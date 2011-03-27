@@ -1,3 +1,6 @@
 [submodule "id3lib"]
 	path = id3lib
 	url = git@github.com:suryakiran/ID3Lib.git
+[submodule "CMake"]
+	path = CMake
+	url = git@github.com:suryakiran/CMakeScripts.git
