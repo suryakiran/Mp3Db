@@ -1,4 +1,5 @@
 Project (Mp3Db)
+Include (FindPkgConfig)
 
 Cmake_Minimum_Required (VERSION 2.8.4)
 
@@ -17,5 +18,7 @@ Set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 Find_Package (Boost)
 
-Add_Subdirectory (id3lib)
+Pkg_Check_Modules (TAGLIB REQUIRED taglib)
+Pkg_Check_Modules (ZLIB REQUIRED zlib)
+
 Add_Subdirectory (mp3db-samples)
