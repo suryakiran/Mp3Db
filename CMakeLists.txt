@@ -21,4 +21,4 @@ Find_Package (Boost)
 Pkg_Check_Modules (TAGLIB REQUIRED taglib)
 Pkg_Check_Modules (ZLIB REQUIRED zlib)
 
-Add_Subdirectory (mp3db-samples)
+Add_Subdirectory (Samples)
