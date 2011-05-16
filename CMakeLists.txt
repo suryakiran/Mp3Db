@@ -5,7 +5,11 @@ Cmake_Minimum_Required (VERSION 2.8.4)
 Set (CMAKE_SKIP_BUILD_RPATH TRUE)
 
 Set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
+Set (MP3DB_CMAKE_MODULES ${CMAKE_CURRENT_SOURCE_DIR}/CMakeUtils)
 Set (MP3DB_CONFIG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Config)
+
+Include (FindPerl)
+Include (${MP3DB_CMAKE_MODULES}/Mp3Db.cmake)
 
 Set(Boost_ADDITIONAL_VERSIONS "1.46.1")
 
@@ -20,6 +24,7 @@ Set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 Find_Package (Boost)
 Find_Package (Qt4 COMPONENTS QtCore QtGui)
+Include (${QT_USE_FILE})
 
 Pkg_Check_Modules (TAGLIB REQUIRED taglib)
 Pkg_Check_Modules (ZLIB REQUIRED zlib)

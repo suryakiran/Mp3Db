@@ -1,13 +1,14 @@
 #include <iostream>
 #include <string>
-#include <boost/algorithm/string.hpp>
-namespace str = boost::algorithm;
-using namespace std;
+
+#include <TagRename/MainWindow.hpp>
 
 int main (int argc, char** argv) 
 {
-  string s = "mp3db";
-  str::to_upper(s);
-  cout << s << endl;
-  return 0;
+  QApplication app (argc, argv);
+
+  MainWindow *mainw = new MainWindow;
+  mainw->show();
+
+  app.exec();
 }

@@ -17,4 +17,4 @@ given ($package) {
   }
 }
 
-print $exe . "\n";
+system($exe);
