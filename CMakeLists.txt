@@ -32,7 +32,7 @@ Pkg_Check_Modules (ZLIB REQUIRED zlib)
 Include_Directories (${Boost_INCLUDE_DIR})
 
 Add_Subdirectory (TagRename)
-Add_Subdirectory (Samples)
+#Add_Subdirectory (Samples)
 
 File (GLOB ConfigInFiles ${MP3DB_CONFIG_DIR}/*.in)
 
