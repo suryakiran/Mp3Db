@@ -32,11 +32,11 @@ Function (MP3DB_EXECUTABLE)
   List (APPEND SOURCES ${UI_SRCS})
   List (APPEND SOURCES ${MOC_SRCS})
 
-  Include_Directories (${CMAKE_CURRENT_SOURCE_DIR}/Include)
-
-  Include_Directories (${QT_QTCORE_INCLUDE_DIR})
-  Include_Directories (${QT_QTGUI_INCLUDE_DIR})
-
+  Include_Directories (
+    ${CMAKE_CURRENT_SOURCE_DIR}/Include
+    ${QT_QTCORE_INCLUDE_DIR}
+    ${QT_QTGUI_INCLUDE_DIR}
+    )
 
   Add_Executable (
     ${TargetName}
