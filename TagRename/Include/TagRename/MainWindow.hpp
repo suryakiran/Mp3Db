@@ -3,6 +3,8 @@
 
 #include "ui_MainWindow.h"
 
+class QFileSystemModel;
+
 class MainWindow : public QMainWindow, private Ui::MainWindow
 {
   Q_OBJECT
@@ -13,6 +15,9 @@ class MainWindow : public QMainWindow, private Ui::MainWindow
   private Q_SLOTS:
     void toggleDetailsDisplay (bool);
     void toggleFoldersDisplay (bool);
+
+  private:
+    QFileSystemModel *m_dirModel;
 };
 
 #endif

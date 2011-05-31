@@ -84,7 +84,7 @@
       <number>5</number>
      </property>
      <item>
-      <widget class="QTreeView" name="treeView_2">
+      <widget class="QTreeView" name="m_dirView">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
