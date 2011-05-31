@@ -84,7 +84,7 @@
       <number>5</number>
      </property>
      <item>
-      <widget class="QTreeView" name="m_dirView">
+      <widget class="DirView" name="m_dirView">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
@@ -102,7 +102,7 @@
      <x>0</x>
      <y>0</y>
      <width>1500</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -158,6 +158,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DirView</class>
+   <extends>QTreeView</extends>
+   <header>TagRename/DirView.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

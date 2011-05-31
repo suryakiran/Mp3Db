@@ -12,10 +12,6 @@ class MainWindow : public QMainWindow, private Ui::MainWindow
   public:
     MainWindow(QWidget* p_parent = 0);
 
-  private Q_SLOTS:
-    void toggleDetailsDisplay (bool);
-    void toggleFoldersDisplay (bool);
-
   private:
     QFileSystemModel *m_dirModel;
 };
