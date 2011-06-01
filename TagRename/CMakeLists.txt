@@ -1,4 +1,6 @@
 Project (TagRename)
 
-Mp3db_Project (TagRename)
-Mp3Db_Executable ()
+Mp3Db_Executable_Properties (
+  TagRename
+  PROPERTY "BoostLibraries=filesystem,system"
+  )
