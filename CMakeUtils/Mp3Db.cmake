@@ -1,4 +1,5 @@
 Function (MP3DB_PROJECT p_target)
+  Set_Property (DIRECTORY PROPERTY ProjectName ${p_target})
   Set_Property (DIRECTORY PROPERTY ModuleName ${p_target})
   Execute_Process (COMMAND 
     ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/perl/CaseConv.pl
@@ -12,6 +13,7 @@ EndFunction (MP3DB_PROJECT)
 Function (MP3DB_EXECUTABLE)
   Get_Property (ModuleName DIRECTORY PROPERTY ModuleName)
   Get_Property (TargetName DIRECTORY PROPERTY TargetName)
+  Get_Property (BoostLibraries DIRECTORY PROPERTY BoostLibraries)
 
   File (GLOB HPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Include/${ModuleName}/*.hpp)
   File (GLOB CXX_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Src/*.cxx)
@@ -43,10 +45,46 @@ Function (MP3DB_EXECUTABLE)
     ${SOURCES}
     )
 
+  Set (Boost_Libraries)
+
+  ForEach (lib ${BoostLibraries})
+    String (TOUPPER ${lib} lib) 
+    List (APPEND Boost_Libraries ${Boost_@lib@_LIBRARY})
+  EndForEach (lib)
+
   Target_Link_Libraries (
     ${TargetName}
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
+    ${Boost_Libraries}
     )
 
 EndFunction (MP3DB_EXECUTABLE)
+
+Function (MP3DB_MODULE_PROPERTIES)
+  Get_Property (ProjectName DIRECTORY PROPERTY ProjectName)
+  Set (PropertiesFile ${CMAKE_CURRENT_BINARY_DIR}/${ProjectName}.cmake)
+
+  Set (args)
+  ForEach (arg ${ARGN})
+    If (${arg} STREQUAL "PROPERTY")
+      List(APPEND args "--Property")
+    Else (${arg} STREQUAL "PROPERTY")
+      List(APPEND args ${arg})
+    EndIf (${arg} STREQUAL "PROPERTY")
+  EndForEach(arg)
+
+  Execute_Process (COMMAND 
+    ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/perl/WriteProperties.pl
+    --Output=${PropertiesFile}
+    ${args}
+    )
+
+  Include (${PropertiesFile})
+EndFunction (MP3DB_MODULE_PROPERTIES)
+
+Function (MP3DB_EXECUTABLE_PROPERTIES p_name)
+  Mp3db_Project(${p_name})
+  Mp3db_Module_Properties (${ARGN})
+  Mp3db_Executable()
+EndFunction (MP3DB_EXECUTABLE_PROPERTIES)

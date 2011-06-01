@@ -1,6 +1,7 @@
 #!@PERL_EXECUTABLE@ -W
 
 use feature qw/switch/;
+use Env qw(@LD_LIBRARY_PATH);
 
 use Getopt::Long qw(:config no_ignore_case);
 
@@ -16,5 +17,7 @@ given ($package) {
     $exe = "@CMAKE_BINARY_DIR@/TagRename/tag-rename";
   }
 }
+
+unshift @LD_LIBRARY_PATH, "@Boost_LIBRARY_DIRS@";
 
 system($exe);

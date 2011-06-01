@@ -22,7 +22,10 @@ EndIf (CMAKE_COMPILER_IS_GNUCXX)
 
 Set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
-Find_Package (Boost)
+Find_Package (Boost
+  COMPONENTS
+  filesystem date_time system
+  )
 Find_Package (Qt4 COMPONENTS QtCore QtGui)
 Include (${QT_USE_FILE})
 
