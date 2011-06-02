@@ -32,15 +32,25 @@ Include (${QT_USE_FILE})
 Pkg_Check_Modules (TAGLIB REQUIRED taglib)
 Pkg_Check_Modules (ZLIB REQUIRED zlib)
 
-Include_Directories (${Boost_INCLUDE_DIR})
+Mp3db_Include_Directories (${Boost_INCLUDE_DIR})
 
 Add_Subdirectory (TagRename)
 #Add_Subdirectory (Samples)
 
+Get_Property (IncludeDirectories GLOBAL PROPERTY IncludeDirectories)
+
+ForEach (id ${IncludeDirectories})
+  Set (
+    ADDITIONAL_GVIM_SEARCH_DIRS 
+    "${ADDITIONAL_GVIM_SEARCH_DIRS}\nset path+=${id}"
+    )
+EndForEach (id)
+
 File (GLOB ConfigInFiles ${MP3DB_CONFIG_DIR}/*.in)
 
 ForEach (cf ${ConfigInFiles})
-  Get_Filename_Component (of ${cf} NAME_WE)
+  Get_Filename_Component (of ${cf} NAME)
+  String (REGEX REPLACE "\\.in$" "" of ${of})
   Set (of ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${of})
   Configure_File (${cf} ${of} @ONLY)
   File (

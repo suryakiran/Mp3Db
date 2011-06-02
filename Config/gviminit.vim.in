@@ -1,0 +1,59 @@
+set path=.
+set path+=/usr/include
+@ADDITIONAL_GVIM_SEARCH_DIRS@
+
+function! OpenAlternateFile()
+  python << end_of_python
+
+import vim
+import os, sys, re
+
+src_re = re.compile('/([^/]*)/Src$')
+inc_re = re.compile('/([^/]*)/Include/\\1$')
+curBuffer = vim.current.buffer
+curFileName = curBuffer.name
+
+ext_map = {
+'.cxx' : (True, ['.hpp']),
+'.hpp' : (False, ['.cxx', '.cpp'])
+}
+
+(dir, file) = os.path.split(curFileName)
+(base, ext) = os.path.splitext(file)
+
+other_file_extns = ext_map.get(ext)
+
+if other_file_extns is not None:
+  isSource = other_file_extns[0]
+  fileFound = False
+
+  if isSource:
+    searchDir = src_re.sub('/\\1/Include/\\1', dir) 
+  else:
+    searchDir = inc_re.sub('/\\1/Src', dir) 
+
+  for of in other_file_extns[1]:
+    f = '%s%s' % (base, of)
+    m = src_re.search(dir)
+    if m is None:
+      m = inc_re.search(dir)
+
+    if m is None:
+      continue
+
+    reqd_file = os.path.join(searchDir, f)
+
+    if os.path.exists(reqd_file):
+      vim.command('e %s' % reqd_file)
+      fileFound = True
+      break
+
+  if not fileFound:
+    f = '%s%s' % (base, other_file_extns[1][0])
+    vim.command('e %s' % os.path.join(searchDir, f))
+
+
+end_of_python
+endfunction
+
+nmap <C-A> :call OpenAlternateFile()<CR>

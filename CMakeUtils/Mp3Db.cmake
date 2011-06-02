@@ -24,7 +24,7 @@ Function (MP3DB_EXECUTABLE)
   If (UI_FILES)
     Qt4_Wrap_Ui (UI_SRCS ${UI_FILES})
     List (APPEND SOURCES ${UI_FILES})
-    Include_Directories (${CMAKE_CURRENT_BINARY_DIR})
+    Mp3db_Include_Directories (${CMAKE_CURRENT_BINARY_DIR})
   EndIf (UI_FILES)
 
   Qt4_Wrap_Cpp (MOC_SRCS ${HPP_FILES})
@@ -34,7 +34,7 @@ Function (MP3DB_EXECUTABLE)
   List (APPEND SOURCES ${UI_SRCS})
   List (APPEND SOURCES ${MOC_SRCS})
 
-  Include_Directories (
+  Mp3db_Include_Directories (
     ${CMAKE_CURRENT_SOURCE_DIR}/Include
     ${QT_QTCORE_INCLUDE_DIR}
     ${QT_QTGUI_INCLUDE_DIR}
@@ -88,3 +88,8 @@ Function (MP3DB_EXECUTABLE_PROPERTIES p_name)
   Mp3db_Module_Properties (${ARGN})
   Mp3db_Executable()
 EndFunction (MP3DB_EXECUTABLE_PROPERTIES)
+
+Function (MP3DB_INCLUDE_DIRECTORIES)
+  Include_Directories (${ARGN})
+  Set_Property (GLOBAL APPEND PROPERTY IncludeDirectories ${ARGN})
+EndFunction (MP3DB_INCLUDE_DIRECTOIRES)
