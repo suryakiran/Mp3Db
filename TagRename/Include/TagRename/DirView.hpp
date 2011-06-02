@@ -15,6 +15,15 @@ class DirView : public QTreeView
 
   private:
       QFileSystemModel* m_model;
+
+  private Q_SLOTS:
+    void selectCurrentDirectory();
+
+  protected:
+      void showEvent (QShowEvent*);
+
+  private:
+      bool m_shown;
 };
 
 #endif
