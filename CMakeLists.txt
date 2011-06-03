@@ -49,8 +49,10 @@ EndForEach (id)
 File (GLOB ConfigInFiles ${MP3DB_CONFIG_DIR}/*.in)
 
 ForEach (cf ${ConfigInFiles})
+  Set (CONFIG_IN_FILE ${cf})
   Get_Filename_Component (of ${cf} NAME)
   String (REGEX REPLACE "\\.in$" "" of ${of})
+  Set (CONFIG_OUT_FILE ${CMAKE_BINARY_DIR}/${of})
   Set (of ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${of})
   Configure_File (${cf} ${of} @ONLY)
   File (
