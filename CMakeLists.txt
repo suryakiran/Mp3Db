@@ -24,7 +24,7 @@ Set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 Find_Package (Boost
   COMPONENTS
-  filesystem date_time system
+  filesystem date_time system program_options
   )
 Find_Package (Qt4 COMPONENTS QtCore QtGui)
 Include (${QT_USE_FILE})
