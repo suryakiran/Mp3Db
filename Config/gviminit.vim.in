@@ -2,6 +2,8 @@ set path=.
 set path+=/usr/include
 @ADDITIONAL_GVIM_SEARCH_DIRS@
 
+chdir @CMAKE_SOURCE_DIR@
+
 function! OpenAlternateFile()
   python << end_of_python
 
@@ -44,7 +46,7 @@ if other_file_extns is not None:
     reqd_file = os.path.join(searchDir, f)
 
     if os.path.exists(reqd_file):
-      vim.command('e %s' % reqd_file)
+      vim.command("call OpenFile('%s')" % f)
       fileFound = True
       break
 
@@ -52,6 +54,33 @@ if other_file_extns is not None:
     f = '%s%s' % (base, other_file_extns[1][0])
     vim.command('e %s' % os.path.join(searchDir, f))
 
+end_of_python
+endfunction
+
+function! OpenAlternateConfigFile()
+  python << end_of_python
+
+import os, sys, vim, re
+
+alternate_dirs = [
+@CONFIG_ALTERNATE_DIRS@
+]
+
+curBuffer = vim.current.buffer
+currentFile = curBuffer.name
+in_re = re.compile('\.in$')
+
+if re.search('\\.in$',currentFile) is None:
+  reqdFile = currentFile + '.in'
+else:
+  reqdFile = re.sub('\\.in$', '', currentFile)
+
+reqdFile = os.path.basename(reqdFile)
+
+for ad in alternate_dirs:
+  f = os.path.join(ad, reqdFile)
+  if os.path.exists(f):
+    vim.command("call OpenFile('%s')" % f)
 
 end_of_python
 endfunction
@@ -59,3 +88,4 @@ endfunction
 nmap <C-A> :call OpenAlternateFile()<CR>
 nmap ,i :e @CONFIG_OUT_FILE@<CR>
 nmap ,g :e @CONFIG_IN_FILE@<CR>
+nmap ,a :call OpenAlternateConfigFile()<CR>

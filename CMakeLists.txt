@@ -48,6 +48,18 @@ EndForEach (id)
 
 File (GLOB ConfigInFiles ${MP3DB_CONFIG_DIR}/*.in)
 
+Set (AlternateDirs)
+
+List (APPEND AlternateDirs \"${MP3DB_CONFIG_DIR}\")
+List (APPEND AlternateDirs \"${CMAKE_BINARY_DIR}\")
+
+Execute_Process (COMMAND 
+  ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/perl/WritePythonList.pl
+  ${AlternateDirs}
+  OUTPUT_VARIABLE CONFIG_ALTERNATE_DIRS
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
 ForEach (cf ${ConfigInFiles})
   Set (CONFIG_IN_FILE ${cf})
   Get_Filename_Component (of ${cf} NAME)
