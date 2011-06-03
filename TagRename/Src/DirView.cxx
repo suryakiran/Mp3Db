@@ -37,6 +37,15 @@ DirView::DirView(QWidget* p_parent)
   for (int i = 1; i < m_model->columnCount(); ++i) {
     setColumnHidden(i, true);
   }
+
+  connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), 
+      this, SLOT(currentChangedSlot(const QModelIndex&, const QModelIndex&)));
+}
+
+void
+DirView::currentChangedSlot(const QModelIndex& p_current, const QModelIndex& p_previous)
+{
+  cout << "Current Directory Name: " << m_model->filePath(p_current) << endl;
 }
 
 DirView::~DirView()
