@@ -85,7 +85,7 @@ for ad in alternate_dirs:
 end_of_python
 endfunction
 
-nmap <C-A> :call OpenAlternateFile()<CR>
-nmap ,i :e @CONFIG_OUT_FILE@<CR>
-nmap ,g :e @CONFIG_IN_FILE@<CR>
-nmap ,a :call OpenAlternateConfigFile()<CR>
+nmap <silent> <C-A> :call OpenAlternateFile()<CR>
+nmap <silent> ,i :e @CONFIG_OUT_FILE@<CR>
+nmap <silent> ,g :e @CONFIG_IN_FILE@<CR>
+nmap <silent> ,a :call OpenAlternateConfigFile()<CR>
