@@ -5,8 +5,7 @@
 #include <iostream>
 using namespace std;
 
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
+#include <boost/filesystem.hpp>
 namespace fs = boost::filesystem;
 
 namespace {
@@ -39,13 +38,18 @@ DirView::DirView(QWidget* p_parent)
   }
 
   connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), 
-      this, SLOT(currentChangedSlot(const QModelIndex&, const QModelIndex&)));
+      this, SLOT(readDirectory(const QModelIndex&)));
 }
 
 void
-DirView::currentChangedSlot(const QModelIndex& p_current, const QModelIndex& p_previous)
+DirView::readDirectory(const QModelIndex& p_current)
 {
-  cout << "Current Directory Name: " << m_model->filePath(p_current) << endl;
+  fs::path dir (m_model->filePath(p_current).toStdWString());
+  fs::directory_iterator dirEnd;
+  for (fs::directory_iterator iter(dir); iter != dirEnd; ++iter)
+  {
+    cout << iter->path() << endl;
+  }
 }
 
 DirView::~DirView()

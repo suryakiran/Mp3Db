@@ -18,7 +18,7 @@ class DirView : public QTreeView
 
   private Q_SLOTS:
     void selectCurrentDirectory();
-    void currentChangedSlot (const QModelIndex&, const QModelIndex&);
+    void readDirectory (const QModelIndex&);
 
   protected:
       void showEvent (QShowEvent*);
