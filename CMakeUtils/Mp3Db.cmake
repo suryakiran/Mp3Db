@@ -10,10 +10,27 @@ Function (MP3DB_PROJECT p_target)
   Set_Property (DIRECTORY PROPERTY TargetName ${p_target})
 EndFunction (MP3DB_PROJECT)
 
+Macro (GET_PROPERTIES)
+  Set (GetPropertiesFile
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}GetProperties.cmake)
+  Set (PropsArg)
+  ForEach (arg ${ARGN})
+    If (NOT PropsArg)
+      Set (PropsArg ${arg})
+    Else (NOT PropsArg)
+      Set (PropsArg ${PropsArg},${arg})
+    EndIf (NOT PropsArg)
+  EndForEach (arg)
+  Execute_Process (COMMAND
+    ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/perl/WriteGetPropertiesFile.pl
+    --Output=${GetPropertiesFile}
+    --Properties=${PropsArg}
+    )
+  Include (${GetPropertiesFile})
+EndMacro (GET_PROPERTIES)
+
 Function (MP3DB_EXECUTABLE)
-  Get_Property (ModuleName DIRECTORY PROPERTY ModuleName)
-  Get_Property (TargetName DIRECTORY PROPERTY TargetName)
-  Get_Property (BoostLibraries DIRECTORY PROPERTY BoostLibraries)
+  Get_Properties (ModuleName TargetName BoostLibraries)
 
   File (GLOB HPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Include/${ModuleName}/*.hpp)
   File (GLOB CXX_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Src/*.cxx)
@@ -63,7 +80,7 @@ EndFunction (MP3DB_EXECUTABLE)
 
 Function (MP3DB_MODULE_PROPERTIES)
   Get_Property (ProjectName DIRECTORY PROPERTY ProjectName)
-  Set (PropertiesFile ${CMAKE_CURRENT_BINARY_DIR}/${ProjectName}.cmake)
+  Set (PropertiesFile ${CMAKE_CURRENT_BINARY_DIR}/${ProjectName}SetProperties.cmake)
 
   Set (args)
   ForEach (arg ${ARGN})
@@ -75,7 +92,7 @@ Function (MP3DB_MODULE_PROPERTIES)
   EndForEach(arg)
 
   Execute_Process (COMMAND 
-    ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/perl/WriteProperties.pl
+    ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/perl/WriteSetPropertiesFile.pl
     --Output=${PropertiesFile}
     ${args}
     )
