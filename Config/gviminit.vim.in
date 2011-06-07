@@ -89,3 +89,4 @@ nmap <silent> <C-A> :call OpenAlternateFile()<CR>
 nmap <silent> ,i :e @CONFIG_OUT_FILE@<CR>
 nmap <silent> ,g :e @CONFIG_IN_FILE@<CR>
 nmap <silent> ,a :call OpenAlternateConfigFile()<CR>
+nmap <silent> ,m :call OpenFile('@CMAKE_PARENT_LIST_FILE@')<CR>
