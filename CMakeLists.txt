@@ -4,14 +4,10 @@ Include (FindPkgConfig)
 Cmake_Minimum_Required (VERSION 2.8.4)
 Set (CMAKE_SKIP_BUILD_RPATH TRUE)
 
-Set (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
-Set (MP3DB_CMAKE_MODULES ${CMAKE_CURRENT_SOURCE_DIR}/CMakeUtils)
-Set (MP3DB_CONFIG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Config)
-
-Include (FindPerl)
-Include (${MP3DB_CMAKE_MODULES}/Mp3Db.cmake)
-
-Set(Boost_ADDITIONAL_VERSIONS "1.46.1")
+Include (${CMAKE_SOURCE_DIR}/CMake/Dirs.cmake)
+Include (${CMAKE_MODULE_PATH}/Macros.cmake)
+Include (${CMAKE_MODULE_PATH}/Perl.cmake)
+Include (${CMAKE_SOURCE_DIR}/Mp3Db.cmake)
 
 If (CMAKE_COMPILER_IS_GNUCXX)
 	Set (
@@ -32,7 +28,7 @@ Include (${QT_USE_FILE})
 Pkg_Check_Modules (TAGLIB REQUIRED taglib)
 Pkg_Check_Modules (ZLIB REQUIRED zlib)
 
-Mp3db_Include_Directories (${Boost_INCLUDE_DIR})
+Mp_Include_Dirs (${Boost_INCLUDE_DIR})
 
 Add_Subdirectory (TagRename)
 #Add_Subdirectory (Samples)
@@ -54,7 +50,7 @@ List (APPEND AlternateDirs \"${MP3DB_CONFIG_DIR}\")
 List (APPEND AlternateDirs \"${CMAKE_BINARY_DIR}\")
 
 Execute_Process (COMMAND 
-  ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/perl/WritePythonList.pl
+  ${PERL_EXECUTABLE} ${CMAKE_PERL_DIR}/WritePythonList.pl
   ${AlternateDirs}
   OUTPUT_VARIABLE CONFIG_ALTERNATE_DIRS
   OUTPUT_STRIP_TRAILING_WHITESPACE
