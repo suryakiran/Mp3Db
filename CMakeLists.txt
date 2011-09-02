@@ -24,8 +24,8 @@ Find_Package (Boost
 Find_Package (Qt4 COMPONENTS QtCore QtGui)
 Include (${QT_USE_FILE})
 
-Pkg_Check_Modules (TAGLIB REQUIRED taglib)
-Pkg_Check_Modules (ZLIB REQUIRED zlib)
+Include (${CMAKE_MODULE_PATH}/Taglib.cmake)
+Include (${CMAKE_MODULE_PATH}/Zlib.cmake)
 
 Mp_Include_Dirs (${Boost_INCLUDE_DIR})
 
@@ -47,5 +47,12 @@ List (APPEND AlternateDirs \"${PROJECT_CONFIG_DIR}\")
 List (APPEND AlternateDirs \"${CMAKE_BINARY_DIR}\")
 
 Set (PROJECT_MODULES "'TagRename'")
+
+If (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  Set (CMAKE_IS_DEBUG_BUILD "true")
+Else (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  Set (CMAKE_IS_DEBUG_BUILD "false")
+EndIf (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+
 Configure_Executable_File (${PROJECT_GVIM_INIT_FILE} ${CMAKE_GVIM_INIT_FILE_OUT} @ONLY)
 Configure_Executable_File (${MP3DB_IN_FILE} ${MP3DB_OUT_FILE} @ONLY)

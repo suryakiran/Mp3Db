@@ -2,7 +2,11 @@
 
 use feature qw/switch/;
 use File::Spec::Functions;
+use File::Basename;
 use Env qw(@LD_LIBRARY_PATH);
+
+use constant true => 1;
+use constant false => 0;
 
 use Getopt::Long qw(:config no_ignore_case);
 
@@ -13,9 +17,11 @@ BEGIN {
 use Gdb;
 use App;
 
-my ($package, $exe, $world, $debugApplication, $debugInitFile);
+my ($package, $exe, $world, $debugApplication, $debugInitFile, $debugBuild);
 my $init_dir="@MODULE_INIT_DIR@";
 my @args;
+
+$debugBuild = @CMAKE_IS_DEBUG_BUILD@;
 
 my $result = GetOptions (
   'module|m=s' => \$package,
@@ -26,7 +32,11 @@ my $result = GetOptions (
 
 given ($package) {
   when ('tag-rename') {
-    $exe = "@INSTALL_PREFIX_Debug@/bin/tag-rename";
+    if ($debugBuild) {
+      $exe = "@INSTALL_PREFIX_Debug@/bin/tag-rename";
+    } else {
+      $exe = "@INSTALL_PREFIX_Release@/bin/tag-rename";
+    }
   }
 }
 
@@ -34,6 +44,12 @@ my %appArgs;
 
 if ($init_dir) {
   $appArgs{'init-dir'} = sprintf('\"%s\"', $init_dir);
+}
+
+if ($debugBuild) {
+  unshift @LD_LIBRARY_PATH, dirname ("@TAGLIB_DEBUG_LIBRARY@");
+} else {
+  unshift @LD_LIBRARY_PATH, dirname ("@TAGLIB_OPTIMIZED_LIBRARY@");
 }
 
 unshift @LD_LIBRARY_PATH, "@Boost_LIBRARY_DIRS@";

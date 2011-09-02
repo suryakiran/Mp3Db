@@ -29,6 +29,12 @@ class Mp3FileIterator : public boost::filter_iterator <is_mp3_file, fs::director
     {
     }
 
+    Mp3FileIterator (const std::string& p_dirName)
+      : boost::filter_iterator<is_mp3_file, fs::directory_iterator> 
+        (m_predicate, fs::directory_iterator(fs::path(p_dirName)))
+    {
+    }
+
     Mp3FileIterator (const fs::path& p_path)
       : boost::filter_iterator<is_mp3_file, fs::directory_iterator> 
         (m_predicate, fs::directory_iterator(p_path))

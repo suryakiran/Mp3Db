@@ -6,5 +6,5 @@ Mp3Db_Executable_Properties (
   )
 
 Target_Link_Libraries (
-  tag-rename tag
+  tag-rename ${TAGLIB_LIBRARIES}
   )
