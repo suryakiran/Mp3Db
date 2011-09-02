@@ -1,16 +1,26 @@
 #!@PERL_EXECUTABLE@ -W
 
 use feature qw/switch/;
+use File::Spec::Functions;
 use Env qw(@LD_LIBRARY_PATH);
 
 use Getopt::Long qw(:config no_ignore_case);
 
-my ($package, $exe, $world);
+BEGIN {
+  unshift @INC, catfile("@CMAKE_SOURCE_DIR@", 'PerlModules'); 
+}
+
+use Gdb;
+use App;
+
+my ($package, $exe, $world, $debugApplication, $debugInitFile);
 my $init_dir="@MODULE_INIT_DIR@";
 my @args;
 
 my $result = GetOptions (
-  'module=s' => \$package,
+  'module|m=s' => \$package,
+  'debug|d' => \$debugApplication,
+  'init|i' => \$debugInitFile,
   'all' => \$world,
 );
 
@@ -20,14 +30,31 @@ given ($package) {
   }
 }
 
+my %appArgs;
+
 if ($init_dir) {
-  push @args, sprintf('--init-dir=\"%s\"', $init_dir);
+  $appArgs{'init-dir'} = sprintf('\"%s\"', $init_dir);
 }
 
 unshift @LD_LIBRARY_PATH, "@Boost_LIBRARY_DIRS@";
 
-if (@args) {
-  system($exe @args);
+if ($debugApplication) {
+  my $init_file;
+
+  if ($debugInitFile) {
+    $init_file = $debugInitFile;
+  } else {
+    $init_file = catfile ("@CMAKE_BINARY_DIR@", 'init.gdb');
+  }
+
+  my $gdb = Gdb->new(
+      exe_file => $exe,
+      init_file => $init_file
+      );
+  $gdb->launch(%appArgs);
 } else {
-  system($exe);
+  my $app = App->new (
+      exe_file => $exe
+      );
+  $app->launch(%appArgs);
 }
