@@ -10,6 +10,9 @@ class MusicFileDisplayWidget : public QTreeWidget
   public:
     MusicFileDisplayWidget (QWidget* p_parent = 0);
     ~MusicFileDisplayWidget();
+
+  public Q_SLOTS:
+    void readDirectory (const QModelIndex& p_index);
 };
 
 #endif

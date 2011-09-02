@@ -36,20 +36,6 @@ DirView::DirView(QWidget* p_parent)
   for (int i = 1; i < m_model->columnCount(); ++i) {
     setColumnHidden(i, true);
   }
-
-  connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), 
-      this, SLOT(readDirectory(const QModelIndex&)));
-}
-
-void
-DirView::readDirectory(const QModelIndex& p_current)
-{
-  fs::path dir (m_model->filePath(p_current).toStdWString());
-  fs::directory_iterator dirEnd;
-  for (fs::directory_iterator iter(dir); iter != dirEnd; ++iter)
-  {
-    cout << iter->path() << endl;
-  }
 }
 
 DirView::~DirView()
