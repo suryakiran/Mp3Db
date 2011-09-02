@@ -4,8 +4,7 @@ Include (FindPkgConfig)
 Cmake_Minimum_Required (VERSION 2.8.4)
 Set (CMAKE_SKIP_BUILD_RPATH TRUE)
 
-Include (${CMAKE_SOURCE_DIR}/CMake/Dirs.cmake)
-Include (${CMAKE_MODULE_PATH}/Macros.cmake)
+Include (${CMAKE_SOURCE_DIR}/CMake/Config.cmake)
 Include (${CMAKE_MODULE_PATH}/Perl.cmake)
 Include (${CMAKE_SOURCE_DIR}/Mp3Db.cmake)
 
@@ -42,32 +41,11 @@ ForEach (id ${IncludeDirectories})
     )
 EndForEach (id)
 
-File (GLOB ConfigInFiles ${MP3DB_CONFIG_DIR}/*.in)
-
 Set (AlternateDirs)
 
-List (APPEND AlternateDirs \"${MP3DB_CONFIG_DIR}\")
+List (APPEND AlternateDirs \"${PROJECT_CONFIG_DIR}\")
 List (APPEND AlternateDirs \"${CMAKE_BINARY_DIR}\")
 
-Execute_Process (COMMAND 
-  ${PERL_EXECUTABLE} ${CMAKE_PERL_DIR}/WritePythonList.pl
-  ${AlternateDirs}
-  OUTPUT_VARIABLE CONFIG_ALTERNATE_DIRS
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-ForEach (cf ${ConfigInFiles})
-  Set (CONFIG_IN_FILE ${cf})
-  Get_Filename_Component (of ${cf} NAME)
-  String (REGEX REPLACE "\\.in$" "" of ${of})
-  Set (CONFIG_OUT_FILE ${CMAKE_BINARY_DIR}/${of})
-  Set (of ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${of})
-  Configure_File (${cf} ${of} @ONLY)
-  File (
-    COPY ${of} DESTINATION ${CMAKE_BINARY_DIR}
-    FILE_PERMISSIONS 
-    OWNER_READ OWNER_WRITE OWNER_EXECUTE
-    GROUP_READ GROUP_EXECUTE
-    WORLD_READ WORLD_EXECUTE
-    )
-EndForEach (cf)
+Set (PROJECT_MODULES "'TagRename'")
+Configure_Executable_File (${PROJECT_GVIM_INIT_FILE} ${CMAKE_GVIM_INIT_FILE_OUT} @ONLY)
+Configure_Executable_File (${MP3DB_IN_FILE} ${MP3DB_OUT_FILE} @ONLY)

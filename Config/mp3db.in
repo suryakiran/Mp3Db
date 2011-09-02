@@ -16,7 +16,7 @@ my $result = GetOptions (
 
 given ($package) {
   when ('tag-rename') {
-    $exe = "@CMAKE_BINARY_DIR@/TagRename/tag-rename";
+    $exe = "@INSTALL_PREFIX_Debug@/bin/tag-rename";
   }
 }
 

@@ -1,5 +1,3 @@
-Include (${CMAKE_MODULE_PATH}/Directories.cmake)
-
 Set (GUI_DIR_Debug ${INSTALL_PREFIX_Debug}/gui)
 Set (GUI_DIR_Release ${INSTALL_PREFIX_Release}/gui)
 Set (PERL_MODULES_DIR_Release ${INSTALL_PREFIX_Release}${PERL_ARCH_DIR_SUFFIX}/Mp3Db)
@@ -36,13 +34,12 @@ Function (MP3DB_MODULE_PROPERTIES)
     EndIf (${arg} STREQUAL "PROPERTY")
   EndForEach(arg)
 
-  Execute_Process (COMMAND 
-    ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/Perl/WriteSetPropertiesFile.pl
-    --Output=${PropertiesFile}
-    ${args}
+  Execute_Perl (
+    FILE ${CMAKE_PERL_DIR}/WriteSetPropertiesFile.pl
+    ARGS ${args}
+    CMAKE_OUTPUT ${PropertiesFile}
     )
 
-  Include (${PropertiesFile})
 EndFunction (MP3DB_MODULE_PROPERTIES)
 
 Function (MP3DB_PROJECT p_target)
@@ -139,20 +136,7 @@ EndFunction (MP3DB_INCLUDE_DIRECTORIES)
 Get_Filename_Component(MP_CONFIG_DIR ${CMAKE_SOURCE_DIR}/Config ABSOLUTE)
 Set (DLL_UTILITIES_DIR ${CMAKE_CURRENT_BINARY_DIR}/DllUtilities)
 
-Find_File (
-  GVIM_INIT_IN_FILE
-    gviminit.vim.in
-  PATHS
-    ${MP_CONFIG_DIR}
-  )
-Set (GVIM_INIT_OUT_FILE ${CMAKE_BINARY_DIR}/gviminit.vim)
-
-Find_File (
-  MP3DB_IN_FILE
-    mp3db.in
-  PATHS
-    ${MP_CONFIG_DIR}
-  )
+Find_File_In_Dir (MP3DB_IN_FILE mp3db.in ${PROJECT_CONFIG_DIR})
 Set (MP3DB_OUT_FILE ${CMAKE_BINARY_DIR}/mp3db)
 
 Set(Boost_ADDITIONAL_VERSIONS "1.46.1")
