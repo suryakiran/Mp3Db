@@ -42,7 +42,8 @@ MusicFileDisplayWidget::MusicFileDisplayWidget (QWidget* p_parent)
     header->setText (himv.first, himv.second);
   }
   setHeaderItem (header);
-  setAlternatingRowColors (true);
+
+  connect (this, SIGNAL(itemSelectionChanged()), this, SLOT(emitSignalIfItemsSelected()));
 }
 
 MusicFileDisplayWidget::~MusicFileDisplayWidget()
@@ -98,4 +99,9 @@ void MusicFileDisplayWidget::readDirectory (const QModelIndex& p_index)
   {
     resizeColumnToContents(i);
   }
+}
+
+void MusicFileDisplayWidget::emitSignalIfItemsSelected ()
+{
+  Q_EMIT hasItemSelection(!selectedItems().isEmpty());
 }

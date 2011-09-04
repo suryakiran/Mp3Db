@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1500</width>
+    <width>938</width>
     <height>600</height>
    </rect>
   </property>
@@ -15,11 +15,37 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>5</number>
+    </property>
+    <property name="margin">
+     <number>5</number>
+    </property>
     <item>
      <widget class="MusicFileDisplayWidget" name="m_musicFileDisplayWidget">
       <property name="alternatingRowColors">
        <bool>true</bool>
       </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTabWidget" name="m_detailsTab">
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Properties</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Lyrics</string>
+       </attribute>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -88,7 +114,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1500</width>
+     <width>938</width>
      <height>23</height>
     </rect>
    </property>
