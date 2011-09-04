@@ -22,6 +22,11 @@ namespace {
     {
       return QString::fromStdWString(p_string);
     }
+
+    QString operator() (int p_int) const
+    {
+      return QString("%1").arg(p_int);
+    }
   };
 
   struct TaglibStringVisitor : public boost::static_visitor<TagLib::String>
@@ -45,7 +50,17 @@ namespace {
     {
       return TagLib::String (p_string);
     }
+
+    TagLib::String operator() (int p_int) const
+    {
+      return TagLib::String::number(p_int);
+    }
   };
+}
+
+Mp3String::Mp3String (int p_int)
+  : m_string (p_int)
+{
 }
 
 Mp3String::Mp3String (const std::string& p_string)

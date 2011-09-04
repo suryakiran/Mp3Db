@@ -81,15 +81,15 @@ void MusicFileDisplayWidget::readDirectory (const QModelIndex& p_index)
         }
       }
 
-      item->setText (FileName, _M(p.filename()));
-      item->setText (AlbumName, _M(tag->album()));
-      item->setText (TrackName, _M(tag->title()));
-      item->setText (Genre, _M(tag->genre()));
+      item->setText (FileName,    _M(p.filename()));
+      item->setText (AlbumName,   _M(tag->album()));
+      item->setText (TrackName,   _M(tag->title()));
+      item->setText (Genre,       _M(tag->genre()));
       item->setText (ArtistNames, _M(tag->artist()));
-      item->setText (TrackNumber, QString("%1").arg(tag->track()));
-      item->setText (BitRate, QString("%1").arg(audioProperties->bitrate()));
-      item->setText (Duration, QString("%1").arg(bt::to_simple_string(td).c_str()));
-      item->setData (Duration, HiddenDataRole, length); 
+      item->setText (TrackNumber, _M(tag->track()));
+      item->setText (BitRate,     _M(audioProperties->bitrate()));
+      item->setText (Duration,    _M(bt::to_simple_string(td)));
+      item->setData (Duration,    HiddenDataRole, length); 
     }
   }
 

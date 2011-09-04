@@ -15,9 +15,11 @@ class Mp3String
       , std::wstring
       , QString
       , TagLib::String
+      , int
       > String;
 
   public:
+    Mp3String (int p_int);
     Mp3String (const std::string& p_string);
     Mp3String (const std::wstring& p_string);
     Mp3String (const QString& p_string);
