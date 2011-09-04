@@ -1,5 +1,6 @@
 #include <TagRename/MusicFileDisplayWidget.hpp>
 #include <TagRename/Mp3FileIterator.hpp>
+#include <TagRename/Mp3String.hpp>
 
 #include <QtCore/QTextCodec>
 #include <QtGui/QFileSystemModel>
@@ -62,7 +63,6 @@ void MusicFileDisplayWidget::readDirectory (const QModelIndex& p_index)
       QTreeWidgetItem* item = new QTreeWidgetItem(this);
       TagLib::Tag* tag = fileRef.tag();
       TagLib::AudioProperties* audioProperties = fileRef.audioProperties();
-      TagLib::String album = tag->album();
 
       int length (audioProperties->length());
       bt::time_duration td = bt::seconds (length);
@@ -76,19 +76,16 @@ void MusicFileDisplayWidget::readDirectory (const QModelIndex& p_index)
           TagLib::ID3v2::FrameListMap::ConstIterator iter = frameList.find("TCOM");
           if (iter != frameList.end())
           {
-            item->setText (Composer, TStringToQString(iter->second.front()->toString()));
+            item->setText (Composer, _M(iter->second.front()->toString()));
           }
         }
       }
-      else
-      {
-      }
 
-      item->setText (FileName, p.filename().c_str());
-      item->setText (AlbumName, TStringToQString(tag->album()));
-      item->setText (TrackName, TStringToQString(tag->title()));
-      item->setText (Genre, TStringToQString(tag->genre()));
-      item->setText (ArtistNames, TStringToQString(tag->artist()));
+      item->setText (FileName, _M(p.filename()));
+      item->setText (AlbumName, _M(tag->album()));
+      item->setText (TrackName, _M(tag->title()));
+      item->setText (Genre, _M(tag->genre()));
+      item->setText (ArtistNames, _M(tag->artist()));
       item->setText (TrackNumber, QString("%1").arg(tag->track()));
       item->setText (BitRate, QString("%1").arg(audioProperties->bitrate()));
       item->setText (Duration, QString("%1").arg(bt::to_simple_string(td).c_str()));
