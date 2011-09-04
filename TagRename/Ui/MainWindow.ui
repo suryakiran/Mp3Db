@@ -17,46 +17,9 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="MusicFileDisplayWidget" name="m_musicFileDisplayWidget">
-      <column>
-       <property name="text">
-        <string>File Name</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Album</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>#</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string notr="true">Track Name</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Artist(s)</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Genre</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Composer</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Bitrate</string>
-       </property>
-      </column>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
    </layout>
