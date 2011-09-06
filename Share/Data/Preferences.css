@@ -1,0 +1,30 @@
+QAbstractItemView {
+	alternate-background-color: #bbeedd;
+}
+
+QLineEdit {
+	background-color: #ffeedd;
+}
+
+QProgressBar {
+	border: 1px solid gray;
+	border-radius: 5px ;
+	background: white;
+	padding: 1px;
+	text-align: center ;
+}
+
+QProgressBar::chunk{
+	background-color: #508bcc;
+	width: 5px;
+}
+
+QToolBox::tab:selected{
+	font: bold ;
+}
+
+QToolTip {
+	color: brown ;
+	background-color: #ffeedd ;
+	padding: 1px ;
+}

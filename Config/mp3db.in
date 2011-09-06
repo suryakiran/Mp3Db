@@ -42,6 +42,11 @@ given ($package) {
 
 my %appArgs;
 
+if ($debugBuild) {
+  my $prefsFile = catfile ("@CMAKE_SOURCE_DIR@", 'Share', 'Data', 'Preferences.css');
+  $appArgs{'style-sheet'} = $prefsFile if -e $prefsFile; 
+}
+
 if ($init_dir) {
   $appArgs{'init-dir'} = sprintf('\"%s\"', $init_dir);
 }
