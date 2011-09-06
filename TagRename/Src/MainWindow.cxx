@@ -7,10 +7,10 @@ MainWindow :: MainWindow(QWidget* p_parent)
   setupUi(this);
   resize(1000, 600);
 
-  m_detailsTab->setVisible(false);
+//  m_musicFilePropertiesWidget->setVisible(false);
 
   connect(m_dirView->selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), 
       m_musicFileDisplayWidget, SLOT(readDirectory(const QModelIndex&)));
 
-  connect(m_musicFileDisplayWidget, SIGNAL(hasItemSelection(bool)), m_detailsTab, SLOT(setVisible(bool)));
+ // connect(m_musicFileDisplayWidget, SIGNAL(hasItemSelection(bool)), m_musicFilePropertiesWidget, SLOT(setVisible(bool)));
 }
