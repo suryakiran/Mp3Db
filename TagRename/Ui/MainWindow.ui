@@ -44,7 +44,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QFrame" name="m_musicFilePropertiesWidget">
+     <widget class="QFrame" name="m_musicFilePropertiesFrame">
       <property name="sizePolicy">
        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -65,7 +65,7 @@
         <number>2</number>
        </property>
        <item>
-        <widget class="MusicFilePropertiesWidget" name="widget" native="true">
+        <widget class="MusicFilePropertiesWidget" name="m_musicFilePropertiesWidget" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
            <horstretch>0</horstretch>

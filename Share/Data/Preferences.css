@@ -6,6 +6,10 @@ QLineEdit {
 	background-color: #ffeedd;
 }
 
+QLineEdit:read-only {
+  background-color: #eeeeee;
+}
+
 QProgressBar {
 	border: 1px solid gray;
 	border-radius: 5px ;

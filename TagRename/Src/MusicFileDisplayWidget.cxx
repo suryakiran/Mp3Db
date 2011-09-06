@@ -1,6 +1,7 @@
 #include <TagRename/MusicFileDisplayWidget.hpp>
 #include <TagRename/Mp3FileIterator.hpp>
 #include <TagRename/Mp3String.hpp>
+#include <TagRename/FileModelColumn.hpp>
 
 #include <QtCore/QTextCodec>
 #include <QtGui/QFileSystemModel>
@@ -26,15 +27,15 @@ MusicFileDisplayWidget::MusicFileDisplayWidget (QWidget* p_parent)
 {
   QTreeWidgetItem* header = new QTreeWidgetItem();
   insert (m_headerNameMap)
-    (FileName, "File Name")
-    (AlbumName, "Album Name")
-    (TrackNumber, "#")
-    (TrackName, "Track Name")
-    (ArtistNames, "Artist(s)")
-    (Genre, "Genre")
-    (Composer, "Composer")
-    (BitRate, "Bit Rate")
-    (Duration, "Duration")
+    (COLUMN_ID(FileName),    COLUMN_LABEL(FileName))
+    (COLUMN_ID(AlbumName),   COLUMN_LABEL(AlbumName))
+    (COLUMN_ID(TrackNumber), COLUMN_LABEL(TrackNumber))
+    (COLUMN_ID(TrackName),   COLUMN_LABEL(TrackName))
+    (COLUMN_ID(ArtistNames), COLUMN_LABEL(ArtistNames))
+    (COLUMN_ID(Genre),       COLUMN_LABEL(Genre))
+    (COLUMN_ID(Composer),    COLUMN_LABEL(Composer))
+    (COLUMN_ID(BitRate),     COLUMN_LABEL(BitRate))
+    (COLUMN_ID(Duration),    COLUMN_LABEL(Duration))
     ;
 
   BOOST_FOREACH (HeaderNameMapValue himv, m_headerNameMap)
@@ -77,20 +78,21 @@ void MusicFileDisplayWidget::readDirectory (const QModelIndex& p_index)
           TagLib::ID3v2::FrameListMap::ConstIterator iter = frameList.find("TCOM");
           if (iter != frameList.end())
           {
-            item->setText (Composer, _M(iter->second.front()->toString()));
+            item->setText (COLUMN_ID(Composer), _M(iter->second.front()->toString()));
           }
         }
       }
 
-      item->setText (FileName,    _M(p.filename()));
-      item->setText (AlbumName,   _M(tag->album()));
-      item->setText (TrackName,   _M(tag->title()));
-      item->setText (Genre,       _M(tag->genre()));
-      item->setText (ArtistNames, _M(tag->artist()));
-      item->setText (TrackNumber, _M(tag->track()));
-      item->setText (BitRate,     _M(audioProperties->bitrate()));
-      item->setText (Duration,    _M(bt::to_simple_string(td)));
-      item->setData (Duration,    HiddenDataRole, length); 
+      item->setData (COLUMN_ID(FileName),    ItemDataRole::Hidden, p.string().c_str());
+      item->setText (COLUMN_ID(FileName),    _M(p.filename()));
+      item->setText (COLUMN_ID(AlbumName),   _M(tag->album()));
+      item->setText (COLUMN_ID(TrackName),   _M(tag->title()));
+      item->setText (COLUMN_ID(Genre),       _M(tag->genre()));
+      item->setText (COLUMN_ID(ArtistNames), _M(tag->artist()));
+      item->setText (COLUMN_ID(TrackNumber), _M(tag->track()));
+      item->setText (COLUMN_ID(BitRate),     _M(audioProperties->bitrate()));
+      item->setText (COLUMN_ID(Duration),    _M(bt::to_simple_string(td)));
+      item->setData (COLUMN_ID(Duration),    ItemDataRole::Hidden, length); 
     }
   }
 

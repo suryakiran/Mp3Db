@@ -64,12 +64,16 @@
             <item row="0" column="0">
              <widget class="QLabel" name="label">
               <property name="text">
-               <string>Name</string>
+               <string>File Name</string>
               </property>
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLineEdit" name="lineEdit"/>
+             <widget class="QLineEdit" name="m_fileName">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_2">
@@ -79,7 +83,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLineEdit" name="lineEdit_2"/>
+             <widget class="QLineEdit" name="m_trackName"/>
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="label_3">
@@ -89,7 +93,7 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLineEdit" name="lineEdit_3"/>
+             <widget class="QLineEdit" name="m_artist"/>
             </item>
             <item row="3" column="0">
              <widget class="QLabel" name="label_4">
@@ -99,7 +103,7 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLineEdit" name="lineEdit_4"/>
+             <widget class="QLineEdit" name="m_album"/>
             </item>
             <item row="4" column="0">
              <widget class="QLabel" name="label_5">
@@ -109,7 +113,7 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLineEdit" name="lineEdit_5"/>
+             <widget class="QLineEdit" name="m_composer"/>
             </item>
             <item row="5" column="0">
              <widget class="QLabel" name="label_6">
