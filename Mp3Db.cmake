@@ -156,3 +156,5 @@ Mark_As_Advanced (
   USE_POCO
   USE_QT
   )
+
+Include (${CMAKE_MODULE_PATH}/Zorba.cmake)
