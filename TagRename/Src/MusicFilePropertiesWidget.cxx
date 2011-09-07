@@ -30,7 +30,7 @@ namespace {
     return QImage::fromData (ba);
 #endif
     QPixmap pixmap = QPixmap::fromImage (QImage::fromData((uchar*)bv.data(), bv.size()));
-    return pixmap.scaledToHeight (75, Qt::SmoothTransformation);
+    return pixmap.scaledToHeight (100, Qt::SmoothTransformation);
   }
 }
 
