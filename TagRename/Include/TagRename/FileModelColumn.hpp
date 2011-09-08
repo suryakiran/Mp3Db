@@ -11,7 +11,7 @@
       return ColumnId;                                 \
     }                                                  \
                                                        \
-    QString operator() () const                         \
+    QString operator() () const                        \
     {                                                  \
       return StringRep;                                \
     }                                                  \
