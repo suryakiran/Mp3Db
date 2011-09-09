@@ -58,52 +58,65 @@ namespace {
   };
 }
 
+Mp3String::Mp3String()
+  : m_null (true)
+{
+}
+
 Mp3String::Mp3String (int p_int)
-  : m_string (p_int)
+  : m_string (p_int), m_null(false)
 {
 }
 
 Mp3String::Mp3String (const std::string& p_string)
-  : m_string(p_string)
+  : m_string(p_string), m_null(false)
 {
 }
 
 Mp3String::Mp3String (const std::wstring& p_string)
-  : m_string(p_string)
+  : m_string(p_string), m_null(false)
 {
 }
 
 Mp3String::Mp3String (const TagLib::String& p_string)
-  : m_string(p_string)
+  : m_string(p_string), m_null(false)
 {
 }
 
 Mp3String::Mp3String (const QString& p_string)
-  : m_string(p_string)
+  : m_string(p_string), m_null(false)
 {
 }
 
 Mp3String::Mp3String (const char* p_string)
-  : m_string(QString(p_string))
+  : m_string(QString(p_string)), m_null(false)
 {
 }
 
 Mp3String::Mp3String (const wchar_t* p_string)
-  : m_string(TagLib::String(p_string))
+  : m_string(TagLib::String(p_string)), m_null(false)
 {
 }
 
 Mp3String::Mp3String (const boost::filesystem::path& p_path)
-  : m_string (TagLib::String(p_path.string()))
+  : m_string (TagLib::String(p_path.string())), m_null(false)
 {
 }
 
-Mp3String::operator QString()
+Mp3String::operator QString() const
 {
+  if (m_null) {
+    return QString();
+  }
+
   return boost::apply_visitor (QStringVisitor(), m_string);
 }
 
-Mp3String::operator TagLib::String()
+Mp3String::operator TagLib::String() const
 {
+  if (m_null) {
+    return TagLib::String();
+  }
+
   return boost::apply_visitor (TaglibStringVisitor(), m_string);
 }

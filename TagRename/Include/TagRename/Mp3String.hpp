@@ -19,6 +19,7 @@ class Mp3String
       > String;
 
   public:
+    Mp3String ();
     Mp3String (int p_int);
     Mp3String (const std::string& p_string);
     Mp3String (const std::wstring& p_string);
@@ -28,11 +29,16 @@ class Mp3String
     Mp3String (const wchar_t* p_string);
     Mp3String (const boost::filesystem::path& p_path);
 
-    operator QString();
-    operator TagLib::String();
+    bool isNull () const { 
+      return m_null;
+    }
+
+    operator QString() const;
+    operator TagLib::String() const;
 
   private:
     String m_string;
+    bool m_null;
 };
 
 #ifdef _M

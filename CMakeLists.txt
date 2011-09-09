@@ -1,4 +1,5 @@
 Project (Mp3Db)
+Cmake_Minimum_Required (VERSION 2.8.4)
 
 Include (${CMAKE_SOURCE_DIR}/CMake/Config.cmake)
 Include (${CMAKE_MODULE_PATH}/Perl.cmake)

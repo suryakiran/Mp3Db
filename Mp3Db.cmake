@@ -158,3 +158,13 @@ Mark_As_Advanced (
   )
 
 Include (${CMAKE_MODULE_PATH}/Zorba.cmake)
+
+Function (Include_Zorba)
+  Mp3db_Include_Directories (
+    ${ZORBA_INCLUDE_DIR}
+    )
+  
+  If (UNIX)
+    Remove_Definitions ("-DUNIX")
+  Endif (UNIX)
+EndFunction (Include_Zorba)
