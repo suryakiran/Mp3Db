@@ -1,5 +1,5 @@
-#ifndef Mp3String_hpp_INCLUDED
-#define Mp3String_hpp_INCLUDED
+#ifndef Mp3String_hxx_INCLUDED
+#define Mp3String_hxx_INCLUDED
 
 #include <string>
 #include <QString>

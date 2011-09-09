@@ -1,4 +1,4 @@
-#include <TagRename/MainWindow.hpp>
+#include <TagRename/MainWindow.hxx>
 #include <QtGui/QFileSystemModel>
 
 MainWindow :: MainWindow(QWidget* p_parent)

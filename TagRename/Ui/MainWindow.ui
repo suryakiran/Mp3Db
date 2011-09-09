@@ -175,12 +175,12 @@
   <customwidget>
    <class>DirView</class>
    <extends>QTreeView</extends>
-   <header>TagRename/DirView.hpp</header>
+   <header>TagRename/DirView.hxx</header>
   </customwidget>
   <customwidget>
    <class>MusicFileDisplayWidget</class>
    <extends>QTreeWidget</extends>
-   <header>TagRename/MusicFileDisplayWidget.hpp</header>
+   <header>TagRename/MusicFileDisplayWidget.hxx</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -1,5 +1,5 @@
-#ifndef Mp3FileIterator_hpp_INCLUDED
-#define Mp3FileIterator_hpp_INCLUDED
+#ifndef Mp3FileIterator_hxx_INCLUDED
+#define Mp3FileIterator_hxx_INCLUDED
 
 #include <iostream>
 #include <string>

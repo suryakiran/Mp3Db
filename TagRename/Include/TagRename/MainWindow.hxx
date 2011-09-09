@@ -1,5 +1,5 @@
-#ifndef MainWindow_hpp_INCLUDED
-#define MainWindow_hpp_INCLUDED
+#ifndef MainWindow_hxx_INCLUDED
+#define MainWindow_hxx_INCLUDED
 
 #include "ui_MainWindow.h"
 

@@ -1,4 +1,4 @@
-#include <TagRename/DirView.hpp>
+#include <TagRename/DirView.hxx>
 #include <QtGui/QFileSystemModel>
 #include <QtCore/QTimer>
 

@@ -1,4 +1,4 @@
-#include <TagRename/Mp3String.hpp>
+#include <TagRename/Mp3String.hxx>
 
 namespace {
   struct QStringVisitor : public boost::static_visitor<QString>

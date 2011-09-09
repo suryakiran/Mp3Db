@@ -1,5 +1,5 @@
-#ifndef DirView_hpp_INCLUDED
-#define DirView_hpp_INCLUDED
+#ifndef DirView_hxx_INCLUDED
+#define DirView_hxx_INCLUDED
 
 #include <QtGui/QTreeView>
 

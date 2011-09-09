@@ -77,7 +77,7 @@ EndMacro (GET_PROPERTIES)
 Function (MP3DB_EXECUTABLE)
   Get_Properties (ModuleName TargetName BoostLibraries)
 
-  File (GLOB HPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Include/${ModuleName}/*.hpp)
+  File (GLOB HPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Include/${ModuleName}/*.hxx)
   File (GLOB CXX_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Src/*.cxx)
   File (GLOB UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Ui/*.ui)
 

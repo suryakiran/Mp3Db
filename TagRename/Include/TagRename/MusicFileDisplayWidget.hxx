@@ -1,5 +1,5 @@
-#ifndef MusicFileDisplayWidget_hpp_INCLUDED
-#define MusicFileDisplayWidget_hpp_INCLUDED
+#ifndef MusicFileDisplayWidget_hxx_INCLUDED
+#define MusicFileDisplayWidget_hxx_INCLUDED
 
 #include <QtGui/QTreeWidget>
 #include <map>
