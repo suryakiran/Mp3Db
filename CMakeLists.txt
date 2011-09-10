@@ -1,9 +1,17 @@
 Project (Mp3Db)
 Cmake_Minimum_Required (VERSION 2.8.4)
 
+Set (PROJECT_LIST_FILE ${CMAKE_SOURCE_DIR}/Mp3Db.cmake)
+
 Include (${CMAKE_SOURCE_DIR}/CMake/Config.cmake)
 Include (${CMAKE_MODULE_PATH}/Perl.cmake)
 Include (${CMAKE_SOURCE_DIR}/Mp3Db.cmake)
+
+Check_Perl_Modules (
+  Template
+  XML::Simple
+  File::Find::Rule
+  )
 
 If (CMAKE_COMPILER_IS_GNUCXX)
 	Set (
@@ -43,7 +51,8 @@ Set (AlternateDirs)
 List (APPEND AlternateDirs \"${PROJECT_CONFIG_DIR}\")
 List (APPEND AlternateDirs \"${CMAKE_BINARY_DIR}\")
 
-Set (PROJECT_MODULES "'TagRename'")
+Set (PROJECT_MODULES)
+List (APPEND PROJECT_MODULES "TagRename")
 
 If (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
   Set (CMAKE_IS_DEBUG_BUILD "true")
@@ -51,5 +60,14 @@ Else (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
   Set (CMAKE_IS_DEBUG_BUILD "false")
 EndIf (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 
-Configure_Executable_File (${PROJECT_GVIM_INIT_FILE} ${CMAKE_GVIM_INIT_FILE_OUT} @ONLY)
 Configure_Executable_File (${MP3DB_IN_FILE} ${MP3DB_OUT_FILE} @ONLY)
+
+Cmake_List_To_Perl_Args (AdditionalGvimSearchDirs -d ${IncludeDirectories})
+Cmake_List_To_Perl_Args (ProjectModules -p ${PROJECT_MODULES})
+
+Process_Perl_Template (
+  PERL_FILE ${PL_FILE_GVIM_INIT}
+  TEMPLATE ${CMAKE_GVIM_INIT_TMPL_FILE}
+  OUTPUT ${CMAKE_GVIM_INIT_FILE_OUT}
+  ARGS ${AdditionalGvimSearchDirs} ${ProjectModules}
+  )

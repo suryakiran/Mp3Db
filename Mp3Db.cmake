@@ -9,6 +9,8 @@ Set (SHARE_DATA_DIR_Release ${INSTALL_PREFIX_Release}/share/data)
 Set (SHARE_DATA_DIR ${CMAKE_SOURCE_DIR}/Share/Data)
 Set (AppPrefix Mp3Db)
 
+Include (${CMAKE_MODULE_PATH}/Module.cmake)
+
 Function (MP_INCLUDE_DIRS)
   Include_Directories (${ARGN})
   ForEach (dir ${ARGN})
@@ -75,11 +77,18 @@ EndMacro (GET_PROPERTIES)
 
 
 Function (MP3DB_EXECUTABLE)
-  Get_Properties (ModuleName TargetName BoostLibraries)
+  Get_Properties (ModuleName TargetName BoostLibraries OtherLibraries)
 
-  File (GLOB HPP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Include/${ModuleName}/*.hpp)
-  File (GLOB CXX_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Src/*.cxx)
-  File (GLOB UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/Ui/*.ui)
+  Set (INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Include/${ModuleName})
+  Set (SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Src)
+  Set (UI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Ui)
+
+  File (GLOB HXX_FILES ${INC_DIR}/*.hxx)
+  File (GLOB CXX_FILES ${SRC_DIR}/*.cxx)
+  File (GLOB UI_FILES ${UI_DIR}/*.ui)
+
+  Set_Property (GLOBAL APPEND PROPERTY IncludeDirectories ${INC_DIR})
+  Set_Property (GLOBAL APPEND PROPERTY IncludeDirectories ${SRC_DIR})
 
   Set (SOURCES)
 
@@ -89,9 +98,9 @@ Function (MP3DB_EXECUTABLE)
     Mp3db_Include_Directories (${CMAKE_CURRENT_BINARY_DIR})
   EndIf (UI_FILES)
 
-  Qt4_Wrap_Cpp (MOC_SRCS ${HPP_FILES})
+  Qt_Get_Moc_Files (MOC_SRCS ${HXX_FILES})
 
-  List (APPEND SOURCES ${HPP_FILES})
+  List (APPEND SOURCES ${HXX_FILES})
   List (APPEND SOURCES ${CXX_FILES})
   List (APPEND SOURCES ${UI_SRCS})
   List (APPEND SOURCES ${MOC_SRCS})
@@ -108,20 +117,27 @@ Function (MP3DB_EXECUTABLE)
     )
 
   Set (Boost_Libraries)
+  Set (Other_Libraries)
 
   ForEach (lib ${BoostLibraries})
     String (TOUPPER ${lib} lib) 
     List (APPEND Boost_Libraries ${Boost_@lib@_LIBRARY})
   EndForEach (lib)
 
+  ForEach (lib ${OtherLibraries})
+    String (TOUPPER ${lib} lib) 
+    List (APPEND Other_Libraries ${@lib@_LIBRARIES})
+  EndForeach (lib)
+
   Target_Link_Libraries (
     ${TargetName}
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
     ${Boost_Libraries}
+    ${Other_Libraries}
     )
-
 EndFunction (MP3DB_EXECUTABLE)
+
 Function (MP3DB_EXECUTABLE_PROPERTIES p_name)
   Mp3db_Project(${p_name})
   Mp3db_Module_Properties (${ARGN})

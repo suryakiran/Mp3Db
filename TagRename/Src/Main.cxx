@@ -3,7 +3,7 @@
 #include <vector>
 #include <fstream>
 
-#include <TagRename/MainWindow.hpp>
+#include <TagRename/MainWindow.hxx>
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>

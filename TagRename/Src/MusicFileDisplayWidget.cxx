@@ -1,6 +1,6 @@
-#include <TagRename/MusicFileDisplayWidget.hpp>
-#include <TagRename/Mp3FileIterator.hpp>
-#include <TagRename/FileModelColumn.hpp>
+#include <TagRename/MusicFileDisplayWidget.hxx>
+#include <TagRename/Mp3FileIterator.hxx>
+#include <TagRename/Mp3String.hxx>
 
 #include <QtCore/QTextCodec>
 #include <QtGui/QFileSystemModel>
