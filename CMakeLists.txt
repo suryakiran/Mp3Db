@@ -4,6 +4,8 @@ Include (FindPkgConfig)
 Cmake_Minimum_Required (VERSION 2.8.4)
 Set (CMAKE_SKIP_BUILD_RPATH TRUE)
 
+Set (PROJECT_LIST_FILE ${CMAKE_SOURCE_DIR}/Mp3Db.cmake)
+
 Include (${CMAKE_SOURCE_DIR}/CMake/Config.cmake)
 Include (${CMAKE_MODULE_PATH}/Perl.cmake)
 Include (${CMAKE_SOURCE_DIR}/Mp3Db.cmake)
@@ -61,7 +63,6 @@ Else (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
   Set (CMAKE_IS_DEBUG_BUILD "false")
 EndIf (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 
-Configure_Executable_File (${PROJECT_GVIM_INIT_FILE} ${CMAKE_GVIM_INIT_FILE_OUT} @ONLY)
 Configure_Executable_File (${MP3DB_IN_FILE} ${MP3DB_OUT_FILE} @ONLY)
 
 Cmake_List_To_Perl_Args (AdditionalGvimSearchDirs -d ${IncludeDirectories})
