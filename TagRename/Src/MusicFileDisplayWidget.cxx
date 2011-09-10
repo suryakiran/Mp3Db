@@ -1,6 +1,7 @@
 #include <TagRename/MusicFileDisplayWidget.hxx>
 #include <TagRename/Mp3FileIterator.hxx>
 #include <TagRename/Mp3String.hxx>
+#include <TagRename/FileModelColumn.hxx>
 
 #include <QtCore/QTextCodec>
 #include <QtGui/QFileSystemModel>
@@ -20,7 +21,7 @@
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
 #include <xercesc/framework/StdOutFormatTarget.hpp>
 
-#include <TagRename/XString.hpp>
+#include <TagRename/XString.hxx>
 
 using namespace xercesc;
 using namespace boost::assign;
@@ -106,16 +107,22 @@ void MusicFileDisplayWidget::readDirectory (const QModelIndex& p_index)
           TagLib::ID3v2::FrameListMap::ConstIterator iter = frameList.find("TCOM");
           if (iter != frameList.end())
           {
-            item->setText (COLUMN_ID(Composer), _M(iter->second.front()->toString()));
+            setItemValue (item, COLUMN_ID(Composer), iter->second.front()->toString(), tags.composer);
+          }
+
+          iter = frameList.find("USLT");
+          if (iter != frameList.end())
+          {
+            tags.lyrics = iter->second.front()->toString();
           }
         }
       }
 
-      item->setData (COLUMN_ID(FileName),    ItemDataRole::Hidden, p.string().c_str());
-      item->setText (COLUMN_ID(FileName),    _M(p.filename()));
-      item->setText (COLUMN_ID(BitRate),     _M(audioProperties->bitrate()));
-      item->setText (COLUMN_ID(Duration),    _M(bt::to_simple_string(td)));
-      item->setData (COLUMN_ID(Duration),    ItemDataRole::Hidden, length); 
+      item->setData (COLUMN_ID(FileName), ItemDataRole::Hidden, p.string().c_str());
+      item->setText (COLUMN_ID(FileName), _M(p.filename()));
+      item->setText (COLUMN_ID(BitRate),  _M(audioProperties->bitrate()));
+      item->setText (COLUMN_ID(Duration), _M(bt::to_simple_string(td)));
+      item->setData (COLUMN_ID(Duration), ItemDataRole::Hidden, length); 
 
       setItemValue (item, COLUMN_ID(AlbumName),   tag->album(),  tags.album);
       setItemValue (item, COLUMN_ID(TrackName),   tag->title(),  tags.track);

@@ -1,10 +1,10 @@
-#include <TagRename/MusicFilePropertiesWidget.hpp>
+#include <TagRename/MusicFilePropertiesWidget.hxx>
 #include <QTreeWidget>
 #include <QPalette>
 #include <QStandardItemModel>
 #include <iostream>
-#include <TagRename/FileModelColumn.hpp>
-#include <TagRename/Mp3String.hpp>
+#include <TagRename/FileModelColumn.hxx>
+#include <TagRename/Mp3String.hxx>
 
 #include <taglib/mpegfile.h>
 #include <taglib/attachedpictureframe.h>
@@ -14,21 +14,6 @@ using namespace std;
 namespace {
   QPixmap createImage (const TagLib::ByteVector& bv)
   {
-    cout << bv.size() << endl;
-#if 0
-    qint32 pos = 0;
-    const char *data = bv.data();
-    pos++;
-    quint32 pictSize = *( quint32 *)(data + pos );
-    pos += 4;
-    QString mimeType = QString::fromUtf16( ( const ushort *)( data + pos ) );
-    pos += 2 * ( mimeType.length() + 1 );
-    QString description = QString::fromUtf16( ( const ushort *)( data + pos ) );
-    pos += 2 * ( description.length() + 1 );
-    QByteArray ba ( data + pos, pictSize );
-
-    return QImage::fromData (ba);
-#endif
     QPixmap pixmap = QPixmap::fromImage (QImage::fromData((uchar*)bv.data(), bv.size()));
     return pixmap.scaledToHeight (100, Qt::SmoothTransformation);
   }

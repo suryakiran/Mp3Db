@@ -1,10 +1,10 @@
-#ifndef XString_hpp_INCLUDED
-#define XString_hpp_INCLUDED
+#ifndef XString_hxx_INCLUDED
+#define XString_hxx_INCLUDED
 
 #include <xercesc/util/XMLChar.hpp>
 #include <string>
 
-#include <TagRename/Mp3String.hpp>
+#include <TagRename/Mp3String.hxx>
 
 class XString : public std::basic_string <XMLCh>
 {

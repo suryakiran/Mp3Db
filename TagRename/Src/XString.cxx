@@ -1,4 +1,4 @@
-#include <TagRename/XString.hpp>
+#include <TagRename/XString.hxx>
 #include <boost/scoped_array.hpp>
 
 #include <iostream>

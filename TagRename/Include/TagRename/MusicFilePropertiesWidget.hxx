@@ -1,5 +1,5 @@
-#ifndef MusicFilePropertiesWidget_hpp_INCLUDED
-#define MusicFilePropertiesWidget_hpp_INCLUDED
+#ifndef MusicFilePropertiesWidget_hxx_INCLUDED
+#define MusicFilePropertiesWidget_hxx_INCLUDED
 
 #include "ui_MusicFilePropertiesWidget.h"
 

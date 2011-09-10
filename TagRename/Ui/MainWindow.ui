@@ -279,7 +279,7 @@
   <customwidget>
    <class>MusicFilePropertiesWidget</class>
    <extends>QWidget</extends>
-   <header>TagRename/MusicFilePropertiesWidget.hpp</header>
+   <header>TagRename/MusicFilePropertiesWidget.hxx</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -1,5 +1,5 @@
-#ifndef FileModelColumn_hpp_INCLUDED
-#define FileModelColumn_hpp_INCLUDED
+#ifndef FileModelColumn_hxx_INCLUDED
+#define FileModelColumn_hxx_INCLUDED
 
 #include <string>
 

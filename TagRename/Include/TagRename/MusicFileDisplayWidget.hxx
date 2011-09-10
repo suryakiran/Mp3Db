@@ -6,7 +6,7 @@ namespace fs = boost::filesystem;
 
 #include <QtGui/QTreeWidget>
 #include <map>
-#include <TagRename/Mp3String.hpp>
+#include <TagRename/Mp3String.hxx>
 
 class MusicFileDisplayWidget : public QTreeWidget
 {
