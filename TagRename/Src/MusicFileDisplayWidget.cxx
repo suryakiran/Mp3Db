@@ -188,3 +188,44 @@ void MusicFileDisplayWidget::writeXML ()
   ser->release();
   delete myFormTarget;
 }
+
+void MusicFileDisplayWidget::saveCurrentAndGotoNextItem()
+{
+  if (!saveCurrentItem())
+  {
+    return ;
+  }
+
+  QTreeWidgetItem* curItem (currentItem());
+  QTreeWidgetItem* nextItem (itemBelow(curItem));
+  
+  if (nextItem)
+  {
+    curItem->setSelected (false);
+    nextItem->setSelected(true);
+    setCurrentItem (nextItem);
+  }
+}
+
+void MusicFileDisplayWidget::saveCurrentAndGotoPrevItem()
+{
+  if (!saveCurrentItem())
+  {
+    return;
+  }
+
+  QTreeWidgetItem* curItem (currentItem());
+  QTreeWidgetItem* prevItem (itemAbove(curItem));
+
+  if (prevItem)
+  {
+    curItem->setSelected (false);
+    prevItem->setSelected(true);
+    setCurrentItem (prevItem);
+  }
+}
+
+bool MusicFileDisplayWidget::saveCurrentItem()
+{
+  return true;
+}
