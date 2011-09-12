@@ -17,7 +17,7 @@ BEGIN {
 use Gdb;
 use App;
 
-my ($package, $exe, $world, $debugApplication, $debugInitFile, $debugBuild);
+my ($package, $exe, $world, $debugApplication, $debugInitFile, $debugBuild, $gitBranch);
 my $init_dir="@MODULE_INIT_DIR@";
 my @args;
 
@@ -27,13 +27,18 @@ my $result = GetOptions (
   'module|m=s' => \$package,
   'debug|d' => \$debugApplication,
   'init|i' => \$debugInitFile,
+  'branch|b=s' => \$gitBranch,
   'all' => \$world,
 );
+
+if (!$gitBranch) {
+  $gitBranch='@GIT_CURRENT_BRANCH_NAME@';
+}
 
 given ($package) {
   when ('tag-rename') {
     if ($debugBuild) {
-      $exe = "@INSTALL_PREFIX_Debug@/bin/tag-rename";
+      $exe = "@INSTALL_PREFIX_Debug@/$gitBranch/bin/tag-rename";
     } else {
       $exe = "@INSTALL_PREFIX_Release@/bin/tag-rename";
     }
