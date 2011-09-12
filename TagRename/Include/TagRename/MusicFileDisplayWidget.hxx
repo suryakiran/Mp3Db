@@ -15,7 +15,7 @@ class MusicFileDisplayWidget : public QTreeWidget
   private:
     struct Mp3Tags
     {
-      Mp3String track, composer, id;
+      Mp3String track, composer, id, year;
       Mp3String album, lyrics, artist, genre;
     };
 

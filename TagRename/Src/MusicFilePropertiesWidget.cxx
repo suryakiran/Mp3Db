@@ -48,6 +48,22 @@ MusicFilePropertiesWidget::updateDetailsOfSelectedFile (const QModelIndex& p_cur
   idx = p_current.sibling (row, COLUMN_ID(ArtistNames));
   m_artist->setText (idx.data().toString());
 
+  bool ok(false);
+  idx = p_current.sibling (row, COLUMN_ID(Year));
+  int year = idx.data().toString().toInt(&ok);
+  if (ok) 
+  {
+    m_year->setValue(year);
+  }
+
+  ok = false;
+  idx = p_current.sibling (row, COLUMN_ID(TrackNumber));
+  int id = idx.data().toString().toInt(&ok);
+  if (ok) 
+  {
+    m_trackId->setValue(id);
+  }
+
   TagLib::MPEG::File mp3File (m_fileName->text().toStdString().c_str());
   TagLib::ID3v2::Tag* tag = mp3File.ID3v2Tag();
   if (tag)
