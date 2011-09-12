@@ -49,7 +49,9 @@ my %appArgs;
 
 if ($debugBuild) {
   my $prefsFile = catfile ("@CMAKE_SOURCE_DIR@", 'Share', 'Data', 'Preferences.css');
+  my $genreFile = catfile ("@CMAKE_SOURCE_DIR@", 'Share', 'Data', 'Genre.xml');
   $appArgs{'style-sheet'} = $prefsFile if -e $prefsFile; 
+  $appArgs{'genre-file'} = $genreFile if -e $genreFile; 
 }
 
 if ($init_dir) {

@@ -18,6 +18,7 @@ namespace po = boost::program_options;
 
 namespace {
   string styleSheetFile;
+  string genreFile;
 
   void parseArgs (int argc, char** argv)
   {
@@ -27,6 +28,7 @@ namespace {
       ("help", "Display this message")
       ("init-dir", po::value<std::string>(), "Initial directory to start with")
       ("style-sheet", po::value<std::string>(), "Style Sheet File")
+      ("genre-file", po::value<std::string>(), "Genre Listing File")
       ;
 
     po::variables_map vmap;
@@ -37,28 +39,42 @@ namespace {
     {
       styleSheetFile = vmap["style-sheet"].as<string>();
     }
+
+    if (vmap.count("genre-file"))
+    {
+      genreFile = vmap["genre-file"].as<string>();
+    }
+  }
+
+  void storePredefinedGenres()
+  {
+    if (genreFile.empty())
+    {
+      return;
+    }
   }
 
   void setApplicationStyleSheet()
   {
-    if (!styleSheetFile.empty())
+    if (styleSheetFile.empty())
     {
-      fstream fin;
-      fin.open (styleSheetFile.c_str(), ios_base::in);
-
-      vector<string> lines;
-      string l;
-
-      while (getline (fin, l, '\n'))
-      {
-        lines.push_back (l);
-      }
-
-      fin.close();
-      qApp->setStyleSheet (boost::algorithm::join(lines, "\n").c_str());
+      return;
     }
-  }
 
+    fstream fin;
+    fin.open (styleSheetFile.c_str(), ios_base::in);
+
+    vector<string> lines;
+    string l;
+
+    while (getline (fin, l, '\n'))
+    {
+      lines.push_back (l);
+    }
+
+    fin.close();
+    qApp->setStyleSheet (boost::algorithm::join(lines, "\n").c_str());
+  }
 }
 
 int main (int argc, char** argv) 
@@ -68,6 +84,7 @@ int main (int argc, char** argv)
 
   QApplication app (argc, argv);
   setApplicationStyleSheet();
+  storePredefinedGenres();
 
   MainWindow *mainw = new MainWindow;
   mainw->show();

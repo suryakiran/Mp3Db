@@ -64,6 +64,17 @@ MusicFilePropertiesWidget::updateDetailsOfSelectedFile (const QModelIndex& p_cur
     m_trackId->setValue(id);
   }
 
+  idx = p_current.sibling (row, COLUMN_ID(Genre));
+  QString genre = idx.data().toString();
+  int comboIdx (m_genre->findText(genre));
+  if (comboIdx != -1)
+  {
+    m_genre->setCurrentIndex (comboIdx);
+  }
+  else
+  {
+  }
+
   TagLib::MPEG::File mp3File (m_fileName->text().toStdString().c_str());
   TagLib::ID3v2::Tag* tag = mp3File.ID3v2Tag();
   if (tag)
