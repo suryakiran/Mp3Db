@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+  <Genres>
+    <Genre>Indian Classical</Genre>
+    <Genre>Carnatic Classical</Genre>
+    <Genre>Western Classical</Genre>
+    <Genre>Light Music</Genre>
+    <Genre>Fusion Music</Genre>
+    <Genre>Fusion</Genre>
+    <Genre>Telugu Songs</Genre>
+    <Genre>Hindi Songs</Genre>
+    <Genre>New Age</Genre>
+    <Genre>Easy Listening</Genre>
+    <Genre>Jazz</Genre>
+    <Genre>Guitar</Genre>
+    <Genre>Celtic</Genre>
+  </Genres>
+</Config>

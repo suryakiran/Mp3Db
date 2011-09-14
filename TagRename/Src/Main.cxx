@@ -14,11 +14,15 @@ using namespace std;
 #include <xercesc/util/PlatformUtils.hpp>
 using namespace xercesc;
 
+#include <TagRename/Zorba.hxx>
+#include <TagRename/Mp3Config.hxx>
+
 namespace po = boost::program_options;
 
 namespace {
   string styleSheetFile;
-  string genreFile;
+  string confFile;
+  string dataDir;
 
   void parseArgs (int argc, char** argv)
   {
@@ -28,7 +32,8 @@ namespace {
       ("help", "Display this message")
       ("init-dir", po::value<std::string>(), "Initial directory to start with")
       ("style-sheet", po::value<std::string>(), "Style Sheet File")
-      ("genre-file", po::value<std::string>(), "Genre Listing File")
+      ("conf-file", po::value<std::string>(), "Mp3 Configuration File")
+      ("data-dir", po::value<std::string>(), "Mp3 Data Directory")
       ;
 
     po::variables_map vmap;
@@ -40,18 +45,26 @@ namespace {
       styleSheetFile = vmap["style-sheet"].as<string>();
     }
 
-    if (vmap.count("genre-file"))
+    if (vmap.count("conf-file"))
     {
-      genreFile = vmap["genre-file"].as<string>();
+      confFile = vmap["conf-file"].as<string>();
+    }
+
+    if (vmap.count("data-dir"))
+    {
+      dataDir = vmap["data-dir"].as<string>();
     }
   }
 
-  void storePredefinedGenres()
+  void readMp3Config()
   {
-    if (genreFile.empty())
+    if (confFile.empty())
     {
       return;
     }
+
+    Mp3Config* conf(Mp3Config::instance());
+    conf->readFile (confFile);
   }
 
   void setApplicationStyleSheet()
@@ -80,15 +93,19 @@ namespace {
 int main (int argc, char** argv) 
 {
   XMLPlatformUtils::Initialize();
+  xml::Zorba::init();
+
   parseArgs (argc, argv);
 
   QApplication app (argc, argv);
   setApplicationStyleSheet();
-  storePredefinedGenres();
+  readMp3Config();
 
   MainWindow *mainw = new MainWindow;
   mainw->show();
 
   app.exec();
+
+  xml::Zorba::terminate();
   XMLPlatformUtils::Terminate();
 }

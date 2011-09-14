@@ -5,6 +5,10 @@
 #include <iostream>
 #include <TagRename/FileModelColumn.hxx>
 #include <TagRename/Mp3String.hxx>
+#include <TagRename/Mp3Config.hxx>
+
+#include <boost/foreach.hpp>
+#include <iostream>
 
 #include <taglib/mpegfile.h>
 #include <taglib/attachedpictureframe.h>
@@ -23,6 +27,11 @@ MusicFilePropertiesWidget::MusicFilePropertiesWidget (QWidget* p_parent)
   : QWidget (p_parent)
 {
   setupUi (this);
+
+  BOOST_FOREACH (const string& genre, Mp3Config::instance()->getGenres())
+  {
+    m_genre->addItem (genre.c_str());
+  }
 }
 
 void
@@ -73,6 +82,8 @@ MusicFilePropertiesWidget::updateDetailsOfSelectedFile (const QModelIndex& p_cur
   }
   else
   {
+    //set<string>& genres = Mp3Config::instance()->getGenres();
+    //genres.insert (genre);
   }
 
   TagLib::MPEG::File mp3File (m_fileName->text().toStdString().c_str());

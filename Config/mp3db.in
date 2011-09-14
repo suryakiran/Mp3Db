@@ -49,9 +49,10 @@ my %appArgs;
 
 if ($debugBuild) {
   my $prefsFile = catfile ("@CMAKE_SOURCE_DIR@", 'Share', 'Data', 'Preferences.css');
-  my $genreFile = catfile ("@CMAKE_SOURCE_DIR@", 'Share', 'Data', 'Genre.xml');
+  my $confFile = catfile ("@CMAKE_SOURCE_DIR@", 'Share', 'Data', 'Mp3Config.xml');
   $appArgs{'style-sheet'} = $prefsFile if -e $prefsFile; 
-  $appArgs{'genre-file'} = $genreFile if -e $genreFile; 
+  $appArgs{'conf-file'} = $confFile if -e $confFile; 
+  $appArgs{'data-dir'} = "@CMAKE_SOURCE_DIR@/Share/Data";
 }
 
 if ($init_dir) {
