@@ -6,6 +6,8 @@
 #include <TagRename/FileModelColumn.hxx>
 #include <TagRename/Mp3String.hxx>
 #include <TagRename/Mp3Config.hxx>
+#include <TagRename/ReturnPress.hxx>
+#include <TagRename/QStringPrint.hxx>
 
 #include <boost/foreach.hpp>
 #include <iostream>
@@ -14,6 +16,8 @@
 #include <taglib/attachedpictureframe.h>
 #include <taglib/id3v2tag.h>
 using namespace std;
+
+#include <Signals/BoostSlots.hxx>
 
 namespace {
   QPixmap createImage (const TagLib::ByteVector& bv)
@@ -27,8 +31,40 @@ MusicFilePropertiesWidget::MusicFilePropertiesWidget (QWidget* p_parent)
   : QWidget (p_parent)
 {
   setupUi (this);
+  ReturnPress *rp = new ReturnPress (this);
+  m_genre->installEventFilter (rp);
 
-  BOOST_FOREACH (const string& genre, Mp3Config::instance()->getGenres())
+  m_mp3Config = Mp3Config::instance();
+  updateGenresList();
+
+  m_mp3Config->signal<Mp3Config::GenresModified>().connect(MEM_FUN(MusicFilePropertiesWidget, updateGenresList, 0));
+  connect (m_genre, SIGNAL(editTextChanged(const QString&)), this, SLOT(updateGenresList(const QString&)));
+  connect (rp, SIGNAL(returnPressed()), this, SLOT (genreNameEdited()));
+}
+
+void 
+MusicFilePropertiesWidget::genreNameEdited()
+{
+  QString curText (m_genre->currentText());
+  int idx (m_genre->findText (curText));
+  if (idx == -1)
+  {
+    m_mp3Config->addGenre (curText.toStdString());
+    idx = m_genre->findText (curText);
+    m_genre->setCurrentIndex (idx);
+  }
+}
+
+void
+MusicFilePropertiesWidget::updateGenresList(const QString& p_genre)
+{
+}
+
+void 
+MusicFilePropertiesWidget::updateGenresList ()
+{
+  m_genre->clear();
+  BOOST_FOREACH (const string& genre, m_mp3Config->getGenres())
   {
     m_genre->addItem (genre.c_str());
   }
@@ -82,8 +118,9 @@ MusicFilePropertiesWidget::updateDetailsOfSelectedFile (const QModelIndex& p_cur
   }
   else
   {
-    //set<string>& genres = Mp3Config::instance()->getGenres();
-    //genres.insert (genre);
+    m_mp3Config->addGenre (genre.toStdString());
+    comboIdx = m_genre->findText(genre);
+    m_genre->setCurrentIndex (comboIdx);
   }
 
   TagLib::MPEG::File mp3File (m_fileName->text().toStdString().c_str());

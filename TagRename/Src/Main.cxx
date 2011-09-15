@@ -64,7 +64,8 @@ namespace {
     }
 
     Mp3Config* conf(Mp3Config::instance());
-    conf->readFile (confFile);
+    fs::path cf (confFile);
+    conf->readConfig (cf.parent_path()/"xq/ConfigQueries.xml");
   }
 
   void setApplicationStyleSheet()

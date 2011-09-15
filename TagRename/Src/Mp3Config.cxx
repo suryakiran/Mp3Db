@@ -6,6 +6,10 @@
 #include <boost/format.hpp>
 using boost::format;
 
+#include <boost/spirit/include/qi.hpp>
+#include <boost/fusion/adapted/std_pair.hpp>
+using namespace boost::spirit;
+
 #include <zorba/zorba.h>
 #include <zorba/store_manager.h>
 #include <zorba/zorba_exception.h>
@@ -16,6 +20,7 @@ using namespace zorba;
 using namespace std;
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/algorithm/string/split.hpp>
@@ -30,6 +35,7 @@ Mp3Config* Mp3Config::m_instance = (Mp3Config*) 0;
 
 Mp3Config::Mp3Config()
 {
+  fusion::for_each(m_signals, initialize());
 }
 
 Mp3Config*
@@ -49,16 +55,17 @@ Mp3Config::getGenres() const
   return m_genres;
 }
 
-void 
-Mp3Config::readFile(const string& p_fileName)
+void Mp3Config::writeGenres()
 {
-  m_fileName = p_fileName;
-  m_xqDir = m_fileName.parent_path()/"xq";
-  const fs::path& queryConfigFile = (m_xqDir/"ConfigQueries.xml");
+}
 
+void Mp3Config::readConfig (const fs::path& p_fileName)
+{
+  m_fileName = p_fileName.parent_path().parent_path()/"Mp3Config.xml";
+  m_xqDir = p_fileName.parent_path();
   Zorba* z = xml::Zorba::instance();
 
-  if (fs::exists (queryConfigFile))
+  if (fs::exists (p_fileName))
   {
     ostringstream oss;
     istringstream iss;
@@ -66,11 +73,11 @@ Mp3Config::readFile(const string& p_fileName)
     oss 
       << "declare variable $file external;"
       << "for $x in doc($file)/Queries/Query "
-      << "return (\"[\", data($x/@name), \"-\", data($x),\"]\n\")" << endl;
+      << "return (\"[\", data($x/@name), \"=\", data($x), \"]\n\")" << endl;
 
     XQuery_t query = z->compileQuery (oss.str());
     DynamicContext* ctx = query->getDynamicContext();
-    ctx->setVariable("file", z->getItemFactory()->createString(queryConfigFile.string()));
+    ctx->setVariable("file", z->getItemFactory()->createString(p_fileName.string()));
     Zorba_SerializerOptions_t* options = new Zorba_SerializerOptions_t;
     options->ser_method = ZORBA_SERIALIZATION_METHOD_TEXT;
 
@@ -81,16 +88,30 @@ Mp3Config::readFile(const string& p_fileName)
     while (getline (iss, l, '\n'))
     {
       vector<string> vs;
+      string key, value;
       str::split (vs, l, boost::is_any_of("[-]"), boost::token_compress_on);
-      BOOST_FOREACH (string& s, vs)
-        str::trim(s);
-      m_queryFileMap[vs[0]] = vs[1];
+      string::iterator b (l.begin());
+      const bool result = qi::phrase_parse (b, l.end(),
+          *(qi::lit("[")) >> *(qi::char_-'=') >> '=' >> *(qi::char_-']') >> ']',
+            ascii::space, key, value);
+      m_queryFileMap[key] = m_xqDir/value;
     }
   }
 
+  readGenres();
+}
 
-  format fmt ("for $x in doc('%1%')/Config/Genres/Genre return data($x)");
-  XQuery_t query = z->compileQuery ((fmt % p_fileName).str());
+void 
+Mp3Config::readGenres()
+{
+  const fs::path& queryFile = m_queryFileMap["ReadGenres"];
+  fs::fstream fin;
+  fin.open (queryFile, ios_base::in);
+
+  Zorba* z = xml::Zorba::instance();
+  XQuery_t query = z->compileQuery (fin);
+  DynamicContext* ctx = query->getDynamicContext();
+  ctx->setVariable("context", z->getItemFactory()->createString(m_fileName.string()));
   Iterator_t iter (query->iterator());
   iter->open();
   Item item;
@@ -98,5 +119,44 @@ Mp3Config::readFile(const string& p_fileName)
   {
     m_genres.insert (item.getStringValue().str());
   }
+
   iter->close();
+  fin.close();
+}
+
+void Mp3Config::addGenre (const string& p_genre)
+{
+  const fs::path& queryFile = m_queryFileMap ["WriteGenres"];
+  fs::fstream fin;
+  fin.open (queryFile, ios_base::in);
+  bool success (true);
+
+  try
+  {
+    Zorba* z = xml::Zorba::instance();
+    XQuery_t query = z->compileQuery (fin);
+    DynamicContext* ctx = query->getDynamicContext();
+    ctx->setVariable("context", z->getItemFactory()->createString(m_fileName.string()));
+    ctx->setVariable("genreName", z->getItemFactory()->createString(p_genre));
+
+    Iterator_t iter (query->iterator());
+    iter->open();
+    Item item;
+    while (iter->next(item));
+    iter->close();
+
+    query->close();
+  }
+  catch (ZorbaException& exc)
+  {
+    success = false;
+  }
+
+  fin.close();
+
+  if(success)
+  {
+    m_genres.insert (p_genre);
+    emitSignal<GenresModified>();
+  }
 }

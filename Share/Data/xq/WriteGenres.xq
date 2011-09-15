@@ -12,4 +12,4 @@ declare %private variable $serParamXml :=
   </output:serialization-parameters>;
 
 insert node <Genre>{$genreName}</Genre> into doc($context)/Config/Genres;
-file:write ($context, doc($context), $serParamXml);
+file:write ($context, doc($context), $serParamXml)

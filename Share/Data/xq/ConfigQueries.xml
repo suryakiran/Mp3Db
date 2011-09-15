@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <Queries>
-  <Query name="Read Genres">ReadGenres.xq</Query>
-  <Query name="Write Genres">WriteGenres.xq</Query>
+  <Query name="ReadGenres">ReadGenres.xq</Query>
+  <Query name="WriteGenres">WriteGenres.xq</Query>
 </Queries>
