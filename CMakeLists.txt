@@ -32,19 +32,13 @@ Include (${QT_USE_FILE})
 Include (${CMAKE_MODULE_PATH}/Taglib.cmake)
 Include (${CMAKE_MODULE_PATH}/Zlib.cmake)
 
-Mp_Include_Dirs (${Boost_INCLUDE_DIR})
+Mp3Db_Include_Directories (${Boost_INCLUDE_DIR})
+Mp3Db_Include_Directories (${CMAKE_SOURCE_DIR}/Global/Include)
 
 Add_Subdirectory (TagRename)
 #Add_Subdirectory (Samples)
 
 Get_Property (IncludeDirectories GLOBAL PROPERTY IncludeDirectories)
-
-ForEach (id ${IncludeDirectories})
-  Set (
-    ADDITIONAL_GVIM_SEARCH_DIRS 
-    "${ADDITIONAL_GVIM_SEARCH_DIRS}\nset path+=${id}"
-    )
-EndForEach (id)
 
 Set (AlternateDirs)
 

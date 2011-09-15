@@ -13,11 +13,13 @@ using boost::format;
 using namespace zorba;
 
 #include <iostream>
-#include <string>
 using namespace std;
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/foreach.hpp>
 namespace str = boost::algorithm;
 
 #include <xercesc/parsers/XercesDOMParser.hpp>
@@ -41,7 +43,7 @@ Mp3Config::instance()
   return m_instance;
 }
 
-const set<string>&
+const StringSet&
 Mp3Config::getGenres() const
 {
   return m_genres;
@@ -72,14 +74,17 @@ Mp3Config::readFile(const string& p_fileName)
     Zorba_SerializerOptions_t* options = new Zorba_SerializerOptions_t;
     options->ser_method = ZORBA_SERIALIZATION_METHOD_TEXT;
 
-    oss.clear();
+    oss.str("");
     query->execute(oss, options);
     iss.str(oss.str());
     string l;
     while (getline (iss, l, '\n'))
     {
-      str::trim(l);
-      cout << l << endl;
+      vector<string> vs;
+      str::split (vs, l, boost::is_any_of("[-]"), boost::token_compress_on);
+      BOOST_FOREACH (string& s, vs)
+        str::trim(s);
+      m_queryFileMap[vs[0]] = vs[1];
     }
   }
 

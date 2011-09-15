@@ -3,9 +3,9 @@
 
 #include <boost/filesystem/path.hpp>
 namespace fs = boost::filesystem;
+#include <Stl/Map.hxx>
 
 #include <QtGui/QTreeWidget>
-#include <map>
 #include <TagRename/Mp3String.hxx>
 
 class MusicFileDisplayWidget : public QTreeWidget
@@ -20,13 +20,8 @@ class MusicFileDisplayWidget : public QTreeWidget
     };
 
   private:
-    typedef std::map<int, QString> HeaderNameMap;
-    typedef HeaderNameMap::value_type HeaderNameMapValue;
-
-    typedef std::map <fs::path, Mp3Tags> Mp3TagMap;
-    typedef Mp3TagMap::value_type Mp3TagMapValue;
-    typedef Mp3TagMap::iterator Mp3TagMapIter;
-    typedef Mp3TagMap::const_iterator Mp3TagMapIterC;
+    DEFINE_MAP(int, QString, HeaderNameMap);
+    DEFINE_MAP(fs::path, Mp3Tags, Mp3TagMap);
 
   private:
     HeaderNameMap m_headerNameMap;
