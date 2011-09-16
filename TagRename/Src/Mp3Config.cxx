@@ -72,8 +72,9 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
 
     oss 
       << "declare variable $file external;"
-      << "for $x in doc($file)/Queries/Query "
-      << "return (\"[\", data($x/@name), \"=\", data($x), \"]\n\")" << endl;
+      << "for $x in doc($file)/Queries/Query\n"
+      << "return concat('[', data($x/@name), '=', data($x), ']')" << endl
+      ;
 
     XQuery_t query = z->compileQuery (oss.str());
     DynamicContext* ctx = query->getDynamicContext();
@@ -87,14 +88,15 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
     string l;
     while (getline (iss, l, '\n'))
     {
-      vector<string> vs;
-      string key, value;
-      str::split (vs, l, boost::is_any_of("[-]"), boost::token_compress_on);
-      string::iterator b (l.begin());
-      const bool result = qi::phrase_parse (b, l.end(),
-          *(qi::lit("[")) >> *(qi::char_-'=') >> '=' >> *(qi::char_-']') >> ']',
-            ascii::space, key, value);
-      m_queryFileMap[key] = m_xqDir/value;
+//      cout << l << endl;
+      //vector<string> vs;
+      //string key, value;
+      //str::split (vs, l, boost::is_any_of("[-]"), boost::token_compress_on);
+      //string::iterator b (l.begin());
+      //const bool result = qi::phrase_parse (b, l.end(),
+      //    *(qi::lit("[")) >> *(qi::char_-'=') >> '=' >> *(qi::char_-']') >> ']',
+      //      ascii::space, key, value);
+      //m_queryFileMap[key] = m_xqDir/value;
     }
   }
 
@@ -105,23 +107,32 @@ void
 Mp3Config::readGenres()
 {
   const fs::path& queryFile = m_queryFileMap["ReadGenres"];
+
   fs::fstream fin;
   fin.open (queryFile, ios_base::in);
 
-  Zorba* z = xml::Zorba::instance();
-  XQuery_t query = z->compileQuery (fin);
-  DynamicContext* ctx = query->getDynamicContext();
-  ctx->setVariable("context", z->getItemFactory()->createString(m_fileName.string()));
-  Iterator_t iter (query->iterator());
-  iter->open();
-  Item item;
-  while (iter->next(item))
+  try 
   {
-    m_genres.insert (item.getStringValue().str());
-  }
+    Zorba* z = xml::Zorba::instance();
+    cout << "HE HE HE" << endl;
+    XQuery_t query = z->compileQuery (fin);
+    DynamicContext* ctx = query->getDynamicContext();
+    ctx->setVariable("context", z->getItemFactory()->createString(m_fileName.string()));
+    Iterator_t iter (query->iterator());
+    iter->open();
+    Item item;
+    while (iter->next(item))
+    {
+      m_genres.insert (item.getStringValue().str());
+    }
 
-  iter->close();
-  fin.close();
+    iter->close();
+    fin.close();
+  }
+  catch (ZorbaException& exc)
+  {
+    cout << exc.what() << endl;
+  }
 }
 
 void Mp3Config::addGenre (const string& p_genre)
