@@ -73,7 +73,7 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
     oss 
       << "declare variable $file external;"
       << "for $x in doc($file)/Queries/Query\n"
-      << "return concat('[', data($x/@name), '=', data($x), ']')" << endl
+      << "return concat('[\"', data($x/@name), '\"=', data($x), ']\n')" << endl
       ;
 
     XQuery_t query = z->compileQuery (oss.str());
@@ -88,15 +88,14 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
     string l;
     while (getline (iss, l, '\n'))
     {
-//      cout << l << endl;
-      //vector<string> vs;
-      //string key, value;
-      //str::split (vs, l, boost::is_any_of("[-]"), boost::token_compress_on);
-      //string::iterator b (l.begin());
-      //const bool result = qi::phrase_parse (b, l.end(),
-      //    *(qi::lit("[")) >> *(qi::char_-'=') >> '=' >> *(qi::char_-']') >> ']',
-      //      ascii::space, key, value);
-      //m_queryFileMap[key] = m_xqDir/value;
+      string key, value;
+      string::iterator b (l.begin());
+      const bool result = qi::phrase_parse (b, l.end(),
+          qi::lit("[") >> '"' >> qi::lexeme[*(qi::char_ - '"')] >> '"' >> '=' >> *(qi::char_-']') >> ']',
+          ascii::space, key, value);
+      if (result) {
+        m_queryFileMap[key] = m_xqDir/value;
+      }
     }
   }
 
@@ -106,7 +105,7 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
 void 
 Mp3Config::readGenres()
 {
-  const fs::path& queryFile = m_queryFileMap["ReadGenres"];
+  const fs::path& queryFile = m_queryFileMap["Read Genres"];
 
   fs::fstream fin;
   fin.open (queryFile, ios_base::in);
@@ -114,7 +113,6 @@ Mp3Config::readGenres()
   try 
   {
     Zorba* z = xml::Zorba::instance();
-    cout << "HE HE HE" << endl;
     XQuery_t query = z->compileQuery (fin);
     DynamicContext* ctx = query->getDynamicContext();
     ctx->setVariable("context", z->getItemFactory()->createString(m_fileName.string()));
@@ -137,7 +135,7 @@ Mp3Config::readGenres()
 
 void Mp3Config::addGenre (const string& p_genre)
 {
-  const fs::path& queryFile = m_queryFileMap ["WriteGenres"];
+  const fs::path& queryFile = m_queryFileMap ["Write Genres"];
   fs::fstream fin;
   fin.open (queryFile, ios_base::in);
   bool success (true);
