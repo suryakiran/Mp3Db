@@ -107,34 +107,13 @@ Mp3Config::readGenres()
 void Mp3Config::addGenre (const string& p_genre)
 {
   const fs::path& queryFile = m_queryFileMap ["Write Genres"];
-  fs::fstream fin;
-  fin.open (queryFile, ios_base::in);
-  bool success (true);
 
-  try
-  {
-    zorba::Zorba* z = xml::Zorba::instance();
-    zorba::XQuery_t query = z->compileQuery (fin);
-    zorba::DynamicContext* ctx = query->getDynamicContext();
-    ctx->setVariable("context", z->getItemFactory()->createString(m_fileName.string()));
-    ctx->setVariable("genreName", z->getItemFactory()->createString(p_genre));
+  XQuery query;
+  query.compileFile (queryFile);
+  query.setVariable("context", m_fileName.string());
+  query.setVariable("genreName", p_genre);
 
-    zorba::Iterator_t iter (query->iterator());
-    iter->open();
-    zorba::Item item;
-    while (iter->next(item));
-    iter->close();
-
-    query->close();
-  }
-  catch (zorba::ZorbaException& exc)
-  {
-    success = false;
-  }
-
-  fin.close();
-
-  if(success)
+  if (query.execute())
   {
     m_genres.insert (p_genre);
     emitSignal<GenresModified>();

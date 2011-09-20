@@ -22,6 +22,11 @@ XQuery::XQuery()
   m_serializerOptions->ser_method = ZORBA_SERIALIZATION_METHOD_TEXT;
 }
 
+XQuery::~XQuery()
+{
+  m_query->close();
+}
+
 void
 XQuery::setResultExtractor (XQueryResultExtractor* p_extractor)
 {

@@ -13,6 +13,7 @@ class XQuery
 {
   public:
     XQuery ();
+    ~XQuery ();
 
     void compileString (const std::string& p_string);
     void compileFile (const fs::path& p_file);
