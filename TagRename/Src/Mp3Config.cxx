@@ -78,12 +78,14 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
 
     XQueryMapResultExtractor<string, string> mapResultExtractor;
     XQuery query;
-    query.compileString(oss.str());
-    query.setVariable ("file", p_fileName.string());
-    query.execute (&mapResultExtractor);
-    BOOST_FOREACH (const StringMapValue& smv, mapResultExtractor.getResult())
+    if (query.compileString(oss.str()))
     {
-      m_queryFileMap[smv.first] = m_xqDir/smv.second;
+      query.setVariable ("file", p_fileName.string());
+      query.execute (&mapResultExtractor);
+      BOOST_FOREACH (const StringMapValue& smv, mapResultExtractor.getResult())
+      {
+        m_queryFileMap[smv.first] = m_xqDir/smv.second;
+      }
     }
   }
 
@@ -97,11 +99,13 @@ Mp3Config::readGenres()
 
   XQueryListResultExtractor<string> listResultExtractor;
   XQuery query;
-  query.compileFile (queryFile);
-  query.setVariable("context", m_fileName.string());
-  query.execute(&listResultExtractor);
-  const stl::StringList& results (listResultExtractor.getResult());
-  std::copy (results.begin(), results.end(), std::inserter(m_genres, m_genres.begin()));
+  if (query.compileFile (queryFile))
+  {
+    query.setVariable("context", m_fileName.string());
+    query.execute(&listResultExtractor);
+    const stl::StringList& results (listResultExtractor.getResult());
+    std::copy (results.begin(), results.end(), std::inserter(m_genres, m_genres.begin()));
+  }
 }
 
 void Mp3Config::addGenre (const string& p_genre)
@@ -109,13 +113,15 @@ void Mp3Config::addGenre (const string& p_genre)
   const fs::path& queryFile = m_queryFileMap ["Write Genres"];
 
   XQuery query;
-  query.compileFile (queryFile);
-  query.setVariable("context", m_fileName.string());
-  query.setVariable("genreName", p_genre);
-
-  if (query.execute())
+  if (query.compileFile (queryFile))
   {
-    m_genres.insert (p_genre);
-    emitSignal<GenresModified>();
+    query.setVariable("context", m_fileName.string());
+    query.setVariable("genreName", p_genre);
+
+    if (query.execute())
+    {
+      m_genres.insert (p_genre);
+      emitSignal<GenresModified>();
+    }
   }
 }

@@ -4,7 +4,7 @@
 #include <zorba/zorba.h>
 #include <zorba/options.h>
 #include <boost/filesystem/path.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 namespace fs = boost::filesystem;
 
 class XQueryResultExtractor;
@@ -15,8 +15,8 @@ class XQuery
     XQuery ();
     ~XQuery ();
 
-    void compileString (const std::string& p_string);
-    void compileFile (const fs::path& p_file);
+    bool compileString (const std::string& p_string);
+    bool compileFile (const fs::path& p_file);
 
     void setResultExtractor(XQueryResultExtractor* p_extractor);
 
@@ -29,9 +29,10 @@ class XQuery
   private:
     zorba::XQuery_t m_query;
     Zorba_CompilerHints_t m_compilerHints;
-    boost::shared_ptr<Zorba_SerializerOptions_t> m_serializerOptions;
+    boost::scoped_ptr<Zorba_SerializerOptions_t> m_serializerOptions;
     zorba::DynamicContext* m_dynamicContext;
     std::ostringstream m_resultStream;
+    std::string m_compileError;
     XQueryResultExtractor* m_resultExtractor;
 };
 

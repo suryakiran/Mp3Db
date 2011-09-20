@@ -38,13 +38,23 @@ XQuery::setResultExtractor (XQueryResultExtractor* p_extractor)
   }
 }
 
-void 
+bool 
 XQuery::compileString (const std::string& p_string)
 {
-  m_query->compile (p_string, m_compilerHints);
+  try
+  {
+    m_query->compile (p_string, m_compilerHints);
+  }
+  catch (zorba::ZorbaException& exc)
+  {
+    m_compileError = exc.what();
+    return false;
+  }
+
+  return true;
 }
 
-void
+bool
 XQuery::compileFile (const fs::path& p_file)
 {
   if (fs::exists (p_file))
@@ -52,10 +62,21 @@ XQuery::compileFile (const fs::path& p_file)
     fs::fstream fin;
     fin.open (p_file, std::ios_base::in);
 
-    m_query->compile (fin, m_compilerHints);
+    try 
+    {
+      m_query->compile (fin, m_compilerHints);
+    }
+    catch (zorba::ZorbaException& exc)
+    {
+      m_compileError = exc.what();
+      return false;
+    }
 
     fin.close();
+    return true;
   }
+
+  return false;
 }
 
 bool
