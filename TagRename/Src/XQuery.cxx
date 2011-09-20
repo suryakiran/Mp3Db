@@ -1,35 +1,46 @@
 #include <TagRename/XQuery.hxx>
 #include <TagRename/Zorba.hxx>
+#include <TagRename/XQueryResultExtractor.hxx>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 #include <zorba/iterator.h>
 
+#include <ostream>
+using namespace std;
+
 XQuery::XQuery()
+  : m_dynamicContext(0),
+    m_resultExtractor(0)
 {
   zorba::Zorba* z = xml::Zorba::instance();
   m_query = z->createQuery();
-  m_dynamicContext = m_query->getDynamicContext();
   m_resultStream.str("");
   m_compilerHints.opt_level = ZORBA_OPT_LEVEL_O0;
+  m_serializerOptions.reset(new Zorba_SerializerOptions_t);
+  m_serializerOptions->ser_method = ZORBA_SERIALIZATION_METHOD_TEXT;
 }
 
-XQuery& 
-XQuery::fromString (const std::string& p_string)
+void
+XQuery::setResultExtractor (XQueryResultExtractor* p_extractor)
+{
+  m_resultExtractor = p_extractor;
+
+  if (m_resultExtractor->extractResultFromXml())
+  {
+    m_serializerOptions->ser_method = ZORBA_SERIALIZATION_METHOD_XML;
+  }
+}
+
+void 
+XQuery::compileString (const std::string& p_string)
 {
   m_query->compile (p_string, m_compilerHints);
-  return *this;
 }
 
-XQuery&
-XQuery::fromFile (const std::string& p_file)
-{
-  return fromFile (fs::path(p_file));
-}
-
-XQuery&
-XQuery::fromFile (const fs::path& p_file)
+void
+XQuery::compileFile (const fs::path& p_file)
 {
   if (fs::exists (p_file))
   {
@@ -40,22 +51,43 @@ XQuery::fromFile (const fs::path& p_file)
 
     fin.close();
   }
-  return *this;
 }
 
 bool
-XQuery::execute ()
+XQuery::execute (XQueryResultExtractor* p_extractor)
 {
+  if (p_extractor) {
+    setResultExtractor (p_extractor);
+  }
+
   if (m_query->isUpdating())
   {
     m_query->execute();
   }
   else
   {
-    zorba::Iterator_t iter (m_query->iterator());
-    zorba::Item item;
-    while (iter->next(item));
+    ostringstream oss;
+    m_query->execute (oss, m_serializerOptions.get());
+    if (m_resultExtractor) {
+      m_resultExtractor->extractResult (oss.str());
+    }
   }
 
   return true;
+}
+
+zorba::Zorba*
+XQuery::getZorbaInstance()
+{
+  return xml::Zorba::instance();
+}
+
+void
+XQuery::setVariable (const string& p_varName, const string& p_value)
+{
+  if(!m_dynamicContext) {
+    m_dynamicContext = m_query->getDynamicContext();
+  }
+  m_dynamicContext->setVariable (p_varName, 
+      getZorbaInstance()->getItemFactory()->createString(p_value));
 }

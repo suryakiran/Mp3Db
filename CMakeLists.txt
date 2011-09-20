@@ -38,6 +38,8 @@ Mp3Db_Include_Directories (${CMAKE_SOURCE_DIR}/Global/Include)
 Add_Subdirectory (TagRename)
 #Add_Subdirectory (Samples)
 
+Set_Property (GLOBAL APPEND PROPERTY IncludeDirectories ${CMAKE_SOURCE_DIR}/Share/Data)
+Set_Property (GLOBAL APPEND PROPERTY IncludeDirectories ${CMAKE_SOURCE_DIR}/Share/Data/xq)
 Get_Property (IncludeDirectories GLOBAL PROPERTY IncludeDirectories)
 
 Set (AlternateDirs)

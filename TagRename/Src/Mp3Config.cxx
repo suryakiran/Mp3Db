@@ -1,20 +1,21 @@
 #include <TagRename/Mp3Config.hxx>
 #include <TagRename/Zorba.hxx>
 #include <TagRename/XString.hxx>
+#include <TagRename/XQueryMapResultExtractor.hxx>
+#include <TagRename/XQueryListResultExtractor.hxx>
+#include <TagRename/XQuery.hxx>
+
+#include <Stl/Map.hxx>
+#include <Stl/List.hxx>
 
 #include <sstream>
 #include <boost/format.hpp>
 using boost::format;
 
-#include <boost/spirit/include/qi.hpp>
-#include <boost/fusion/adapted/std_pair.hpp>
-using namespace boost::spirit;
-
 #include <zorba/zorba.h>
 #include <zorba/store_manager.h>
 #include <zorba/zorba_exception.h>
 #include <zorba/iterator.h>
-using namespace zorba;
 
 #include <iostream>
 using namespace std;
@@ -63,12 +64,11 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
 {
   m_fileName = p_fileName.parent_path().parent_path()/"Mp3Config.xml";
   m_xqDir = p_fileName.parent_path();
-  Zorba* z = xml::Zorba::instance();
+  zorba::Zorba* z = xml::Zorba::instance();
 
   if (fs::exists (p_fileName))
   {
     ostringstream oss;
-    istringstream iss;
 
     oss 
       << "declare variable $file external;"
@@ -76,26 +76,14 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
       << "return concat('[\"', data($x/@name), '\"=', data($x), ']\n')" << endl
       ;
 
-    XQuery_t query = z->compileQuery (oss.str());
-    DynamicContext* ctx = query->getDynamicContext();
-    ctx->setVariable("file", z->getItemFactory()->createString(p_fileName.string()));
-    Zorba_SerializerOptions_t* options = new Zorba_SerializerOptions_t;
-    options->ser_method = ZORBA_SERIALIZATION_METHOD_TEXT;
-
-    oss.str("");
-    query->execute(oss, options);
-    iss.str(oss.str());
-    string l;
-    while (getline (iss, l, '\n'))
+    XQueryMapResultExtractor<string, string> mapResultExtractor;
+    XQuery query;
+    query.compileString(oss.str());
+    query.setVariable ("file", p_fileName.string());
+    query.execute (&mapResultExtractor);
+    BOOST_FOREACH (const StringMapValue& smv, mapResultExtractor.getResult())
     {
-      string key, value;
-      string::iterator b (l.begin());
-      const bool result = qi::phrase_parse (b, l.end(),
-          qi::lit("[") >> '"' >> qi::lexeme[*(qi::char_ - '"')] >> '"' >> '=' >> *(qi::char_-']') >> ']',
-          ascii::space, key, value);
-      if (result) {
-        m_queryFileMap[key] = m_xqDir/value;
-      }
+      m_queryFileMap[smv.first] = m_xqDir/smv.second;
     }
   }
 
@@ -107,30 +95,13 @@ Mp3Config::readGenres()
 {
   const fs::path& queryFile = m_queryFileMap["Read Genres"];
 
-  fs::fstream fin;
-  fin.open (queryFile, ios_base::in);
-
-  try 
-  {
-    Zorba* z = xml::Zorba::instance();
-    XQuery_t query = z->compileQuery (fin);
-    DynamicContext* ctx = query->getDynamicContext();
-    ctx->setVariable("context", z->getItemFactory()->createString(m_fileName.string()));
-    Iterator_t iter (query->iterator());
-    iter->open();
-    Item item;
-    while (iter->next(item))
-    {
-      m_genres.insert (item.getStringValue().str());
-    }
-
-    iter->close();
-    fin.close();
-  }
-  catch (ZorbaException& exc)
-  {
-    cout << exc.what() << endl;
-  }
+  XQueryListResultExtractor<string> listResultExtractor;
+  XQuery query;
+  query.compileFile (queryFile);
+  query.setVariable("context", m_fileName.string());
+  query.execute(&listResultExtractor);
+  const stl::StringList& results (listResultExtractor.getResult());
+  std::copy (results.begin(), results.end(), std::inserter(m_genres, m_genres.begin()));
 }
 
 void Mp3Config::addGenre (const string& p_genre)
@@ -142,21 +113,21 @@ void Mp3Config::addGenre (const string& p_genre)
 
   try
   {
-    Zorba* z = xml::Zorba::instance();
-    XQuery_t query = z->compileQuery (fin);
-    DynamicContext* ctx = query->getDynamicContext();
+    zorba::Zorba* z = xml::Zorba::instance();
+    zorba::XQuery_t query = z->compileQuery (fin);
+    zorba::DynamicContext* ctx = query->getDynamicContext();
     ctx->setVariable("context", z->getItemFactory()->createString(m_fileName.string()));
     ctx->setVariable("genreName", z->getItemFactory()->createString(p_genre));
 
-    Iterator_t iter (query->iterator());
+    zorba::Iterator_t iter (query->iterator());
     iter->open();
-    Item item;
+    zorba::Item item;
     while (iter->next(item));
     iter->close();
 
     query->close();
   }
-  catch (ZorbaException& exc)
+  catch (zorba::ZorbaException& exc)
   {
     success = false;
   }
