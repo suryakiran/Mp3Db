@@ -1,5 +1,5 @@
-#ifndef Result_hxx_INCLUDED
-#define Result_hxx_INCLUDED
+#ifndef xquery_result_mapper_Result_hxx_INCLUDED
+#define xquery_result_mapper_Result_hxx_INCLUDED
 
 #include <string>
 

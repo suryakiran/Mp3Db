@@ -1,7 +1,7 @@
-#ifndef Map_hxx_INCLUDED
-#define Map_hxx_INCLUDED
+#ifndef xquery_result_mapper_Map_hxx_INCLUDED
+#define xquery_result_mapper_Map_hxx_INCLUDED
 
-#include <TagRename/XQueryResultExtractor.hxx>
+#include <TagRename/XQueryResult.hxx>
 #include <TagRename/XQueryResultRule.hxx>
 #include <sstream>
 #include <iostream>

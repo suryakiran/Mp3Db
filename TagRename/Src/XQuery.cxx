@@ -1,6 +1,6 @@
 #include <TagRename/XQuery.hxx>
 #include <TagRename/Zorba.hxx>
-#include <TagRename/XQueryResultExtractor.hxx>
+#include <TagRename/XQueryResult.hxx>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/fstream.hpp>

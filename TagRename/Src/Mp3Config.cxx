@@ -1,8 +1,8 @@
 #include <TagRename/Mp3Config.hxx>
 #include <TagRename/Zorba.hxx>
 #include <TagRename/XString.hxx>
-#include <TagRename/XQueryMapResultExtractor.hxx>
-#include <TagRename/XQueryListResultExtractor.hxx>
+#include <TagRename/XQueryMapResult.hxx>
+#include <TagRename/XQueryListResult.hxx>
 #include <TagRename/XQuery.hxx>
 
 #include <Stl/Map.hxx>
