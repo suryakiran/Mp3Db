@@ -8,7 +8,7 @@
 #include <boost/spirit/include/qi.hpp>
 namespace qi = boost::spirit::qi;
 
-namespace xquery { namespace result {
+namespace xquery { namespace parser {
   template <class T> struct map;
 
   template <> struct map <std::string>
@@ -26,7 +26,7 @@ namespace xquery { namespace result {
   };
 }}
 
-namespace xquery { namespace result {
+namespace xquery { namespace parser {
   template <class T> struct list;
 
   template <> struct list<std::string>

@@ -43,8 +43,8 @@ class Map : public Result
         KeyType key;
         ValueType value;
 
-        xquery::result::map<KeyType> map_key;
-        xquery::result::map<ValueType> map_value;
+        xquery::parser::map<KeyType> map_key;
+        xquery::parser::map<ValueType> map_value;
 
         if (
             qi::phrase_parse (

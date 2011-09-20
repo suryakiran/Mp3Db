@@ -4,7 +4,7 @@
 #include <boost/spirit/include/qi.hpp>
 namespace qi = boost::spirit::qi;
 
-namespace xquery { namespace result { namespace type_of {
+namespace xquery { namespace parser { namespace type_of {
 
   template <class T>
     struct rule

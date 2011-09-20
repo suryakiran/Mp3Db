@@ -42,7 +42,7 @@ class List : public Result
       {
         std::string::iterator beg (l.begin());
 
-        xquery::result::list<KeyType> list_;
+        xquery::parser::list<KeyType> list_;
 
         qi::phrase_parse (
             beg,

@@ -3,7 +3,7 @@
 
 #include <TagRename/XQueryResultTypeOf.hxx>
 
-namespace xquery { namespace result { 
+namespace xquery { namespace parser { 
 
 template < class CharType, CharType ch >
 struct string
