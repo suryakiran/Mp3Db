@@ -12,7 +12,7 @@ using namespace std;
 
 XQuery::XQuery()
   : m_dynamicContext(0),
-    m_resultExtractor(0)
+    m_resultMapper(0)
 {
   zorba::Zorba* z = xml::Zorba::instance();
   m_query = z->createQuery();
@@ -28,11 +28,11 @@ XQuery::~XQuery()
 }
 
 void
-XQuery::setResultExtractor (XQueryResultExtractor* p_extractor)
+XQuery::setResultMapper (xquery::result_mapper::Result* p_mapper)
 {
-  m_resultExtractor = p_extractor;
+  m_resultMapper = p_mapper;
 
-  if (m_resultExtractor->extractResultFromXml())
+  if (m_resultMapper->parseFromXml())
   {
     m_serializerOptions->ser_method = ZORBA_SERIALIZATION_METHOD_XML;
   }
@@ -80,10 +80,10 @@ XQuery::compileFile (const fs::path& p_file)
 }
 
 bool
-XQuery::execute (XQueryResultExtractor* p_extractor)
+XQuery::execute (xquery::result_mapper::Result* p_mapper)
 {
-  if (p_extractor) {
-    setResultExtractor (p_extractor);
+  if (p_mapper) {
+    setResultMapper (p_mapper);
   }
 
   if (m_query->isUpdating())
@@ -94,8 +94,8 @@ XQuery::execute (XQueryResultExtractor* p_extractor)
   {
     ostringstream oss;
     m_query->execute (oss, m_serializerOptions.get());
-    if (m_resultExtractor) {
-      m_resultExtractor->extractResult (oss.str());
+    if (m_resultMapper) {
+      m_resultMapper->parse (oss.str());
     }
   }
 

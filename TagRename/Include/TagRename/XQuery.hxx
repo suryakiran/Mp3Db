@@ -7,7 +7,9 @@
 #include <boost/scoped_ptr.hpp>
 namespace fs = boost::filesystem;
 
-class XQueryResultExtractor;
+namespace xquery { namespace result_mapper {
+  class Result;
+}}
 
 class XQuery
 {
@@ -18,9 +20,9 @@ class XQuery
     bool compileString (const std::string& p_string);
     bool compileFile (const fs::path& p_file);
 
-    void setResultExtractor(XQueryResultExtractor* p_extractor);
+    void setResultMapper(xquery::result_mapper::Result* p_extractor);
 
-    bool execute (XQueryResultExtractor* p_extractor = 0);
+    bool execute (xquery::result_mapper::Result* p_extractor = 0);
     void setVariable (const std::string& p_varName, const std::string& p_value);
 
   private:
@@ -33,7 +35,7 @@ class XQuery
     zorba::DynamicContext* m_dynamicContext;
     std::ostringstream m_resultStream;
     std::string m_compileError;
-    XQueryResultExtractor* m_resultExtractor;
+    xquery::result_mapper::Result* m_resultMapper;
 };
 
 #endif

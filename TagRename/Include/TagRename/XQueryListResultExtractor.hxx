@@ -1,26 +1,28 @@
-#ifndef XQueryListResultExtractor_hxx_INCLUDED
-#define XQueryListResultExtractor_hxx_INCLUDED
+#ifndef List_hxx_INCLUDED
+#define List_hxx_INCLUDED
 
 #include <TagRename/XQueryResultExtractor.hxx>
 #include <TagRename/XQueryResultRule.hxx>
 #include <sstream>
 #include <iostream>
 
+namespace xquery { namespace result_mapper {
+
 template <class KeyType>
-class XQueryListResultExtractor : public XQueryResultExtractor
+class List : public Result
 {
   private:
     typedef std::list<KeyType> ResultType;
     ResultType m_result;
 
   public:
-    XQueryListResultExtractor()
-      : XQueryResultExtractor()
+    List()
+      : Result()
     {
     }
 
-    XQueryListResultExtractor (const std::string& p_input)
-      : XQueryResultExtractor(p_input)
+    List (const std::string& p_input)
+      : Result(p_input)
     {
     }
 
@@ -29,7 +31,7 @@ class XQueryListResultExtractor : public XQueryResultExtractor
     }
 
   protected:
-    virtual void extractResultImp ()
+    virtual void parseImp ()
     {
       std::istringstream iss;
       iss.str (m_input);
@@ -52,5 +54,7 @@ class XQueryListResultExtractor : public XQueryResultExtractor
       }
     }
 };
+
+}}
 
 #endif

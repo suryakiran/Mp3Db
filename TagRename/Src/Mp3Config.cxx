@@ -76,13 +76,13 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
       << "return concat('[\"', data($x/@name), '\"=', data($x), ']\n')" << endl
       ;
 
-    XQueryMapResultExtractor<string, string> mapResultExtractor;
+    xquery::result_mapper::Map<string, string> resultMapper;
     XQuery query;
     if (query.compileString(oss.str()))
     {
       query.setVariable ("file", p_fileName.string());
-      query.execute (&mapResultExtractor);
-      BOOST_FOREACH (const StringMapValue& smv, mapResultExtractor.getResult())
+      query.execute (&resultMapper);
+      BOOST_FOREACH (const StringMapValue& smv, resultMapper.getResult())
       {
         m_queryFileMap[smv.first] = m_xqDir/smv.second;
       }
@@ -97,13 +97,13 @@ Mp3Config::readGenres()
 {
   const fs::path& queryFile = m_queryFileMap["Read Genres"];
 
-  XQueryListResultExtractor<string> listResultExtractor;
+  xquery::result_mapper::List<string> resultMapper;
   XQuery query;
   if (query.compileFile (queryFile))
   {
     query.setVariable("context", m_fileName.string());
-    query.execute(&listResultExtractor);
-    const stl::StringList& results (listResultExtractor.getResult());
+    query.execute(&resultMapper);
+    const stl::StringList& results (resultMapper.getResult());
     std::copy (results.begin(), results.end(), std::inserter(m_genres, m_genres.begin()));
   }
 }

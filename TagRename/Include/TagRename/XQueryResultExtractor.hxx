@@ -1,36 +1,40 @@
-#ifndef XQueryResultExtractor_hxx_INCLUDED
-#define XQueryResultExtractor_hxx_INCLUDED
+#ifndef Result_hxx_INCLUDED
+#define Result_hxx_INCLUDED
 
 #include <string>
 
-class XQueryResultExtractor
+namespace xquery { namespace result_mapper {
+
+class Result
 {
   public:
-    XQueryResultExtractor ()
+    Result ()
     {
     }
 
-    XQueryResultExtractor (const std::string& p_input)
+    Result (const std::string& p_input)
       : m_input(p_input)
     {
     }
 
-    void extractResult(const std::string& p_input = std::string("")) {
+    void parse(const std::string& p_input = std::string("")) {
       if (!p_input.empty()) {
         m_input = p_input;
       }
-      extractResultImp() ;
+      parseImp() ;
     }
 
-    virtual bool extractResultFromXml() {
+    virtual bool parseFromXml() {
       return false;
     }
 
   protected:
-    virtual void extractResultImp() = 0;
+    virtual void parseImp() = 0;
 
   protected:
     std::string m_input;
 };
+
+}}
 
 #endif
