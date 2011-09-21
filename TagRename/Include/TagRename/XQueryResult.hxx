@@ -53,12 +53,13 @@ template <class Derived>
   struct ResultBase 
   {
     typedef typename xquery::result_mapper::traits::result <Derived>::type result_type;
-    typedef typename boost::add_reference<result_type>::type result_type_reference;
-    typedef typename boost::add_const<result_type_reference>::type result_type_const_reference;
+    typedef typename boost::add_const<result_type>::type const_result_type;
+    typedef typename boost::add_reference<const_result_type>::type result_type_cref;
+    typedef typename boost::add_reference<result_type>::type result_type_ref;
     typedef ResultBase<Derived> base_type;
     result_type m_result;
 
-    result_type_const_reference getResult()
+    result_type_cref getResult() const
     {
       return m_result;
     }
