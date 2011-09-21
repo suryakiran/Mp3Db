@@ -5,16 +5,27 @@
 #include <TagRename/XQueryResultRule.hxx>
 #include <sstream>
 #include <iostream>
+#include <list>
+
+namespace xquery { namespace result_mapper {
+  template <class T> class List;
+}}
+
+namespace xquery { namespace result_mapper { namespace traits {
+
+template <class K>
+  struct result < xquery::result_mapper::List<K> >
+  {
+    typedef std::list <K> type;
+  };
+}}}
 
 namespace xquery { namespace result_mapper {
 
 template <class KeyType>
-class List : public Result
+class List : public Result, public ResultBase < List <KeyType> >
 {
-  private:
-    typedef std::list<KeyType> ResultType;
-    ResultType m_result;
-
+  using List::base_type::m_result;
   public:
     List()
       : Result()
@@ -24,10 +35,6 @@ class List : public Result
     List (const std::string& p_input)
       : Result(p_input)
     {
-    }
-
-    const ResultType& getResult() const {
-      return m_result;
     }
 
   protected:

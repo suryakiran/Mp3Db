@@ -7,14 +7,24 @@
 #include <iostream>
 
 namespace xquery { namespace result_mapper {
+  template <class K, class V> class Map;
+}}
+
+namespace xquery { namespace result_mapper { namespace traits {
+
+template <class K, class V>
+  struct result < xquery::result_mapper::Map<K,V> >
+  {
+    typedef std::map <K, V> type;
+  };
+}}}
+
+namespace xquery { namespace result_mapper {
 
 template <class KeyType, class ValueType>
-class Map : public Result
+class Map : public Result, public ResultBase < Map<KeyType, ValueType> >
 {
-  private:
-    typedef std::map<KeyType, ValueType> ResultType;
-    ResultType m_result;
-
+  using Map::base_type::m_result;
   public:
     Map()
       : Result()
@@ -24,10 +34,6 @@ class Map : public Result
     Map (const std::string& p_input)
       : Result(p_input)
     {
-    }
-
-    const ResultType& getResult() const {
-      return m_result;
     }
 
   protected:
