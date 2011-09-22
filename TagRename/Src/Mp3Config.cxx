@@ -21,12 +21,7 @@ using boost::format;
 using namespace std;
 
 #include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/algorithm/string/trim.hpp>
-#include <boost/tuple/tuple.hpp>
-#include <boost/algorithm/string/split.hpp>
 #include <boost/foreach.hpp>
-namespace str = boost::algorithm;
 
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
@@ -54,10 +49,6 @@ const StringSet&
 Mp3Config::getGenres() const
 {
   return m_genres;
-}
-
-void Mp3Config::writeGenres()
-{
 }
 
 void Mp3Config::readConfig (const fs::path& p_fileName)
@@ -88,7 +79,6 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
       }
     }
   }
-
   readGenres();
 }
 

@@ -40,7 +40,6 @@ class Mp3Config : public SignalBase
   private:
     Mp3Config();
     void readGenres();
-    void writeGenres();
 };
 
 #endif
