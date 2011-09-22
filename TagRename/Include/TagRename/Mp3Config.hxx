@@ -26,13 +26,13 @@ class Mp3Config : public SignalBase
   public:
     static Mp3Config* instance();
     void readConfig (const fs::path& p_fileName);
-    const StringSet& getGenres() const;
+    const stl::StringSet& getGenres() const;
 
     void addGenre (const std::string& p_genre);
 
   private:
     static Mp3Config* m_instance;
-    StringSet m_genres;
+    stl::StringSet m_genres;
     StringPathMap m_queryFileMap;
     fs::path m_fileName;
     fs::path m_xqDir;

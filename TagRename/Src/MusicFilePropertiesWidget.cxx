@@ -64,7 +64,9 @@ void
 MusicFilePropertiesWidget::updateGenresList ()
 {
   m_genre->clear();
-  BOOST_FOREACH (const string& genre, m_mp3Config->getGenres())
+  const stl::StringSet& genres = m_mp3Config->getGenres();
+
+  BOOST_FOREACH (const string& genre, genres)
   {
     m_genre->addItem (genre.c_str());
   }
