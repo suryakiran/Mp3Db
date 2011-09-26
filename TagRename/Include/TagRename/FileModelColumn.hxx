@@ -26,6 +26,7 @@ COLUMN_DEFINE (Genre,       5, "Genre");
 COLUMN_DEFINE (Composer,    6, "Composer");
 COLUMN_DEFINE (BitRate,     7, "Bit Rate");
 COLUMN_DEFINE (Duration,    8, "Duration");
+COLUMN_DEFINE (Year,        9, "Year");
 
 #define COLUMN_ID(ColumnName) Column<ColumnName>::id()
 #define COLUMN_LABEL(ColumnName) Column<ColumnName>::label()

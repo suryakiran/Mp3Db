@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+  <Genres>
+    <Genre>Blues</Genre>
+    <Genre>Classic Rock</Genre>
+    <Genre>Country</Genre>
+    <Genre>Dance</Genre>
+    <Genre>Disco</Genre>
+    <Genre>Funk</Genre>
+    <Genre>Grunge</Genre>
+    <Genre>Hip-Hop</Genre>
+    <Genre>Jazz</Genre>
+    <Genre>Metal</Genre>
+    <Genre>New Age</Genre>
+    <Genre>Oldies</Genre>
+    <Genre>Other</Genre>
+    <Genre>Pop</Genre>
+    <Genre>R&amp;B</Genre>
+    <Genre>Rap</Genre>
+    <Genre>Reggae</Genre>
+    <Genre>Rock</Genre>
+    <Genre>Techno</Genre>
+    <Genre>Industrial</Genre>
+    <Genre>Alternative</Genre>
+    <Genre>Ska</Genre>
+    <Genre>Death Metal</Genre>
+    <Genre>Pranks</Genre>
+    <Genre>Soundtrack</Genre>
+    <Genre>Euro-Techno</Genre>
+    <Genre>Ambient</Genre>
+    <Genre>Trip-Hop</Genre>
+    <Genre>Vocal</Genre>
+    <Genre>Jazz+Funk</Genre>
+    <Genre>Fusion</Genre>
+    <Genre>Trance</Genre>
+    <Genre>Classical</Genre>
+    <Genre>Instrumental</Genre>
+    <Genre>Acid</Genre>
+    <Genre>House</Genre>
+    <Genre>Game</Genre>
+    <Genre>Sound Clip</Genre>
+    <Genre>Gospel</Genre>
+    <Genre>Noise</Genre>
+    <Genre>Alternative Rock</Genre>
+    <Genre>Bass</Genre>
+    <Genre>Soul</Genre>
+    <Genre>Punk</Genre>
+    <Genre>Indian Classical</Genre>
+    <Genre>Carnatic Classical</Genre>
+    <Genre>Western Classical</Genre>
+    <Genre>Light Music</Genre>
+    <Genre>Fusion Music</Genre>
+    <Genre>Telugu Songs</Genre>
+    <Genre>Hindi Songs</Genre>
+    <Genre>Easy Listening</Genre>
+    <Genre>Guitar</Genre>
+    <Genre>Celtic</Genre>
+  </Genres>
+</Config>

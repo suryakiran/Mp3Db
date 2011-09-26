@@ -14,10 +14,15 @@ using namespace std;
 #include <xercesc/util/PlatformUtils.hpp>
 using namespace xercesc;
 
+#include <TagRename/Zorba.hxx>
+#include <TagRename/Mp3Config.hxx>
+
 namespace po = boost::program_options;
 
 namespace {
   string styleSheetFile;
+  string confFile;
+  string dataDir;
 
   void parseArgs (int argc, char** argv)
   {
@@ -27,6 +32,8 @@ namespace {
       ("help", "Display this message")
       ("init-dir", po::value<std::string>(), "Initial directory to start with")
       ("style-sheet", po::value<std::string>(), "Style Sheet File")
+      ("conf-file", po::value<std::string>(), "Mp3 Configuration File")
+      ("data-dir", po::value<std::string>(), "Mp3 Data Directory")
       ;
 
     po::variables_map vmap;
@@ -37,41 +44,69 @@ namespace {
     {
       styleSheetFile = vmap["style-sheet"].as<string>();
     }
+
+    if (vmap.count("conf-file"))
+    {
+      confFile = vmap["conf-file"].as<string>();
+    }
+
+    if (vmap.count("data-dir"))
+    {
+      dataDir = vmap["data-dir"].as<string>();
+    }
+  }
+
+  void readMp3Config()
+  {
+    if (confFile.empty())
+    {
+      return;
+    }
+
+    Mp3Config* conf(Mp3Config::instance());
+    fs::path cf (confFile);
+    conf->readConfig (cf.parent_path()/"xq/ConfigQueries.xml");
   }
 
   void setApplicationStyleSheet()
   {
-    if (!styleSheetFile.empty())
+    if (styleSheetFile.empty())
     {
-      fstream fin;
-      fin.open (styleSheetFile.c_str(), ios_base::in);
-
-      vector<string> lines;
-      string l;
-
-      while (getline (fin, l, '\n'))
-      {
-        lines.push_back (l);
-      }
-
-      fin.close();
-      qApp->setStyleSheet (boost::algorithm::join(lines, "\n").c_str());
+      return;
     }
-  }
 
+    fstream fin;
+    fin.open (styleSheetFile.c_str(), ios_base::in);
+
+    vector<string> lines;
+    string l;
+
+    while (getline (fin, l, '\n'))
+    {
+      lines.push_back (l);
+    }
+
+    fin.close();
+    qApp->setStyleSheet (boost::algorithm::join(lines, "\n").c_str());
+  }
 }
 
 int main (int argc, char** argv) 
 {
   XMLPlatformUtils::Initialize();
+  xml::Zorba::init();
+
   parseArgs (argc, argv);
 
   QApplication app (argc, argv);
   setApplicationStyleSheet();
+  readMp3Config();
 
   MainWindow *mainw = new MainWindow;
   mainw->show();
 
   app.exec();
+
+  xml::Zorba::terminate();
   XMLPlatformUtils::Terminate();
 }

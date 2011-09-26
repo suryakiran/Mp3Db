@@ -4,3 +4,6 @@
 [submodule "PerlModules"]
 	path = PerlModules
 	url = git@github.com:suryakiran/PerlModules.git
+[submodule "Global"]
+	path = Global
+	url = git@github.com:suryakiran/Global.git

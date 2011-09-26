@@ -62,6 +62,7 @@ MusicFileDisplayWidget::MusicFileDisplayWidget (QWidget* p_parent)
     (COLUMN_ID(Composer),    COLUMN_LABEL(Composer))
     (COLUMN_ID(BitRate),     COLUMN_LABEL(BitRate))
     (COLUMN_ID(Duration),    COLUMN_LABEL(Duration))
+    (COLUMN_ID(Year),        COLUMN_LABEL(Year))
     ;
 
   BOOST_FOREACH (HeaderNameMapValue himv, m_headerNameMap)
@@ -129,6 +130,7 @@ void MusicFileDisplayWidget::readDirectory (const QModelIndex& p_index)
       setItemValue (item, COLUMN_ID(Genre),       tag->genre(),  tags.genre);
       setItemValue (item, COLUMN_ID(ArtistNames), tag->artist(), tags.artist);
       setItemValue (item, COLUMN_ID(TrackNumber), _M(tag->track()),  tags.id);
+      setItemValue (item, COLUMN_ID(Year),        _M(tag->year()),  tags.year);
 
     }
   }
@@ -162,12 +164,13 @@ void MusicFileDisplayWidget::writeXML ()
     DOMElement* song = doc->createElement(_X("Song"));
     song->setAttribute (_X("id"), _X(tag.second.id));
 
-    createChildElement (song, "Title", tag.second.track);
+    createChildElement (song, "Title",    tag.second.track);
     createChildElement (song, "Composer", tag.second.composer);
-    createChildElement (song, "Album", tag.second.album);
-    createChildElement (song, "Artists", tag.second.artist);
-    createChildElement (song, "Genre", tag.second.genre);
-    createChildElement (song, "Lyrics", tag.second.lyrics);
+    createChildElement (song, "Album",    tag.second.album);
+    createChildElement (song, "Artists",  tag.second.artist);
+    createChildElement (song, "Genre",    tag.second.genre);
+    createChildElement (song, "Lyrics",   tag.second.lyrics);
+    createChildElement (song, "Year",     tag.second.year);
 
     songs->appendChild (song);
   }
@@ -187,4 +190,45 @@ void MusicFileDisplayWidget::writeXML ()
   output->release();
   ser->release();
   delete myFormTarget;
+}
+
+void MusicFileDisplayWidget::saveCurrentAndGotoNextItem()
+{
+  if (!saveCurrentItem())
+  {
+    return ;
+  }
+
+  QTreeWidgetItem* curItem (currentItem());
+  QTreeWidgetItem* nextItem (itemBelow(curItem));
+  
+  if (nextItem)
+  {
+    curItem->setSelected (false);
+    nextItem->setSelected(true);
+    setCurrentItem (nextItem);
+  }
+}
+
+void MusicFileDisplayWidget::saveCurrentAndGotoPrevItem()
+{
+  if (!saveCurrentItem())
+  {
+    return;
+  }
+
+  QTreeWidgetItem* curItem (currentItem());
+  QTreeWidgetItem* prevItem (itemAbove(curItem));
+
+  if (prevItem)
+  {
+    curItem->setSelected (false);
+    prevItem->setSelected(true);
+    setCurrentItem (prevItem);
+  }
+}
+
+bool MusicFileDisplayWidget::saveCurrentItem()
+{
+  return true;
 }
