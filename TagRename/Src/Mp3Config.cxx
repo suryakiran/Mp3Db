@@ -73,10 +73,11 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
     {
       query.setVariable ("file", p_fileName.string());
       query.execute (&resultMapper);
-      BOOST_FOREACH (const stl::StringMapValue& smv, resultMapper.getResult())
-      {
-        m_queryFileMap[smv.first] = m_xqDir/smv.second;
-      }
+      auto results (resultMapper.getResult());
+      std::for_each (results.begin(), results.end(), 
+          [&](const stl::StringMapValue& smv) {
+            m_queryFileMap[smv.first] = m_xqDir/smv.second;
+          });
     }
   }
   readGenres();
@@ -93,7 +94,7 @@ Mp3Config::readGenres()
   {
     query.setVariable("context", m_fileName.string());
     query.execute(&resultMapper);
-    const stl::StringList& results (resultMapper.getResult());
+    auto results (resultMapper.getResult());
     std::copy (results.begin(), results.end(), std::inserter(m_genres, m_genres.begin()));
   }
 }
