@@ -1,25 +1,32 @@
 #ifndef Mp3Config_hxx_INCLUDED
 #define Mp3Config_hxx_INCLUDED
 
-#include <Signals/Signals.hxx>
+#include <Signals/SignalBase.hxx>
 #include <Stl/Set.hxx>
 #include <Stl/Map.hxx>
 
 #include <boost/filesystem/path.hpp>
 namespace fs = boost::filesystem;
 
-class Mp3Config : public SignalBase
-{
-  public:
-    struct GenresModified;
+class Mp3Config;
 
-  private:
+namespace signal {
+  namespace mp3 {
+    namespace config {
+      struct GenresModified;
+    }}
+
+  template <>
+  struct types <Mp3Config>
+  {
     typedef fusion::map <
-      fusion::pair <GenresModified, BOOST_SIGNAL(void())>
-      > SignalsMap;
+      fusion::pair <mp3::config::GenresModified, BOOST_SIGNAL(void())>
+      > type;
+  };
+}
 
-#include <Signals/SignalMacros.hxx>
-
+class Mp3Config : public SignalBase <Mp3Config>
+{
   private:
     DEFINE_MAP(std::string, fs::path, StringPathMap);
 

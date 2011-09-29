@@ -31,7 +31,6 @@ Mp3Config* Mp3Config::m_instance = (Mp3Config*) 0;
 
 Mp3Config::Mp3Config()
 {
-  fusion::for_each(m_signals, initialize());
 }
 
 Mp3Config*
@@ -112,7 +111,7 @@ void Mp3Config::addGenre (const string& p_genre)
     if (query.execute())
     {
       m_genres.insert (p_genre);
-      emitSignal<GenresModified>();
+      emitSignal<signal::mp3::config::GenresModified>();
     }
   }
 }

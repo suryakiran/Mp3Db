@@ -37,7 +37,7 @@ MusicFilePropertiesWidget::MusicFilePropertiesWidget (QWidget* p_parent)
   m_mp3Config = Mp3Config::instance();
   updateGenresList();
 
-  m_mp3Config->signal<Mp3Config::GenresModified>().connect(MEM_FUN(MusicFilePropertiesWidget, updateGenresList, 0));
+  m_mp3Config->signal<signal::mp3::config::GenresModified>().connect(MEM_FUN(MusicFilePropertiesWidget, updateGenresList, 0));
   connect (m_genre, SIGNAL(editTextChanged(const QString&)), this, SLOT(updateGenresList(const QString&)));
   connect (rp, SIGNAL(returnPressed()), this, SLOT (genreNameEdited()));
 }
