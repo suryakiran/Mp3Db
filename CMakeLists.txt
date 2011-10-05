@@ -67,3 +67,11 @@ Process_Perl_Template (
   OUTPUT ${CMAKE_GVIM_INIT_FILE_OUT}
   ARGS ${AdditionalGvimSearchDirs} ${ProjectModules}
   )
+
+Execute_Perl (
+  FILE ${CMAKE_PERL_DIR}/WriteGvimSyntaxFile.pl
+  ARGS 
+  -o ${CMAKE_BINARY_DIR}/vim/syntax/cpp.vim
+  -n zorba -n xquery -n result_mapper
+  -c XQuery -c Mp3Config
+  )
