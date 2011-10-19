@@ -47,13 +47,12 @@ EndFunction (MP3DB_MODULE_PROPERTIES)
 Function (MP3DB_PROJECT p_target)
   Set_Property (DIRECTORY PROPERTY ProjectName ${p_target})
   Set_Property (DIRECTORY PROPERTY ModuleName ${p_target})
-  Execute_Process (COMMAND 
-    ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/Perl/CaseConv.pl
-    --type=break_at_upper_case --delimiter='-' -- ${p_target}
-    OUTPUT_VARIABLE p_target
-    OUTPUT_STRIP_TRAILING_WHITESPACE
+  Execute_Perl (
+    FILE ${PL_FILE_CASE_CONV}
+    ARGS -t break_at_upper_case -d '-' -i ${p_target}
+    OUTPUT p_target_name
     )
-  Set_Property (DIRECTORY PROPERTY TargetName ${p_target})
+  Set_Property (DIRECTORY PROPERTY TargetName ${p_target_name})
 EndFunction (MP3DB_PROJECT)
 
 Macro (GET_PROPERTIES)
