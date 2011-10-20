@@ -45,7 +45,7 @@ DirView::~DirView()
 void 
 DirView::selectCurrentDirectory()
 {
-  QModelIndex idx (m_model->index(fs::current_path().c_str()));
+  QModelIndex idx (m_model->index(fs::current_path().string().c_str()));
   selectionModel()->select(idx, QItemSelectionModel::Select);
   setExpanded(idx, true);
   setCurrentIndex(idx);

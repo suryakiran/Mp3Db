@@ -24,7 +24,9 @@ namespace xquery { namespace result_mapper {
 template <class KeyType, class ValueType>
 class Map : public Result, public ResultBase < Map<KeyType, ValueType> >
 {
-  using Map::base_type::m_result;
+	typedef typename Map::base_type base_type;
+	using base_type::m_result;
+  //using Map::base_type::m_result;
   public:
     Map()
       : Result()
