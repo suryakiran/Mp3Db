@@ -21,13 +21,12 @@ template <class K, class V>
 
 namespace xquery { namespace result_mapper {
 
-template <class KeyType, class ValueType>
-class Map : public Result, public ResultBase < Map<KeyType, ValueType> >
-{
-	typedef typename Map::base_type base_type;
-	using base_type::m_result;
-  //using Map::base_type::m_result;
-  public:
+  template <class KeyType, class ValueType>
+  class Map : public Result, public ResultBase < Map<KeyType, ValueType> >
+  {
+    typedef typename Map::base_type base_type;
+    using base_type::m_result;
+    public:
     Map()
       : Result()
     {
@@ -38,7 +37,7 @@ class Map : public Result, public ResultBase < Map<KeyType, ValueType> >
     {
     }
 
-  protected:
+    protected:
     virtual void parseImp ()
     {
       std::istringstream iss;
@@ -71,7 +70,7 @@ class Map : public Result, public ResultBase < Map<KeyType, ValueType> >
         }
       }
     }
-};
+  };
 
 }}
 
