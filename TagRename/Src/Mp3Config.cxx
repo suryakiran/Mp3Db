@@ -10,6 +10,7 @@
 
 #include <sstream>
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 using boost::format;
 
 #include <zorba/zorba.h>
@@ -72,11 +73,11 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
     {
       query.setVariable ("file", p_fileName.string());
       query.execute (&resultMapper);
-      auto results (resultMapper.getResult());
-      std::for_each (results.begin(), results.end(), 
-          [&](const stl::StringMapValue& smv) {
-            m_queryFileMap[smv.first] = m_xqDir/smv.second;
-          });
+      const stl::StringMap& results (resultMapper.getResult());
+      BOOST_FOREACH (const stl::StringMapValue& smv, results)
+      {
+        m_queryFileMap[smv.first] = m_xqDir/smv.second;
+      }
     }
   }
   readGenres();
@@ -93,7 +94,7 @@ Mp3Config::readGenres()
   {
     query.setVariable("context", m_fileName.string());
     query.execute(&resultMapper);
-    auto results (resultMapper.getResult());
+    const stl::StringList& results (resultMapper.getResult());
     std::copy (results.begin(), results.end(), std::inserter(m_genres, m_genres.begin()));
   }
 }
