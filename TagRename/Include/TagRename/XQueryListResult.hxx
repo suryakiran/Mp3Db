@@ -38,7 +38,7 @@ class List : public Result, public ResultBase < List <KeyType> >
     {
     }
 
-  protected:
+  private:
     virtual void parseImp ()
     {
       std::istringstream iss;

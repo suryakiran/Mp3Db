@@ -32,7 +32,7 @@ class Result
       return false;
     }
 
-  protected:
+  private:
     virtual void parseImp() = 0;
 
   protected:
