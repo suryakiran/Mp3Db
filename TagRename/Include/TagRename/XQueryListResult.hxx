@@ -8,60 +8,59 @@
 #include <list>
 
 namespace xquery { namespace result_mapper {
+
   template <class T> class List;
-}}
 
-namespace xquery { namespace result_mapper { namespace traits {
+  namespace traits {
 
-template <class K>
-  struct result < xquery::result_mapper::List<K> >
-  {
-    typedef std::list <K> type;
-  };
-}}}
-
-namespace xquery { namespace result_mapper {
-
-template <class KeyType>
-class List : public Result, public ResultBase < List <KeyType> >
-{
-	typedef typename List::base_type base_type;
-	using base_type::m_result;
-  public:
-    List()
-      : Result()
-    {
-    }
-
-    List (const std::string& p_input)
-      : Result(p_input)
-    {
-    }
-
-  private:
-    virtual void parseImp ()
-    {
-      std::istringstream iss;
-      iss.str (m_input);
-      std::string l;
-
-      using qi::_1;
-      while (getline (iss, l, '\n'))
+    template <class K>
+      struct result < xquery::result_mapper::List<K> >
       {
-        std::string::iterator beg (l.begin());
+        typedef std::list <K> type;
+      };
+  }
 
-        xquery::parser::list<KeyType> list_;
+  template <class KeyType>
+  class List : public Result, public ResultBase < List <KeyType> >
+  {
+    typedef typename List::base_type base_type;
+    using base_type::m_result;
 
-        qi::phrase_parse (
-            beg,
-            l.end(),
-            list_.rule() % ';',
-            qi::ascii::space,
-            m_result
-            );
+    public:
+      List()
+        : Result()
+      {
       }
-    }
-};
+  
+      List (const std::string& p_input)
+        : Result(p_input)
+      {
+      }
+  
+    private:
+      virtual void parseImp ()
+      {
+        std::istringstream iss;
+        iss.str (m_input);
+        std::string l;
+
+        using qi::_1;
+        while (getline (iss, l, '\n'))
+        {
+          std::string::iterator beg (l.begin());
+
+          xquery::parser::list<KeyType> list_;
+
+          qi::phrase_parse (
+              beg,
+              l.end(),
+              list_.rule() % ';',
+              qi::ascii::space,
+              m_result
+              );
+        }
+      }
+  };
 
 }}
 
