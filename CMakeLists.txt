@@ -14,10 +14,10 @@ Check_Perl_Modules (
   )
 
 If (CMAKE_COMPILER_IS_GNUCXX)
-	Set (
-		CMAKE_CXX_FLAGS 
-		"${CMAKE_CXX_FLAGS} -Wall -Wno-unused -Wno-inline -Woverloaded-virtual -Wmissing-declarations -Wno-write-strings"
-		)
+  Set (
+    CMAKE_CXX_FLAGS 
+    "${CMAKE_CXX_FLAGS} -Wall -Wno-unused -Wno-inline -Woverloaded-virtual -Wmissing-declarations -Wno-write-strings"
+    )
 EndIf (CMAKE_COMPILER_IS_GNUCXX)
 
 Set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")

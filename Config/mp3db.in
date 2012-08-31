@@ -61,9 +61,11 @@ if ($init_dir) {
 
 if ($debugBuild) {
   unshift @LD_LIBRARY_PATH, dirname ("@ZORBA_DEBUG_LIBRARY@");
+  unshift @LD_LIBRARY_PATH, dirname ("@QT_QTCORE_LIBRARY@");
   unshift @LD_LIBRARY_PATH, dirname ("@TAGLIB_DEBUG_LIBRARY@");
 } else {
   unshift @LD_LIBRARY_PATH, dirname ("@TAGLIB_OPTIMIZED_LIBRARY@");
+  unshift @LD_LIBRARY_PATH, dirname ("@QT_QTCORE_LIBRARY@");
   unshift @LD_LIBRARY_PATH, dirname ("@ZORBA_OPTIMIZED_LIBRARY@");
 }
 
