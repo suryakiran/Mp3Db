@@ -7,3 +7,6 @@
 [submodule "Global"]
 	path = Global
 	url = git@github.com:suryakiran/Global.git
+[submodule "PythonModules"]
+	path = PythonModules
+	url = git@github.com:suryakiran/PythonModules.git
