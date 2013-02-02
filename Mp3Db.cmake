@@ -27,31 +27,49 @@ Function (MP3DB_MODULE_PROPERTIES)
   Get_Property (ProjectName DIRECTORY PROPERTY ProjectName)
   Set (PropertiesFile ${CMAKE_CURRENT_BINARY_DIR}/${ProjectName}SetProperties.cmake)
 
-  Set (args)
+  Set (get_property_name 0)
+  Set (get_property_value 0)
+
+  Set (keys)
+  Set (key)
   ForEach (arg ${ARGN})
     If (${arg} STREQUAL "PROPERTY")
-      List(APPEND args "--Property")
-    Else (${arg} STREQUAL "PROPERTY")
-      List(APPEND args ${arg})
+      Set (get_property_name 1)
+      Set (args)
+      Set (key)
+      Set (get_property_value 0)
+    ElseIf (get_property_name)
+      Set (key ${arg})
+      Set (values_${key})
+      List (APPEND keys ${key})
+      Set (get_property_name 0)
+      Set (get_property_value 1)
+    ElseIf (get_property_value)
+      If (key)
+        List (APPEND values_${key} "-v${arg}")
+      EndIf (key)
     EndIf (${arg} STREQUAL "PROPERTY")
   EndForEach(arg)
 
-  Execute_Perl (
-    FILE ${CMAKE_PERL_DIR}/WriteSetPropertiesFile.pl
-    ARGS ${args}
-    CMAKE_OUTPUT ${PropertiesFile}
-    )
-
+  File (REMOVE ${PropertiesFile})
+  ForEach (key ${keys})
+    Execute_Python (
+      FILE ${CMAKE_PYTHON_DIR}/WriteSetProperties.py
+      ARGS -n ${key} ${values_${key}}
+      CMAKE_OUTPUT ${PropertiesFile}
+      )
+  EndForEach (key)
+  
 EndFunction (MP3DB_MODULE_PROPERTIES)
 
 Function (MP3DB_PROJECT p_target)
   Set_Property (DIRECTORY PROPERTY ProjectName ${p_target})
   Set_Property (DIRECTORY PROPERTY ModuleName ${p_target})
-  Execute_Perl (
-    FILE ${PL_FILE_CASE_CONV}
-    ARGS -t break_at_upper_case -d '-' -i ${p_target}
-    OUTPUT p_target_name
-    )
+  #Execute_Perl (
+  #  FILE ${PL_FILE_CASE_CONV}
+  #  ARGS -t break_at_upper_case -d '-' -i ${p_target}
+  #  OUTPUT p_target_name
+  #  )
   Set_Property (DIRECTORY PROPERTY TargetName ${p_target_name})
 EndFunction (MP3DB_PROJECT)
 
@@ -153,16 +171,6 @@ Set (DLL_UTILITIES_DIR ${CMAKE_CURRENT_BINARY_DIR}/DllUtilities)
 
 Find_File_In_Dir (MP3DB_IN_FILE mp3db.in ${PROJECT_CONFIG_DIR})
 Set (MP3DB_OUT_FILE ${CMAKE_BINARY_DIR}/mp3db)
-
-Set(Boost_ADDITIONAL_VERSIONS "1.49" "1.50")
-
-OPTION (USE_BOOST "Use Boost Libraries" TRUE)
-OPTION (USE_POCO "Use Poco Libraries" TRUE)
-OPTION (USE_QT "Use Qt Libraries" TRUE)
-
-If (USE_BOOST)
-  Add_Definitions ("-DBOOST_ALL_DYN_LINK")
-EndIf (USE_BOOST)
 
 Mark_As_Advanced (
   MP3DB_IN_FILE
