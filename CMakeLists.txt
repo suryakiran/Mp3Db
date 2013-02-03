@@ -16,7 +16,8 @@ EndIf (CMAKE_COMPILER_IS_GNUCXX)
 
 Set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
-Include (${CMAKE_MODULE_PATH}/Taglib.cmake)
+Find_Package(TagLib)
+Find_Package(YAMLCpp)
 Include (${CMAKE_MODULE_PATH}/Zlib.cmake)
 
 Mp3Db_Include_Directories (${Boost_INCLUDE_DIR})

@@ -65,11 +65,11 @@ EndFunction (MP3DB_MODULE_PROPERTIES)
 Function (MP3DB_PROJECT p_target)
   Set_Property (DIRECTORY PROPERTY ProjectName ${p_target})
   Set_Property (DIRECTORY PROPERTY ModuleName ${p_target})
-  #Execute_Perl (
-  #  FILE ${PL_FILE_CASE_CONV}
-  #  ARGS -t break_at_upper_case -d '-' -i ${p_target}
-  #  OUTPUT p_target_name
-  #  )
+  Execute_Python (
+    FILE ${PY_COMMANDS_FILE}
+    ARGS -c split_string_on_upper_case ${p_target}
+    OUTPUT p_target_name
+    )
   Set_Property (DIRECTORY PROPERTY TargetName ${p_target_name})
 EndFunction (MP3DB_PROJECT)
 
