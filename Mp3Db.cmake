@@ -143,9 +143,11 @@ Function (MP3DB_EXECUTABLE)
 
   ForEach (lib ${OtherLibraries})
     String (TOUPPER ${lib} lib) 
+    # Message (${@lib@_LIBRARIES})
     List (APPEND Other_Libraries ${@lib@_LIBRARIES})
   EndForeach (lib)
 
+  Message (${Other_Libraries})
   Target_Link_Libraries (
     ${TargetName}
     ${QT_QTCORE_LIBRARIES}
@@ -179,8 +181,6 @@ Mark_As_Advanced (
   USE_POCO
   USE_QT
   )
-
-Include (${CMAKE_MODULE_PATH}/Zorba.cmake)
 
 Function (Include_Zorba)
   Mp3db_Include_Directories (

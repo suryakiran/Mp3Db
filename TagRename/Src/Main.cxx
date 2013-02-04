@@ -14,7 +14,6 @@ using namespace std;
 #include <xercesc/util/PlatformUtils.hpp>
 using namespace xercesc;
 
-#include <TagRename/Zorba.hxx>
 #include <TagRename/Mp3Config.hxx>
 
 namespace po = boost::program_options;
@@ -94,7 +93,6 @@ namespace {
 int main (int argc, char** argv) 
 {
   XMLPlatformUtils::Initialize();
-  xml::Zorba::init();
 
   parseArgs (argc, argv);
 
@@ -107,6 +105,5 @@ int main (int argc, char** argv)
 
   app.exec();
 
-  xml::Zorba::terminate();
   XMLPlatformUtils::Terminate();
 }

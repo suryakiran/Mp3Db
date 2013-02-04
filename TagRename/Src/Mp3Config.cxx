@@ -1,9 +1,5 @@
 #include <TagRename/Mp3Config.hxx>
-#include <TagRename/Zorba.hxx>
 #include <TagRename/XString.hxx>
-#include <TagRename/XQueryMapResult.hxx>
-#include <TagRename/XQueryListResult.hxx>
-#include <TagRename/XQuery.hxx>
 
 #include <Stl/Map.hxx>
 #include <Stl/List.hxx>
@@ -12,11 +8,6 @@
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 using boost::format;
-
-#include <zorba/zorba.h>
-#include <zorba/store_manager.h>
-#include <zorba/zorba_exception.h>
-#include <zorba/iterator.h>
 
 #include <iostream>
 using namespace std;
@@ -27,6 +18,8 @@ using namespace std;
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
 using namespace xercesc;
+
+#include <yaml-cpp/yaml.h>
 
 Mp3Config* Mp3Config::m_instance = (Mp3Config*) 0;
 
@@ -53,7 +46,9 @@ Mp3Config::getGenres() const
 
 void Mp3Config::readConfig (const fs::path& p_fileName)
 {
-  m_fileName = p_fileName.parent_path().parent_path()/"Mp3Config.xml";
+#if 0
+  YAML::Node config = YAML::LoadFile (p_fileName.string());
+  m_fileName = p_fileName.parent_path().parent_path()/"Mp3Config.yml";
   m_xqDir = p_fileName.parent_path();
   zorba::Zorba* z = xml::Zorba::instance();
 
@@ -81,11 +76,13 @@ void Mp3Config::readConfig (const fs::path& p_fileName)
     }
   }
   readGenres();
+#endif
 }
 
 void 
 Mp3Config::readGenres()
 {
+#if 0
   const fs::path& queryFile = m_queryFileMap["Read Genres"];
 
   xquery::result_mapper::List<string> resultMapper;
@@ -97,10 +94,12 @@ Mp3Config::readGenres()
     const stl::StringList& results (resultMapper.getResult());
     std::copy (results.begin(), results.end(), std::inserter(m_genres, m_genres.begin()));
   }
+#endif
 }
 
 void Mp3Config::addGenre (const string& p_genre)
 {
+#if 0
   const fs::path& queryFile = m_queryFileMap ["Write Genres"];
 
   XQuery query;
@@ -115,4 +114,5 @@ void Mp3Config::addGenre (const string& p_genre)
       emitSignal<signal::mp3::config::GenresModified>();
     }
   }
+#endif
 }
