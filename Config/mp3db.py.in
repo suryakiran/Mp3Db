@@ -1,0 +1,23 @@
+#!@PYTHON_EXECUTABLE@
+
+import os, sys
+sys.path.insert(0, os.path.join('@CMAKE_SOURCE_DIR@', 'PythonModules'))
+import yaml
+import argparse
+from Gdb import Gdb
+from Locator import Locator
+from Launcher import Launcher
+from Environment import Environment
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(prog = 'mp3db')
+    subparsers = parser.add_subparsers()
+
+    tag_rename_parser = subparsers.add_parser('tag-rename')
+
+    tag_rename_group = tag_rename_parser.add_mutually_exclusive_group()
+    tag_rename_group.add_argument('-r', dest = 'run', action = 'store_true')
+    tag_rename_group.add_argument('-d', dest = 'debug', action = 'store_true')
+
+    args = parser.parse_args()
+    print args

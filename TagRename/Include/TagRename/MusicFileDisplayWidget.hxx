@@ -36,7 +36,7 @@ class MusicFileDisplayWidget : public QTreeWidget
     void readDirectory (const QModelIndex& p_index);
     void saveCurrentAndGotoPrevItem ();
     void saveCurrentAndGotoNextItem ();
-    void writeXML ();
+    // void writeXML ();
 
   private Q_SLOTS:
     void emitSignalIfItemsSelected();

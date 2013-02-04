@@ -1,9 +1,8 @@
 #include <TagRename/Mp3Config.hxx>
-#include <TagRename/Zorba.hxx>
-#include <TagRename/XString.hxx>
+// #include <TagRename/Zorba.hxx>
 #include <TagRename/XQueryMapResult.hxx>
 #include <TagRename/XQueryListResult.hxx>
-#include <TagRename/XQuery.hxx>
+// #include <TagRename/XQuery.hxx>
 
 #include <Stl/Map.hxx>
 #include <Stl/List.hxx>
@@ -13,20 +12,11 @@
 #include <boost/foreach.hpp>
 using boost::format;
 
-#include <zorba/zorba.h>
-#include <zorba/store_manager.h>
-#include <zorba/zorba_exception.h>
-#include <zorba/iterator.h>
-
 #include <iostream>
 using namespace std;
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/foreach.hpp>
-
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/dom/DOM.hpp>
-using namespace xercesc;
 
 Mp3Config* Mp3Config::m_instance = (Mp3Config*) 0;
 
@@ -53,66 +43,66 @@ Mp3Config::getGenres() const
 
 void Mp3Config::readConfig (const fs::path& p_fileName)
 {
-  m_fileName = p_fileName.parent_path().parent_path()/"Mp3Config.xml";
-  m_xqDir = p_fileName.parent_path();
-  zorba::Zorba* z = xml::Zorba::instance();
+  // m_fileName = p_fileName.parent_path().parent_path()/"Mp3Config.xml";
+  // m_xqDir = p_fileName.parent_path();
+  // zorba::Zorba* z = xml::Zorba::instance();
 
-  if (fs::exists (p_fileName))
-  {
-    ostringstream oss;
+  // if (fs::exists (p_fileName))
+  // {
+  //   ostringstream oss;
 
-    oss 
-      << "declare variable $file external;"
-      << "for $x in doc($file)/Queries/Query\n"
-      << "return concat('[\"', data($x/@name), '\"=', data($x), ']\n')" << endl
-      ;
+  //   oss 
+  //     << "declare variable $file external;"
+  //     << "for $x in doc($file)/Queries/Query\n"
+  //     << "return concat('[\"', data($x/@name), '\"=', data($x), ']\n')" << endl
+  //     ;
 
-    xquery::result_mapper::Map<string, string> resultMapper;
-    XQuery query;
-    if (query.compileString(oss.str()))
-    {
-      query.setVariable ("file", p_fileName.string());
-      query.execute (&resultMapper);
-      const stl::StringMap& results (resultMapper.getResult());
-      BOOST_FOREACH (const stl::StringMapValue& smv, results)
-      {
-        m_queryFileMap[smv.first] = m_xqDir/smv.second;
-      }
-    }
-  }
-  readGenres();
+  //   xquery::result_mapper::Map<string, string> resultMapper;
+  //   XQuery query;
+  //   if (query.compileString(oss.str()))
+  //   {
+  //     query.setVariable ("file", p_fileName.string());
+  //     query.execute (&resultMapper);
+  //     const stl::StringMap& results (resultMapper.getResult());
+  //     BOOST_FOREACH (const stl::StringMapValue& smv, results)
+  //     {
+  //       m_queryFileMap[smv.first] = m_xqDir/smv.second;
+  //     }
+  //   }
+  // }
+  // readGenres();
 }
 
 void 
 Mp3Config::readGenres()
 {
-  const fs::path& queryFile = m_queryFileMap["Read Genres"];
+  // const fs::path& queryFile = m_queryFileMap["Read Genres"];
 
-  xquery::result_mapper::List<string> resultMapper;
-  XQuery query;
-  if (query.compileFile (queryFile))
-  {
-    query.setVariable("context", m_fileName.string());
-    query.execute(&resultMapper);
-    const stl::StringList& results (resultMapper.getResult());
-    std::copy (results.begin(), results.end(), std::inserter(m_genres, m_genres.begin()));
-  }
+  // xquery::result_mapper::List<string> resultMapper;
+  // XQuery query;
+  // if (query.compileFile (queryFile))
+  // {
+  //   query.setVariable("context", m_fileName.string());
+  //   query.execute(&resultMapper);
+  //   const stl::StringList& results (resultMapper.getResult());
+  //   std::copy (results.begin(), results.end(), std::inserter(m_genres, m_genres.begin()));
+  // }
 }
 
 void Mp3Config::addGenre (const string& p_genre)
 {
-  const fs::path& queryFile = m_queryFileMap ["Write Genres"];
+  // const fs::path& queryFile = m_queryFileMap ["Write Genres"];
 
-  XQuery query;
-  if (query.compileFile (queryFile))
-  {
-    query.setVariable("context", m_fileName.string());
-    query.setVariable("genreName", p_genre);
+  // XQuery query;
+  // if (query.compileFile (queryFile))
+  // {
+  //   query.setVariable("context", m_fileName.string());
+  //   query.setVariable("genreName", p_genre);
 
-    if (query.execute())
-    {
-      m_genres.insert (p_genre);
-      emitSignal<signal::mp3::config::GenresModified>();
-    }
-  }
+  //   if (query.execute())
+  //   {
+  //     m_genres.insert (p_genre);
+  //     emitSignal<signal::mp3::config::GenresModified>();
+  //   }
+  // }
 }
