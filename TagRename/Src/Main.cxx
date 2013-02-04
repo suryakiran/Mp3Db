@@ -11,9 +11,6 @@
 #include <boost/algorithm/string/join.hpp>
 using namespace std;
 
-#include <xercesc/util/PlatformUtils.hpp>
-using namespace xercesc;
-
 #include <TagRename/Mp3Config.hxx>
 
 namespace po = boost::program_options;
@@ -55,18 +52,6 @@ namespace {
     }
   }
 
-  void readMp3Config()
-  {
-    if (confFile.empty())
-    {
-      return;
-    }
-
-    Mp3Config* conf(Mp3Config::instance());
-    fs::path cf (confFile);
-    conf->readConfig (cf.parent_path()/"xq/ConfigQueries.xml");
-  }
-
   void setApplicationStyleSheet()
   {
     if (styleSheetFile.empty())
@@ -92,18 +77,13 @@ namespace {
 
 int main (int argc, char** argv) 
 {
-  XMLPlatformUtils::Initialize();
-
   parseArgs (argc, argv);
 
   QApplication app (argc, argv);
   setApplicationStyleSheet();
-  readMp3Config();
 
   MainWindow *mainw = new MainWindow;
   mainw->show();
 
   app.exec();
-
-  XMLPlatformUtils::Terminate();
 }

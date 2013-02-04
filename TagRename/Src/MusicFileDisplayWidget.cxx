@@ -17,13 +17,6 @@
 #include <boost/foreach.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/framework/LocalFileFormatTarget.hpp>
-#include <xercesc/framework/StdOutFormatTarget.hpp>
-
-#include <TagRename/XString.hxx>
-
-using namespace xercesc;
 using namespace boost::assign;
 
 namespace bt = boost::posix_time;
@@ -32,6 +25,7 @@ namespace bt = boost::posix_time;
 using namespace std;
 
 namespace {
+#if 0
   void createChildElement (DOMNode* p_node, const std::string& p_nodeName, const Mp3String& p_nodeText)
   {
     DOMDocument* doc = p_node->getOwnerDocument();
@@ -40,6 +34,7 @@ namespace {
     node->appendChild (text);
     p_node->appendChild (node);
   }
+#endif
 
   void setItemValue (QTreeWidgetItem* p_item, int p_id, const TagLib::String& p_string, Mp3String& p_target)
   {
@@ -147,50 +142,50 @@ void MusicFileDisplayWidget::emitSignalIfItemsSelected ()
   Q_EMIT hasItemSelection(!selectedItems().isEmpty());
 }
 
-void MusicFileDisplayWidget::writeXML ()
-{
-  if (m_tags.empty()) {
-    return;
-  }
+// void MusicFileDisplayWidget::writeXML ()
+// {
+//   if (m_tags.empty()) {
+//     return;
+//   }
 
-  const XMLCh ls_id [] = {chLatin_L, chLatin_S, chNull};
-  DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(ls_id);
+//   const XMLCh ls_id [] = {chLatin_L, chLatin_S, chNull};
+//   DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(ls_id);
 
-  DOMDocument* doc = impl->createDocument (0, _X("Songs"), 0);
-  DOMElement* songs = doc->getDocumentElement();
+//   DOMDocument* doc = impl->createDocument (0, _X("Songs"), 0);
+//   DOMElement* songs = doc->getDocumentElement();
 
-  BOOST_FOREACH (const Mp3TagMapValue& tag, m_tags)
-  {
-    DOMElement* song = doc->createElement(_X("Song"));
-    song->setAttribute (_X("id"), _X(tag.second.id));
+//   BOOST_FOREACH (const Mp3TagMapValue& tag, m_tags)
+//   {
+//     DOMElement* song = doc->createElement(_X("Song"));
+//     song->setAttribute (_X("id"), _X(tag.second.id));
 
-    createChildElement (song, "Title",    tag.second.track);
-    createChildElement (song, "Composer", tag.second.composer);
-    createChildElement (song, "Album",    tag.second.album);
-    createChildElement (song, "Artists",  tag.second.artist);
-    createChildElement (song, "Genre",    tag.second.genre);
-    createChildElement (song, "Lyrics",   tag.second.lyrics);
-    createChildElement (song, "Year",     tag.second.year);
+//     createChildElement (song, "Title",    tag.second.track);
+//     createChildElement (song, "Composer", tag.second.composer);
+//     createChildElement (song, "Album",    tag.second.album);
+//     createChildElement (song, "Artists",  tag.second.artist);
+//     createChildElement (song, "Genre",    tag.second.genre);
+//     createChildElement (song, "Lyrics",   tag.second.lyrics);
+//     createChildElement (song, "Year",     tag.second.year);
 
-    songs->appendChild (song);
-  }
+//     songs->appendChild (song);
+//   }
 
-  DOMLSSerializer* ser = impl->createLSSerializer();
-  DOMConfiguration* serializerConfig=ser->getDomConfig();
-  serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
-  serializerConfig->setParameter(XMLUni::fgDOMWRTXercesPrettyPrint, false);
-  serializerConfig->setParameter(XMLUni::fgDOMXMLDeclaration, true);
+//   DOMLSSerializer* ser = impl->createLSSerializer();
+//   DOMConfiguration* serializerConfig=ser->getDomConfig();
+//   serializerConfig->setParameter(XMLUni::fgDOMWRTFormatPrettyPrint, true);
+//   serializerConfig->setParameter(XMLUni::fgDOMWRTXercesPrettyPrint, false);
+//   serializerConfig->setParameter(XMLUni::fgDOMXMLDeclaration, true);
 
-  DOMLSOutput* output = impl->createLSOutput();
-  output->setEncoding (_X("UTF-8"));
-  XMLFormatTarget *myFormTarget=new StdOutFormatTarget(); 
-  output->setByteStream (myFormTarget);
+//   DOMLSOutput* output = impl->createLSOutput();
+//   output->setEncoding (_X("UTF-8"));
+//   XMLFormatTarget *myFormTarget=new StdOutFormatTarget(); 
+//   output->setByteStream (myFormTarget);
 
-  ser->write (doc, output);
-  output->release();
-  ser->release();
-  delete myFormTarget;
-}
+//   ser->write (doc, output);
+//   output->release();
+//   ser->release();
+//   delete myFormTarget;
+// }
 
 void MusicFileDisplayWidget::saveCurrentAndGotoNextItem()
 {
