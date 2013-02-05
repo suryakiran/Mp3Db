@@ -50,6 +50,9 @@ namespace {
     {
       dataDir = vmap["data-dir"].as<string>();
     }
+
+    Mp3Config* config = Mp3Config::instance();
+    config->readConfig(confFile);
   }
 
   void setApplicationStyleSheet()
@@ -72,6 +75,7 @@ namespace {
 
     fin.close();
     qApp->setStyleSheet (boost::algorithm::join(lines, "\n").c_str());
+
   }
 }
 

@@ -1,9 +1,6 @@
 #include <TagRename/Mp3Config.hxx>
-// #include <TagRename/Zorba.hxx>
-// #include <TagRename/XQuery.hxx>
 
-#include <Stl/Map.hxx>
-#include <Stl/List.hxx>
+#include <Stl/Vector.hxx>
 
 #include <sstream>
 #include <boost/format.hpp>
@@ -11,6 +8,7 @@
 using boost::format;
 
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 #include <boost/filesystem/operations.hpp>
@@ -43,52 +41,14 @@ Mp3Config::getGenres() const
 
 void Mp3Config::readConfig (const fs::path& p_fileName)
 {
-  // m_fileName = p_fileName.parent_path().parent_path()/"Mp3Config.xml";
-  // m_xqDir = p_fileName.parent_path();
-  // zorba::Zorba* z = xml::Zorba::instance();
-
-  // if (fs::exists (p_fileName))
-  // {
-  //   ostringstream oss;
-
-  //   oss 
-  //     << "declare variable $file external;"
-  //     << "for $x in doc($file)/Queries/Query\n"
-  //     << "return concat('[\"', data($x/@name), '\"=', data($x), ']\n')" << endl
-  //     ;
-
-  //   xquery::result_mapper::Map<string, string> resultMapper;
-  //   XQuery query;
-  //   if (query.compileString(oss.str()))
-  //   {
-  //     query.setVariable ("file", p_fileName.string());
-  //     query.execute (&resultMapper);
-  //     const stl::StringMap& results (resultMapper.getResult());
-  //     BOOST_FOREACH (const stl::StringMapValue& smv, results)
-  //     {
-  //       m_queryFileMap[smv.first] = m_xqDir/smv.second;
-  //     }
-  //   }
-  // }
-  // readGenres();
-#endif
-}
-
-void 
-Mp3Config::readGenres()
-{
-  // const fs::path& queryFile = m_queryFileMap["Read Genres"];
-
-  // xquery::result_mapper::List<string> resultMapper;
-  // XQuery query;
-  // if (query.compileFile (queryFile))
-  // {
-  //   query.setVariable("context", m_fileName.string());
-  //   query.execute(&resultMapper);
-  //   const stl::StringList& results (resultMapper.getResult());
-  //   std::copy (results.begin(), results.end(), std::inserter(m_genres, m_genres.begin()));
-  // }
-#endif
+  YAML::Node config = YAML::LoadFile(p_fileName.string());
+  stl::StringVec genres = config["Config"]["Genres"].as<stl::StringVec>();
+  copy(genres.begin(), genres.end(), inserter(m_genres, m_genres.begin()));
+  cout << m_genres.size() << endl;
+  cout << genres.size() << endl;
+  BOOST_FOREACH (string s, m_genres)
+    cout << s << endl;
+  
 }
 
 void Mp3Config::addGenre (const string& p_genre)
@@ -107,5 +67,4 @@ void Mp3Config::addGenre (const string& p_genre)
   //     emitSignal<signal::mp3::config::GenresModified>();
   //   }
   // }
-#endif
 }

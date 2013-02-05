@@ -142,12 +142,11 @@ Function (MP3DB_EXECUTABLE)
   EndForEach (lib)
 
   ForEach (lib ${OtherLibraries})
+    String (REPLACE "-" "_" lib ${lib})
     String (TOUPPER ${lib} lib) 
-    # Message (${@lib@_LIBRARIES})
     List (APPEND Other_Libraries ${@lib@_LIBRARIES})
   EndForeach (lib)
 
-  Message (${Other_Libraries})
   Target_Link_Libraries (
     ${TargetName}
     ${QT_QTCORE_LIBRARIES}
