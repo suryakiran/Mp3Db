@@ -16,9 +16,38 @@ using namespace std;
 
 #include <yaml-cpp/yaml.h>
 
+namespace YAML {
+  template <typename T>
+  struct convert< std::set<T> >
+  {
+    static Node encode (const std::set<T>& p_set)
+    {
+      Node node (NodeType::Sequence);
+      BOOST_FOREACH(const T& item, p_set)
+        node.push_back(item);
+      return node;
+    }
+
+    static bool decode (const Node& node, std::set<T>& p_set)
+    {
+      if(!node.IsSequence()) {
+        return false;
+      }
+
+      p_set.clear();
+      for(const_iterator it = node.begin(); it != node.end(); ++it) {
+        p_set.insert(it->as<T>());
+      }
+      return true;
+    }
+
+  };
+}
+
 Mp3Config* Mp3Config::m_instance = (Mp3Config*) 0;
 
 Mp3Config::Mp3Config()
+  : config(0)
 {
 }
 
@@ -42,29 +71,10 @@ Mp3Config::getGenres() const
 void Mp3Config::readConfig (const fs::path& p_fileName)
 {
   YAML::Node config = YAML::LoadFile(p_fileName.string());
-  stl::StringVec genres = config["Config"]["Genres"].as<stl::StringVec>();
-  copy(genres.begin(), genres.end(), inserter(m_genres, m_genres.begin()));
-  cout << m_genres.size() << endl;
-  cout << genres.size() << endl;
-  BOOST_FOREACH (string s, m_genres)
-    cout << s << endl;
-  
+  m_genres = config["Config"]["Genres"].as<stl::StringSet>();
 }
 
 void Mp3Config::addGenre (const string& p_genre)
 {
-  // const fs::path& queryFile = m_queryFileMap ["Write Genres"];
-
-  // XQuery query;
-  // if (query.compileFile (queryFile))
-  // {
-  //   query.setVariable("context", m_fileName.string());
-  //   query.setVariable("genreName", p_genre);
-
-  //   if (query.execute())
-  //   {
-  //     m_genres.insert (p_genre);
-  //     emitSignal<signal::mp3::config::GenresModified>();
-  //   }
-  // }
+  return;
 }

@@ -54,3 +54,5 @@ Execute_Python (
   ARGS -y ${CMAKE_VARIABLES_YML_OUT_FILE}
   ${EditorSearchDirectories}
 )
+
+Write_Variables_Yml_File()

@@ -9,6 +9,15 @@ from Locator import Locator
 from Launcher import Launcher
 from Environment import Environment
 
+class RunOnExe:
+    def __init__(self, exe_name):
+        self.exe_name = exe_name
+
+    def __call__(self, cmd):
+        l = Launcher(cmd)
+        l.addArg(self.exe_name)
+        l(wait_for_command_to_complete = True)
+
 class Action(object):
     def __init__(self, exeName):
         self.yml = yaml.load(file('@CMAKE_VARIABLES_YML_OUT_FILE@', 'r'))
@@ -22,22 +31,26 @@ class Action(object):
         self.exe_file = os.path.join(exe_dir, self.yml['misc']['git_branch'], 'bin', exeName)
 
     def __call__(self, **kwargs):
-        cmake = self.yml['cmake']
-        init_file = os.path.join('@CMAKE_BINARY_DIR@', 'init.gdb')
-        conf_file = os.path.join('@CMAKE_SOURCE_DIR@', 'Share', 'Data', 'Mp3Config.yml')
-        style_sheet = os.path.join('@CMAKE_SOURCE_DIR@', 'Share', 'Data', 'Preferences.css')
-
-        l = Gdb(exe_file = self.exe_file,
-                debug = kwargs.get('debug'),
-                init_file = init_file,
-                dry_run = kwargs.get('dry_run')
-                )
-
-        app_args = {
-            'conf-file' : conf_file,
-            'style-sheet' : style_sheet,
-            }
-        l(**app_args)
+        if kwargs.get('deps'):
+            r = RunOnExe(self.exe_file)
+            r('ldd')
+        else:
+            cmake = self.yml['cmake']
+            init_file = os.path.join('@CMAKE_BINARY_DIR@', 'init.gdb')
+            conf_file = os.path.join('@CMAKE_SOURCE_DIR@', 'Share', 'Data', 'Mp3Config.yml')
+            style_sheet = os.path.join('@CMAKE_SOURCE_DIR@', 'Share', 'Data', 'Preferences.css')
+            
+            l = Gdb(exe_file = self.exe_file,
+                    debug = kwargs.get('debug'),
+                    init_file = init_file,
+                    dry_run = kwargs.get('dry_run')
+                    )
+            
+            app_args = {
+                'conf-file' : conf_file,
+                'style-sheet' : style_sheet,
+                }
+            l(**app_args)
         
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog = 'mp3db')
@@ -47,8 +60,10 @@ if __name__ == '__main__':
 
     tag_rename_group = tag_rename_parser.add_mutually_exclusive_group()
     tag_rename_group.add_argument('-d', dest = 'debug', action = 'store_true')
+    tag_rename_group.add_argument('-l', dest = 'show_dependencies', action = 'store_true')
+    tag_rename_group.add_argument('-y', dest = 'dry_run', action = 'store_true')
 
     args = parser.parse_args()
 
     a = Action(args.command)
-    a(debug = args.debug)
+    a(debug = args.debug, dry_run = args.dry_run, deps = args.show_dependencies)
