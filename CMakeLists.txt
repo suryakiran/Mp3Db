@@ -21,6 +21,10 @@ Find_Package(YAMLCpp)
 Find_Package(Xerces)
 Include (${CMAKE_MODULE_PATH}/Zlib.cmake)
 
+Set (GTAGS_INPUT_FILE ${CMAKE_BINARY_DIR}/gtags.input)
+Set_Property (GLOBAL PROPERTY MP3DB_GTAGS_INPUT_FILE ${GTAGS_INPUT_FILE})
+File (REMOVE ${GTAGS_INPUT_FILE})
+
 Mp3Db_Include_Directories (${Boost_INCLUDE_DIR})
 Mp3Db_Include_Directories (${CMAKE_SOURCE_DIR}/Global/Include)
 
@@ -55,4 +59,10 @@ Execute_Python (
   ${EditorSearchDirectories}
 )
 
+Add_Custom_Target (
+  tags ALL 
+  COMMAND ${GTAGS_EXECUTABLE} -i -f ${GTAGS_INPUT_FILE} ${CMAKE_BINARY_DIR}
+  COMMENT "Building source code tags"
+  WORKING_DIRECTORY "/"
+  )
 Write_Variables_Yml_File()

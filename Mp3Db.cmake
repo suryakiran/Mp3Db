@@ -95,6 +95,7 @@ EndMacro (GET_PROPERTIES)
 
 Function (MP3DB_EXECUTABLE)
   Get_Properties (ModuleName TargetName BoostLibraries OtherLibraries)
+  Get_Property (MP3DB_GTAGS_INPUT_FILE GLOBAL PROPERTY MP3DB_GTAGS_INPUT_FILE)
 
   Set (INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Include/${ModuleName})
   Set (SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Src)
@@ -128,6 +129,10 @@ Function (MP3DB_EXECUTABLE)
     ${QT_QTGUI_INCLUDE_DIR}
     )
 
+  ForEach (file ${HXX_FILES} ${CXX_FILES} ${UI_SRCS} ${MOC_SRCS})
+    File (APPEND ${MP3DB_GTAGS_INPUT_FILE} "${file}\n")
+  EndForEach(file)
+  
   Add_Executable (
     ${TargetName}
     ${SOURCES}
