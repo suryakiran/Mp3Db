@@ -59,42 +59,40 @@ Function (MP3DB_MODULE_PROPERTIES)
       CMAKE_OUTPUT ${PropertiesFile}
       )
   EndForEach (key)
-  
 EndFunction (MP3DB_MODULE_PROPERTIES)
 
 Function (MP3DB_PROJECT p_target)
   Set_Property (DIRECTORY PROPERTY ProjectName ${p_target})
   Set_Property (DIRECTORY PROPERTY ModuleName ${p_target})
-  #Execute_Perl (
-  #  FILE ${PL_FILE_CASE_CONV}
-  #  ARGS -t break_at_upper_case -d '-' -i ${p_target}
-  #  OUTPUT p_target_name
-  #  )
+  Execute_Python (
+    FILE ${PY_COMMANDS_FILE}
+    ARGS -c split_string_on_upper_case ${p_target}
+    OUTPUT p_target_name
+    )
   Set_Property (DIRECTORY PROPERTY TargetName ${p_target_name})
 EndFunction (MP3DB_PROJECT)
 
 Macro (GET_PROPERTIES)
   Set (GetPropertiesFile
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}GetProperties.cmake)
+
   Set (PropsArg)
   ForEach (arg ${ARGN})
-    If (NOT PropsArg)
-      Set (PropsArg ${arg})
-    Else (NOT PropsArg)
-      Set (PropsArg ${PropsArg},${arg})
-    EndIf (NOT PropsArg)
+    List (APPEND PropsArg "-p")
+    List (APPEND PropsArg ${arg})
   EndForEach (arg)
-  Execute_Process (COMMAND
-    ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/Perl/WriteGetPropertiesFile.pl
-    --Output=${GetPropertiesFile}
-    --Properties=${PropsArg}
+  
+  Execute_Python (
+    FILE ${PY_FILE_GET_PROPERTIES}
+    ARGS ${PropsArg} 
+    CMAKE_OUTPUT ${GetPropertiesFile}
     )
-  Include (${GetPropertiesFile})
 EndMacro (GET_PROPERTIES)
 
 
 Function (MP3DB_EXECUTABLE)
   Get_Properties (ModuleName TargetName BoostLibraries OtherLibraries)
+  Get_Property (MP3DB_GTAGS_INPUT_FILE GLOBAL PROPERTY MP3DB_GTAGS_INPUT_FILE)
 
   Set (INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Include/${ModuleName})
   Set (SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Src)
@@ -128,6 +126,10 @@ Function (MP3DB_EXECUTABLE)
     ${QT_QTGUI_INCLUDE_DIR}
     )
 
+  ForEach (file ${HXX_FILES} ${CXX_FILES} ${UI_SRCS} ${MOC_SRCS})
+    File (APPEND ${MP3DB_GTAGS_INPUT_FILE} "${file}\n")
+  EndForEach(file)
+  
   Add_Executable (
     ${TargetName}
     ${SOURCES}
@@ -142,6 +144,7 @@ Function (MP3DB_EXECUTABLE)
   EndForEach (lib)
 
   ForEach (lib ${OtherLibraries})
+    String (REPLACE "-" "_" lib ${lib})
     String (TOUPPER ${lib} lib) 
     List (APPEND Other_Libraries ${@lib@_LIBRARIES})
   EndForeach (lib)
@@ -169,7 +172,7 @@ EndFunction (MP3DB_INCLUDE_DIRECTORIES)
 Get_Filename_Component(MP_CONFIG_DIR ${CMAKE_SOURCE_DIR}/Config ABSOLUTE)
 Set (DLL_UTILITIES_DIR ${CMAKE_CURRENT_BINARY_DIR}/DllUtilities)
 
-Find_File_In_Dir (MP3DB_IN_FILE mp3db.in ${PROJECT_CONFIG_DIR})
+Find_File_In_Dir (MP3DB_IN_FILE mp3db.py.in ${PROJECT_CONFIG_DIR})
 Set (MP3DB_OUT_FILE ${CMAKE_BINARY_DIR}/mp3db)
 
 Mark_As_Advanced (
@@ -179,8 +182,6 @@ Mark_As_Advanced (
   USE_POCO
   USE_QT
   )
-
-Include (${CMAKE_MODULE_PATH}/Zorba.cmake)
 
 Function (Include_Zorba)
   Mp3db_Include_Directories (
