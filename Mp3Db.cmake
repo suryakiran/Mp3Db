@@ -59,7 +59,6 @@ Function (MP3DB_MODULE_PROPERTIES)
       CMAKE_OUTPUT ${PropertiesFile}
       )
   EndForEach (key)
-  
 EndFunction (MP3DB_MODULE_PROPERTIES)
 
 Function (MP3DB_PROJECT p_target)
@@ -76,20 +75,18 @@ EndFunction (MP3DB_PROJECT)
 Macro (GET_PROPERTIES)
   Set (GetPropertiesFile
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}GetProperties.cmake)
+
   Set (PropsArg)
   ForEach (arg ${ARGN})
-    If (NOT PropsArg)
-      Set (PropsArg ${arg})
-    Else (NOT PropsArg)
-      Set (PropsArg ${PropsArg},${arg})
-    EndIf (NOT PropsArg)
+    List (APPEND PropsArg "-p")
+    List (APPEND PropsArg ${arg})
   EndForEach (arg)
-  Execute_Process (COMMAND
-    ${PERL_EXECUTABLE} ${CMAKE_MODULE_PATH}/Perl/WriteGetPropertiesFile.pl
-    --Output=${GetPropertiesFile}
-    --Properties=${PropsArg}
+  
+  Execute_Python (
+    FILE ${PY_FILE_GET_PROPERTIES}
+    ARGS ${PropsArg} 
+    CMAKE_OUTPUT ${GetPropertiesFile}
     )
-  Include (${GetPropertiesFile})
 EndMacro (GET_PROPERTIES)
 
 
