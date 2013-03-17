@@ -15,29 +15,28 @@ struct is_mp3_file
   }
 };
 
-class Mp3FileIterator : public boost::filter_iterator <is_mp3_file, fs::directory_iterator>
+typedef boost::filter_iterator<is_mp3_file, fs::directory_iterator> Mp3Filter;
+
+class Mp3FileIterator : public Mp3Filter
 {
   public:
     Mp3FileIterator ()
-      : boost::filter_iterator<is_mp3_file, fs::directory_iterator>()
+      : Mp3Filter()
     {
     }
 
     Mp3FileIterator (const std::wstring& p_dirName)
-      : boost::filter_iterator<is_mp3_file, fs::directory_iterator> 
-        (m_predicate, fs::directory_iterator(fs::path(p_dirName)))
+      : Mp3Filter(m_predicate, fs::directory_iterator(fs::path(p_dirName)))
     {
     }
 
     Mp3FileIterator (const std::string& p_dirName)
-      : boost::filter_iterator<is_mp3_file, fs::directory_iterator> 
-        (m_predicate, fs::directory_iterator(fs::path(p_dirName)))
+      : Mp3Filter(m_predicate, fs::directory_iterator(fs::path(p_dirName)))
     {
     }
 
     Mp3FileIterator (const fs::path& p_path)
-      : boost::filter_iterator<is_mp3_file, fs::directory_iterator> 
-        (m_predicate, fs::directory_iterator(p_path))
+      : Mp3Filter(m_predicate, fs::directory_iterator(p_path))
     {
     }
 
