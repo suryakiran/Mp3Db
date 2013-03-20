@@ -60,7 +60,7 @@ Execute_Python (
 )
 
 Add_Custom_Target (
-  tags ALL 
+  tags 
   COMMAND ${GTAGS_EXECUTABLE} -i -f ${GTAGS_INPUT_FILE} ${CMAKE_BINARY_DIR}
   COMMENT "Building source code tags"
   WORKING_DIRECTORY "/"
