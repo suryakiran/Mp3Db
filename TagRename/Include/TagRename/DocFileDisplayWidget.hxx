@@ -1,6 +1,9 @@
 #ifndef DocFileDisplayWidget_hxx_INCLUDED
 #define DocFileDisplayWidget_hxx_INCLUDED
 
+#include <QtGui/QTreeWidget>
+#include <Stl/Map.hxx>
+
 class DocFileDisplayWidget : public QTreeWidget
 {
   Q_OBJECT
