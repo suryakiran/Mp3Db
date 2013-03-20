@@ -1,34 +1,35 @@
 QAbstractItemView {
-	alternate-background-color: #ffeedd;
+    background: #ffffee;
+    alternate-background-color: #a5c1e4;
 }
 
 QLineEdit {
-	background-color: #ffeedd;
+    background-color: #ffeedd;
 }
 
 QLineEdit:read-only {
-  background-color: #eeeeee;
+    background-color: #eeeeee;
 }
 
 QProgressBar {
-	border: 1px solid gray;
-	border-radius: 5px ;
-	background: white;
-	padding: 1px;
-	text-align: center ;
+    border: 1px solid gray;
+    border-radius: 5px ;
+    background: white;
+    padding: 1px;
+    text-align: center ;
 }
 
 QProgressBar::chunk{
-	background-color: #508bcc;
-	width: 5px;
+    background-color: #508bcc;
+    width: 5px;
 }
 
 QToolBox::tab:selected{
-	font: bold ;
+    font: bold ;
 }
 
 QToolTip {
-	color: brown ;
-	background-color: #ffeedd ;
-	padding: 1px ;
+    color: brown ;
+    background-color: #ffeedd ;
+    padding: 1px ;
 }
