@@ -21,7 +21,10 @@ class RunOnExe:
 class Action(object):
     def __init__(self, exeName):
         self.yml = yaml.load(file('@CMAKE_VARIABLES_YML_OUT_FILE@', 'r'))
+        mp3db_yml = yaml.load(file(os.path.join('@CMAKE_BINARY_DIR@', 'mp3db.yml'), 'r'))
         build_type = self.yml['cmake']['build_type'].lower()
+        self.yml['lib'][build_type] = dict(mp3db_yml['lib'][build_type].items() +
+                                           self.yml['lib'][build_type].items())
         exe_dir = self.yml[build_type]['inst_prefix']
 
         ld_lib_path = Environment('LD_LIBRARY_PATH')

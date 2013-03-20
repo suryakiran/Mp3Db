@@ -1,0 +1,8 @@
+lib:
+  debug:
+    yaml: @YAML_CPP_DEBUG_LIBRARY@
+    curl: @CURL_DEBUG_LIBRARY@
+
+  release:
+    yaml: @YAML_CPP_OPTIMIZED_LIBRARY@
+    curl: @CURL_OPTIMIZED_LIBRARY@

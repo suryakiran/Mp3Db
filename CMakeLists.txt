@@ -65,4 +65,7 @@ Add_Custom_Target (
   COMMENT "Building source code tags"
   WORKING_DIRECTORY "/"
   )
-Write_Variables_Yml_File()
+
+Configure_File (
+  ${CMAKE_SOURCE_DIR}/Config/mp3db.yml.in ${CMAKE_BINARY_DIR}/mp3db.yml @ONLY
+  )
