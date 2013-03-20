@@ -20,6 +20,8 @@
 using namespace boost::assign;
 
 namespace bt = boost::posix_time;
+namespace id3 = TagLib::ID3v2;
+namespace mpeg = TagLib::MPEG;
 
 #include <iostream>
 using namespace std;
@@ -83,13 +85,13 @@ void MusicFileDisplayWidget::readDirectory (const QModelIndex& p_index)
       int length (audioProperties->length());
       bt::time_duration td = bt::seconds (length);
 
-      if (TagLib::MPEG::File* mpegFile = dynamic_cast<TagLib::MPEG::File*>(fileRef.file()))
+      if (mpeg::File* mpegFile = dynamic_cast<mpeg::File*>(fileRef.file()))
       {
-        const TagLib::ID3v2::Tag* id3v2Tag = mpegFile->ID3v2Tag();
+        const id3::Tag* id3v2Tag = mpegFile->ID3v2Tag();
         if (id3v2Tag) 
         {
-          const TagLib::ID3v2::FrameListMap& frameList = id3v2Tag->frameListMap();
-          TagLib::ID3v2::FrameListMap::ConstIterator iter = frameList.find("TCOM");
+          const id3::FrameListMap& frameList = id3v2Tag->frameListMap();
+          id3::FrameListMap::ConstIterator iter = frameList.find("TCOM");
           if (iter != frameList.end())
           {
             setItemValue (item, COLUMN_ID(Composer), iter->second.front()->toString(), tags.composer);
