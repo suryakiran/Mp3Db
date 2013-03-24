@@ -40,7 +40,7 @@ class Action(object):
         else:
             cmake = self.yml['cmake']
             init_file = os.path.join('@CMAKE_BINARY_DIR@', 'init.gdb')
-            conf_file = os.path.join('@CMAKE_SOURCE_DIR@', 'Share', 'Data', 'Mp3Config.yml')
+            conf_file = os.path.join('@CMAKE_SOURCE_DIR@', 'Share', 'Data', 'Config.yml')
             style_sheet = os.path.join('@CMAKE_SOURCE_DIR@', 'Share', 'Data', 'Preferences.css')
             
             l = Gdb(exe_file = self.exe_file,
