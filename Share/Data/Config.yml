@@ -1,4 +1,8 @@
 Config:
+  ISBNDb:
+    Keys:
+      - test1
+      - test2
   Genres:
     - Blues
     - Classic Rock
