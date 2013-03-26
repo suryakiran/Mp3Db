@@ -18,7 +18,7 @@ Set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 Find_Package(TagLib)
 Find_Package(YAMLCpp)
-Find_Package(Xerces)
+Find_Package(CURL)
 Include (${CMAKE_MODULE_PATH}/Zlib.cmake)
 
 Set (GTAGS_INPUT_FILE ${CMAKE_BINARY_DIR}/gtags.input)
