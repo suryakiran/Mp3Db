@@ -1,6 +1,8 @@
 QAbstractItemView {
-    background: #ffffee;
+    background: #eeeeff;
     alternate-background-color: #a5c1e4;
+    selection-background-color: #181291;
+    selection-color: #ffffff;
 }
 
 QLineEdit {
