@@ -33,3 +33,31 @@ QToolTip {
     background-color: #ffeedd ;
     padding: 1px ;
 }
+
+QPushButton:checked {
+    background-color: #a5c1e4 ;
+    border: none ;
+    border-radius: 6px ;
+}
+
+QPushButton {
+    outline: none ;
+}
+
+QPushButton#docButton:pressed {
+    outline: none ;
+    background-color: #a5c1e4 ;
+    border: none ;
+    border-radius: 6px ;
+}
+
+QPushButton#musicButton:pressed {
+    outline: none ;
+    background-color: #a5c1e4 ;
+    border: none ;
+    border-radius: 6px ;
+}
+
+QMainWindow {
+    background-color: #eeeeff ;
+}
