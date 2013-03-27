@@ -1,8 +1,12 @@
 #include <TagRename/MainWindow.hxx>
 #include <QtGui/QFileSystemModel>
+#include <iostream>
+using namespace std;
+
+
 
 MainWindow :: MainWindow(QWidget* p_parent)
-  : QMainWindow(p_parent)
+  : QMainWindow(p_parent), m_shown(false)
 {
   setupUi(this);
   resize(1000, 600);
@@ -30,4 +34,15 @@ MainWindow :: MainWindow(QWidget* p_parent)
 
   buttonGroup->setId(musicButton, 0);
   buttonGroup->setId(docButton, 1);
+}
+
+void
+MainWindow::showEvent(QShowEvent* p_event)
+{
+  if (!m_shown) {
+    m_shown = true;
+    buttonGroup->button(0)->click();
+  }
+  
+  QMainWindow::showEvent(p_event);
 }
