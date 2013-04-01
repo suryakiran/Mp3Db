@@ -1,9 +1,5 @@
 #include <TagRename/MainWindow.hxx>
 #include <QtGui/QFileSystemModel>
-#include <iostream>
-using namespace std;
-
-
 
 MainWindow :: MainWindow(QWidget* p_parent)
   : QMainWindow(p_parent), m_shown(false)
