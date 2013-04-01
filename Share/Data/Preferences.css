@@ -3,59 +3,57 @@ QPushButton {
 }
 
 QPushButton:enabled {
-    background-color: #5c3566;
+    background-color: #204a87;
 }
 
 QPushButton:disabled {
-    background-color: #a87fa8;
+    background-color: #888a85;
     color: #555753;   
 }
 
-QPushButton[flat = "true"]:pressed {
+QPushButton[flat = "true"]:pressed, QPushButton[flat = "true"]:checked {
     outline: none ;
-    background-color: #204a87 ;
     border: none ;
+    background-color: #d3d7df ;
+    color: #2e3436;
     border-radius: 6px ;
-    color: #eeeeec;
-}
-
-QPushButton[flat = "true"]:checked {
-    outline: none ;
-    background-color: #204a87 ;
-    border: none ;
-    border-radius: 6px ;
-    color: #eeeeec;
 }
 
 QAbstractItemView {
-    alternate-background-color: #555753;
-    selection-background-color: #fce94f;
+    alternate-background-color: #2e3436;
+    selection-background-color: #fcaf3e;
     selection-color:#2e3436;
 }
 
 QHeaderView {
-    color: #fce94f;
+    color: #fcaf3e;
 }
 
 QHeaderView::section {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
                                      stop: 1 #555753 stop: 0 #2e3436);
-    border: 0.5px solid;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
     padding-left: 5px;
 }
 
-QLineEdit {
-    background-color: #e9b96e;
-    color: #2e3436;
+QLineEdit:read-only {
+    background-color: #555753;
+    color: #babdb6;
+    border: 1px solid #2e3436;
 }
 
-QLineEdit:read-only {
+QLineEdit {
     background-color: #d3d7cf;
+    border-radius: 3px;
+    color: #2e3436;
 }
 
 QScrollBar {
     background-color: none;
-    color: #4e9a06;
+    color: #a40000;
 }
 
 QGroupBox::title {
@@ -77,6 +75,7 @@ QProgressBar::chunk{
 
 QToolBox::tab:selected{
     font: bold ;
+    color: #8ae234;
 }
 
 QToolTip {
@@ -86,6 +85,6 @@ QToolTip {
 }
 
 * {
-    background-color: #2e3436;
+    background-color: #555753;
     color: #eeeeec;
 }
