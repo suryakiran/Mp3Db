@@ -1,16 +1,65 @@
+QPushButton {
+    outline: none;
+}
+
+QPushButton:enabled {
+    background-color: #5c3566;
+}
+
+QPushButton:disabled {
+    background-color: #a87fa8;
+    color: #555753;   
+}
+
+QPushButton[flat = "true"]:pressed {
+    outline: none ;
+    background-color: #204a87 ;
+    border: none ;
+    border-radius: 6px ;
+    color: #eeeeec;
+}
+
+QPushButton[flat = "true"]:checked {
+    outline: none ;
+    background-color: #204a87 ;
+    border: none ;
+    border-radius: 6px ;
+    color: #eeeeec;
+}
+
 QAbstractItemView {
-    background: #eeeeff;
-    alternate-background-color: #a5c1e4;
-    selection-background-color: #181291;
-    selection-color: #ffffff;
+    alternate-background-color: #555753;
+    selection-background-color: #fce94f;
+    selection-color:#2e3436;
+}
+
+QHeaderView {
+    color: #fce94f;
+}
+
+QHeaderView::section {
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+                                     stop: 1 #555753 stop: 0 #2e3436);
+    border: 0.5px solid;
+    padding-left: 5px;
 }
 
 QLineEdit {
-    background-color: #ffeedd;
+    background-color: #e9b96e;
+    color: #2e3436;
 }
 
 QLineEdit:read-only {
-    background-color: #eeeeee;
+    background-color: #d3d7cf;
+}
+
+QScrollBar {
+    background-color: none;
+    color: #4e9a06;
+}
+
+QGroupBox::title {
+    color: #8ae234;
 }
 
 QProgressBar {
@@ -36,30 +85,7 @@ QToolTip {
     padding: 1px ;
 }
 
-QPushButton:checked {
-    background-color: #a5c1e4 ;
-    border: none ;
-    border-radius: 6px ;
-}
-
-QPushButton {
-    outline: none ;
-}
-
-QPushButton#docButton:pressed {
-    outline: none ;
-    background-color: #a5c1e4 ;
-    border: none ;
-    border-radius: 6px ;
-}
-
-QPushButton#musicButton:pressed {
-    outline: none ;
-    background-color: #a5c1e4 ;
-    border: none ;
-    border-radius: 6px ;
-}
-
-QMainWindow {
-    background-color: #eeeeff ;
+* {
+    background-color: #2e3436;
+    color: #eeeeec;
 }
