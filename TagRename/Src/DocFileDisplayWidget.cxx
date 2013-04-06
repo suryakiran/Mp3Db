@@ -13,9 +13,9 @@ using namespace boost::assign;
 
 namespace docs {
   COLUMN_DEFINE(FileType, 0, "File Type");
-  COLUMN_DEFINE(FileName, 1, "File Name");
-  COLUMN_DEFINE(DirName, 2, "Directory");
-  COLUMN_DEFINE(Select, 3, "Select");
+  COLUMN_DEFINE(FileName, 2, "File Name");
+  COLUMN_DEFINE(DirName, 3, "Directory");
+  COLUMN_DEFINE(Select, 1, "Select");
 }
 
 namespace {
@@ -45,10 +45,9 @@ DocFileDisplayWidget::DocFileDisplayWidget(QWidget* p_parent)
     (COLUMN_ID(docs::Select),  COLUMN_LABEL(docs::Select))
     ;
 
-  boost::range::for_each(m_headerNameMap,
-                         [header](HeaderNameMapValue& value) {
-                           header->setText(value.first, value.second);
-                         });
+  for(auto& i: m_headerNameMap) {
+    header->setText(i.first, i.second);
+  }
   setHeaderItem(header);
 
   insert(m_fileTypeItems)
@@ -60,11 +59,24 @@ DocFileDisplayWidget::DocFileDisplayWidget(QWidget* p_parent)
   
   connect(this, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
           this, SLOT(onItemChanged(QTreeWidgetItem*, int)));
+  
+  connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)),
+          this, SLOT(resizeColumns()));
+  
+  connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)),
+          this, SLOT(resizeColumns()));
 }
 
 void
 DocFileDisplayWidget::onItemChanged(QTreeWidgetItem* item, int column)
 {
+  bool found(false);
+  for(auto& i: m_fileTypeItems)
+  {
+    if (i.second == item) {
+      found = true;
+    }
+  }
 }
 
 DocFileDisplayWidget::~DocFileDisplayWidget()
@@ -72,12 +84,19 @@ DocFileDisplayWidget::~DocFileDisplayWidget()
   
 }
 
+void
+DocFileDisplayWidget::resizeColumns()
+{
+  for(int i = 0; i < columnCount(); ++i) {
+    resizeColumnToContents(i);
+  }
+}
+
 void DocFileDisplayWidget::readDirectory(const QModelIndex& p_index)
 {
-  boost::range::for_each(m_fileTypeItems,
-                         [] (FileTypeItemMapValue& value) {
-                           qDeleteAll(value.second->takeChildren());
-                         });
+  for(auto& i: m_fileTypeItems) {
+    qDeleteAll(i.second->takeChildren());
+  }
 
   const QFileSystemModel* model = dynamic_cast<const QFileSystemModel*>(p_index.model());
   if(model)
@@ -99,9 +118,8 @@ void DocFileDisplayWidget::readDirectory(const QModelIndex& p_index)
       item->setCheckState(COLUMN_ID(docs::Select), Qt::Unchecked);
     }
 
-    boost::range::for_each(m_fileTypeItems,
-                           [](FileTypeItemMapValue& value){
-                             setFileTypeDefaults(value.second);
-                           });
+    for(auto& i: m_fileTypeItems) {
+      setFileTypeDefaults(i.second);
+    }
   }
 }

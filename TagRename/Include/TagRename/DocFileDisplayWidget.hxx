@@ -25,5 +25,6 @@ public:
 public Q_SLOTS: 
   void readDirectory (const QModelIndex& p_index);
   void onItemChanged (QTreeWidgetItem* item, int column);
+  void resizeColumns ();
 };
 #endif
