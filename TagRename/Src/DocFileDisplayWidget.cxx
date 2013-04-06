@@ -77,9 +77,14 @@ void DocFileDisplayWidget::readDirectory(const QModelIndex& p_index)
         item = new QTreeWidgetItem(m_mobi);
       }
 
-        const fs::path& path (iter->path());
-        item->setText(COLUMN_ID(docs::FileName), path.filename().string().c_str());
-        item->setText(COLUMN_ID(docs::DirName), path.parent_path().string().c_str());
+      const fs::path& path (iter->path());
+      item->setText(COLUMN_ID(docs::FileName), path.filename().string().c_str());
+      item->setText(COLUMN_ID(docs::DirName), path.parent_path().string().c_str());
     }
+
+    m_pdf->setText (COLUMN_ID(docs::FileName), QString("%1 items").arg(m_pdf->childCount()));
+    m_djvu->setText(COLUMN_ID(docs::FileName), QString("%1 items").arg(m_djvu->childCount()));
+    m_epub->setText(COLUMN_ID(docs::FileName), QString("%1 items").arg(m_epub->childCount()));
+    m_mobi->setText(COLUMN_ID(docs::FileName), QString("%1 items").arg(m_mobi->childCount()));
   }
 }
