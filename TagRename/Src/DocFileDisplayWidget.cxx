@@ -8,6 +8,7 @@
 #include <TagRename/QStringPrint.hxx>
 #include <QtGui/QFileSystemModel>
 #include <boost/range/algorithm/for_each.hpp>
+#include <boost/algorithm/string/regex.hpp>
 using namespace std;
 using namespace boost::assign;
 
@@ -105,6 +106,25 @@ DocFileDisplayWidget::resizeColumns()
   }
 }
 
+void DocFileDisplayWidget::guessTitles()
+{
+  boost::regex reg("\\d{9}[\\d|X]");
+  for(auto& iter: m_fileTypeItems)
+  {
+    QTreeWidgetItem* item = iter.second;
+    for (int i = 0; i < item->childCount(); ++i)
+    {
+      QTreeWidgetItem* childItem = item->child(i);
+      string title = childItem->text(COLUMN_ID(docs::FileName)).toStdString();
+      auto match = str::find_regex(title, reg);
+      if (!match) {
+        cout << title << endl;
+      }
+      childItem->setText(COLUMN_ID(docs::Title), title.c_str());
+    }
+  }
+}
+
 void DocFileDisplayWidget::readDirectory(const QModelIndex& p_index)
 {
   for(auto& i: m_fileTypeItems) {
@@ -134,5 +154,7 @@ void DocFileDisplayWidget::readDirectory(const QModelIndex& p_index)
     for(auto& i: m_fileTypeItems) {
       setFileTypeDefaults(i.second);
     }
+
+    guessTitles();
   }
 }

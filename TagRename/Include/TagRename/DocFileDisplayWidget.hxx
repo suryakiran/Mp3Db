@@ -22,6 +22,9 @@ public:
   DocFileDisplayWidget (QWidget* p_parent = 0);
   ~DocFileDisplayWidget();
 
+private:
+  void guessTitles();
+
 public Q_SLOTS: 
   void readDirectory (const QModelIndex& p_index);
   void onItemChanged (QTreeWidgetItem* item, int column);
