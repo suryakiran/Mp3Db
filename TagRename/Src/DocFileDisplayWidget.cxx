@@ -13,9 +13,10 @@ using namespace boost::assign;
 
 namespace docs {
   COLUMN_DEFINE(FileType, 0, "File Type");
-  COLUMN_DEFINE(FileName, 2, "File Name");
-  COLUMN_DEFINE(DirName, 3, "Directory");
   COLUMN_DEFINE(Select, 1, "Select");
+  COLUMN_DEFINE(FileName, 2, "File Name");
+  COLUMN_DEFINE(Title, 3, "Title");
+  COLUMN_DEFINE(DirName, 4, "Directory");
 }
 
 namespace {
@@ -43,6 +44,7 @@ DocFileDisplayWidget::DocFileDisplayWidget(QWidget* p_parent)
     (COLUMN_ID(docs::FileName), COLUMN_LABEL(docs::FileName))
     (COLUMN_ID(docs::DirName),  COLUMN_LABEL(docs::DirName))
     (COLUMN_ID(docs::Select),  COLUMN_LABEL(docs::Select))
+    (COLUMN_ID(docs::Title),  COLUMN_LABEL(docs::Title))
     ;
 
   for(auto& i: m_headerNameMap) {
@@ -75,6 +77,17 @@ DocFileDisplayWidget::onItemChanged(QTreeWidgetItem* item, int column)
   {
     if (i.second == item) {
       found = true;
+    }
+  }
+
+  if(!found) {
+    return;
+  }
+
+  if (column == COLUMN_ID(docs::Select)) {
+    Qt::CheckState state = item->checkState(column);
+    for (int i = 0; i < item->childCount(); ++i) {
+      item->child(i)->setCheckState(COLUMN_ID(docs::Select), state);
     }
   }
 }
