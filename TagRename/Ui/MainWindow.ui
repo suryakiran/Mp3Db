@@ -149,6 +149,7 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <zorder>frame</zorder>
             </widget>
            </item>
           </layout>
@@ -232,15 +233,12 @@
          <number>2</number>
         </property>
         <item>
-         <widget class="QTreeWidget" name="docView">
+         <widget class="DocFileDisplayWidget" name="m_docFileDisplayWidget">
           <property name="dragDropOverwriteMode">
            <bool>false</bool>
           </property>
           <property name="alternatingRowColors">
            <bool>true</bool>
-          </property>
-          <property name="columnCount">
-           <number>0</number>
           </property>
          </widget>
         </item>
@@ -387,6 +385,11 @@
    <extends>QWidget</extends>
    <header>TagRename/MusicFilePropertiesWidget.hxx</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DocFileDisplayWidget</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">TagRename/DocFileDisplayWidget.hxx</header>
   </customwidget>
  </customwidgets>
  <resources/>

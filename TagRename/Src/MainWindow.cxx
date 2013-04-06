@@ -13,6 +13,8 @@ MainWindow :: MainWindow(QWidget* p_parent)
 
   connect(m_dirView->selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), 
           m_musicFileDisplayWidget, SLOT(readDirectory(const QModelIndex&)));
+  connect(m_dirView->selectionModel(), SIGNAL(currentChanged(const QModelIndex&, const QModelIndex&)), 
+          m_docFileDisplayWidget, SLOT(readDirectory(const QModelIndex&)));
   connect(m_musicFileDisplayWidget, SIGNAL(hasItemSelection(bool)),
           m_musicFilePropertiesFrame, SLOT(setVisible(bool)));
   connect(m_musicFileDisplayWidget, SIGNAL(hasItemSelection(bool)),

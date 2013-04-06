@@ -4,6 +4,8 @@
 #include <QtGui/QTreeWidget>
 #include <Stl/Map.hxx>
 
+class QTreeWidgetItem;
+
 class DocFileDisplayWidget : public QTreeWidget
 {
   Q_OBJECT
@@ -13,12 +15,13 @@ private:
 
 private:
   HeaderNameMap m_headerNameMap;
+  QTreeWidgetItem *m_pdf, *m_epub, *m_djvu, *m_mobi;
 
 public:
   DocFileDisplayWidget (QWidget* p_parent = 0);
   ~DocFileDisplayWidget();
 
-public Q_SLOTS:
+public Q_SLOTS: 
   void readDirectory (const QModelIndex& p_index);
 };
 #endif
