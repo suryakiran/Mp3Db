@@ -7,6 +7,7 @@
 #include <boost/iterator/filter_iterator.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 namespace fs = boost::filesystem;
 namespace str = boost::algorithm;
 using namespace std;
@@ -52,6 +53,16 @@ public:
     {
     }
 
+  std::string extension() const {
+    const fs::path& path = *(base());
+    std::string extn(path.extension().string());
+    if (!extn.empty()) {
+      extn = extn.substr(1);
+    }
+    str::to_lower(extn);
+    return extn;
+ } 
+  
   bool isPdf() const {
     return isFileExtension(".pdf");
   }

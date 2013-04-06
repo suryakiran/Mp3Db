@@ -12,10 +12,11 @@ class DocFileDisplayWidget : public QTreeWidget
 
 private:
   DEFINE_MAP(int, QString, HeaderNameMap);
+  DEFINE_MAP(std::string, QTreeWidgetItem*, FileTypeItemMap);
 
 private:
   HeaderNameMap m_headerNameMap;
-  QTreeWidgetItem *m_pdf, *m_epub, *m_djvu, *m_mobi;
+  FileTypeItemMap m_fileTypeItems;
 
 public:
   DocFileDisplayWidget (QWidget* p_parent = 0);
@@ -23,5 +24,6 @@ public:
 
 public Q_SLOTS: 
   void readDirectory (const QModelIndex& p_index);
+  void onItemChanged (QTreeWidgetItem* item, int column);
 };
 #endif

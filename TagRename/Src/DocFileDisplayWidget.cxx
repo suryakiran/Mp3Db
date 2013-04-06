@@ -5,7 +5,9 @@
 #include <boost/assign/std/map.hpp>
 #include <boost/assign/list_of.hpp>
 #include <iostream>
+#include <TagRename/QStringPrint.hxx>
 #include <QtGui/QFileSystemModel>
+#include <boost/range/algorithm/for_each.hpp>
 using namespace std;
 using namespace boost::assign;
 
@@ -13,9 +15,17 @@ namespace docs {
   COLUMN_DEFINE(FileType, 0, "File Type");
   COLUMN_DEFINE(FileName, 1, "File Name");
   COLUMN_DEFINE(DirName, 2, "Directory");
+  COLUMN_DEFINE(Select, 3, "Select");
 }
 
 namespace {
+  void setFileTypeDefaults (QTreeWidgetItem* item)
+  {
+    QString format("%1 items");
+    item->setText(COLUMN_ID(docs::FileName), format.arg(item->childCount()));
+    item->setCheckState(COLUMN_ID(docs::Select), Qt::Unchecked);
+  }
+                  
   QTreeWidgetItem* newItem (QTreeWidget* parent, const QString& itemName)
   {
     QTreeWidgetItem *item = new QTreeWidgetItem(parent);
@@ -24,7 +34,7 @@ namespace {
   }
 }
 
-  DocFileDisplayWidget::DocFileDisplayWidget(QWidget* p_parent)
+DocFileDisplayWidget::DocFileDisplayWidget(QWidget* p_parent)
   : QTreeWidget (p_parent)
 {
   QTreeWidgetItem* header = new QTreeWidgetItem();
@@ -32,18 +42,29 @@ namespace {
     (COLUMN_ID(docs::FileType), COLUMN_LABEL(docs::FileType))
     (COLUMN_ID(docs::FileName), COLUMN_LABEL(docs::FileName))
     (COLUMN_ID(docs::DirName),  COLUMN_LABEL(docs::DirName))
+    (COLUMN_ID(docs::Select),  COLUMN_LABEL(docs::Select))
     ;
 
-  std::for_each(m_headerNameMap.begin(), m_headerNameMap.end(),
-                [header](HeaderNameMapValue& value)
-                { header->setText(value.first, value.second); }
-    );
+  boost::range::for_each(m_headerNameMap,
+                         [header](HeaderNameMapValue& value) {
+                           header->setText(value.first, value.second);
+                         });
   setHeaderItem(header);
+
+  insert(m_fileTypeItems)
+    ("pdf", newItem(this, "Pdf"))
+    ("epub", newItem(this, "Epub"))
+    ("djvu", newItem(this, "Djvu"))
+    ("mobi", newItem(this, "Mobi"))
+    ;
   
-  m_pdf = newItem (this, "Pdf");
-  m_epub = newItem (this, "Epub");
-  m_mobi = newItem (this, "Mobi");
-  m_djvu = newItem (this, "Djvu");
+  connect(this, SIGNAL(itemChanged(QTreeWidgetItem*, int)),
+          this, SLOT(onItemChanged(QTreeWidgetItem*, int)));
+}
+
+void
+DocFileDisplayWidget::onItemChanged(QTreeWidgetItem* item, int column)
+{
 }
 
 DocFileDisplayWidget::~DocFileDisplayWidget()
@@ -53,10 +74,10 @@ DocFileDisplayWidget::~DocFileDisplayWidget()
 
 void DocFileDisplayWidget::readDirectory(const QModelIndex& p_index)
 {
-  qDeleteAll(m_pdf->takeChildren());
-  qDeleteAll(m_epub->takeChildren());
-  qDeleteAll(m_djvu->takeChildren());
-  qDeleteAll(m_mobi->takeChildren());
+  boost::range::for_each(m_fileTypeItems,
+                         [] (FileTypeItemMapValue& value) {
+                           qDeleteAll(value.second->takeChildren());
+                         });
 
   const QFileSystemModel* model = dynamic_cast<const QFileSystemModel*>(p_index.model());
   if(model)
@@ -65,26 +86,22 @@ void DocFileDisplayWidget::readDirectory(const QModelIndex& p_index)
     auto currentDir = model->filePath(p_index).toStdWString();
     for(DocFileIterator iter(currentDir); iter != endIter; ++iter)
     {
-      QTreeWidgetItem* item = nullptr;
-      
-      if (iter.isPdf()) {
-        item = new QTreeWidgetItem(m_pdf);
-      } else if (iter.isDjvu()) {
-        item = new QTreeWidgetItem(m_djvu);
-      } else if (iter.isEpub()) {
-        item = new QTreeWidgetItem(m_epub);
-      } else if (iter.isMobi()) {
-        item = new QTreeWidgetItem(m_mobi);
+      auto findIter = m_fileTypeItems.find(iter.extension());
+      if (findIter == m_fileTypeItems.end()) {
+        continue;
       }
 
+      QTreeWidgetItem* item = new QTreeWidgetItem(findIter->second);
+      
       const fs::path& path (iter->path());
       item->setText(COLUMN_ID(docs::FileName), path.filename().string().c_str());
       item->setText(COLUMN_ID(docs::DirName), path.parent_path().string().c_str());
+      item->setCheckState(COLUMN_ID(docs::Select), Qt::Unchecked);
     }
 
-    m_pdf->setText (COLUMN_ID(docs::FileName), QString("%1 items").arg(m_pdf->childCount()));
-    m_djvu->setText(COLUMN_ID(docs::FileName), QString("%1 items").arg(m_djvu->childCount()));
-    m_epub->setText(COLUMN_ID(docs::FileName), QString("%1 items").arg(m_epub->childCount()));
-    m_mobi->setText(COLUMN_ID(docs::FileName), QString("%1 items").arg(m_mobi->childCount()));
+    boost::range::for_each(m_fileTypeItems,
+                           [](FileTypeItemMapValue& value){
+                             setFileTypeDefaults(value.second);
+                           });
   }
 }
