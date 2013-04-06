@@ -15,9 +15,14 @@ struct is_doc_file
 {
   bool operator() (const fs::path& p_filePath)
     {
+      std::string extn(p_filePath.extension().string());
       return (
-        fs::is_regular_file(p_filePath) &&
-        str::iequals(p_filePath.extension().string(), ".pdf")
+        fs::is_regular_file(p_filePath) && (
+          str::iequals(extn, ".pdf") ||
+          str::iequals(extn, ".djvu") ||
+          str::iequals(extn, ".epub") ||
+          str::iequals(extn, ".mobi")
+          )
         );
     }
 };

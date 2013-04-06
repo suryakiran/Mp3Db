@@ -65,12 +65,21 @@ void DocFileDisplayWidget::readDirectory(const QModelIndex& p_index)
     auto currentDir = model->filePath(p_index).toStdWString();
     for(DocFileIterator iter(currentDir); iter != endIter; ++iter)
     {
+      QTreeWidgetItem* item = nullptr;
+      
       if (iter.isPdf()) {
-        QTreeWidgetItem* item = new QTreeWidgetItem(m_pdf);
+        item = new QTreeWidgetItem(m_pdf);
+      } else if (iter.isDjvu()) {
+        item = new QTreeWidgetItem(m_djvu);
+      } else if (iter.isEpub()) {
+        item = new QTreeWidgetItem(m_epub);
+      } else if (iter.isMobi()) {
+        item = new QTreeWidgetItem(m_mobi);
+      }
+
         const fs::path& path (iter->path());
         item->setText(COLUMN_ID(docs::FileName), path.filename().string().c_str());
         item->setText(COLUMN_ID(docs::DirName), path.parent_path().string().c_str());
-      }
     }
   }
 }
