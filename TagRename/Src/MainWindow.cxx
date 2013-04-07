@@ -5,7 +5,7 @@ MainWindow :: MainWindow(QWidget* p_parent)
   : QMainWindow(p_parent), m_shown(false)
 {
   setupUi(this);
-  resize(1000, 600);
+  resize(1500, 600);
 
   m_musicFilePropertiesFrame->setVisible(false);
   m_saveAndPrev->setEnabled(false);
@@ -29,7 +29,11 @@ MainWindow :: MainWindow(QWidget* p_parent)
           m_musicFileDisplayWidget, SLOT(saveCurrentAndGotoNextItem()));
   connect(m_saveAndPrev, SIGNAL(clicked()),
           m_musicFileDisplayWidget, SLOT(saveCurrentAndGotoPrevItem()));
-
+  connect(m_renameToTitle, SIGNAL(clicked()),
+          m_docFileDisplayWidget, SLOT(onRenameToTitle()));
+  connect(m_fetchTitles, SIGNAL(clicked()),
+          m_docFileDisplayWidget, SLOT(onFetchTitles()));
+  
   buttonGroup->setId(musicButton, 0);
   buttonGroup->setId(docButton, 1);
 }

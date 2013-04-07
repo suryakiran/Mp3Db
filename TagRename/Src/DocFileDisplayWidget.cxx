@@ -9,6 +9,8 @@
 #include <QtGui/QFileSystemModel>
 #include <boost/range/algorithm/for_each.hpp>
 #include <boost/algorithm/string/regex.hpp>
+#include <boost/algorithm/string/trim.hpp>
+#include <Stl/Vector.hxx>
 using namespace std;
 using namespace boost::assign;
 
@@ -21,6 +23,27 @@ namespace docs {
 }
 
 namespace {
+  boost::regex u_isbnReg ("\\d{9}[\\d|X]");
+  boost::regex u_titleReg("\\b([a-z])");
+
+
+  void guessTitle(string& title)
+  {
+    boost::regex reg("\\.|[ _-]|(?<!^)(?=[A-Z][a-z])");
+    boost::regex nonEmptyString ("^\\S+$");
+    stl::StringVec sv;
+    fs::path p(title);
+    string extn(p.extension().string());
+    str::split_regex(sv, p.stem().string(), reg);
+    for(string& s: sv) {
+      str::trim(s);
+      str::replace_regex(s, u_titleReg, std::string("\\U\\1"));
+    }
+    string final = str::join_if(sv, " ", nonEmptyString);
+    final += extn;
+    title = final;
+  }
+  
   void setFileTypeDefaults (QTreeWidgetItem* item)
   {
     QString format("%1 items");
@@ -71,6 +94,38 @@ DocFileDisplayWidget::DocFileDisplayWidget(QWidget* p_parent)
 }
 
 void
+DocFileDisplayWidget::onFetchTitles()
+{
+  for(auto& iter: m_fileTypeItems)
+  {
+  }
+}
+
+void
+DocFileDisplayWidget::onRenameToTitle()
+{
+  for(auto& iter: m_fileTypeItems)
+  {
+    QTreeWidgetItem* item = iter.second;
+    for(int i = 0; i < item->childCount(); ++i)
+    {
+      QTreeWidgetItem* childItem = item->child(i);
+      Qt::CheckState state = childItem->checkState(COLUMN_ID(docs::Select));
+      if (state == Qt::Checked) {
+        QString oldName(childItem->text(COLUMN_ID(docs::FileName)));
+        QString newName(childItem->text(COLUMN_ID(docs::Title)));
+        if (newName.isEmpty()) {
+          continue;
+        }
+        cout << oldName << endl;
+        cout << newName << endl;
+        cout << "======" << endl;
+      }
+    }
+  }
+}
+
+void
 DocFileDisplayWidget::onItemChanged(QTreeWidgetItem* item, int column)
 {
   bool found(false);
@@ -108,7 +163,6 @@ DocFileDisplayWidget::resizeColumns()
 
 void DocFileDisplayWidget::guessTitles()
 {
-  boost::regex reg("\\d{9}[\\d|X]");
   for(auto& iter: m_fileTypeItems)
   {
     QTreeWidgetItem* item = iter.second;
@@ -116,9 +170,9 @@ void DocFileDisplayWidget::guessTitles()
     {
       QTreeWidgetItem* childItem = item->child(i);
       string title = childItem->text(COLUMN_ID(docs::FileName)).toStdString();
-      auto match = str::find_regex(title, reg);
+      auto match = str::find_regex(title, u_isbnReg);
       if (!match) {
-        cout << title << endl;
+        guessTitle(title);
       }
       childItem->setText(COLUMN_ID(docs::Title), title.c_str());
     }
