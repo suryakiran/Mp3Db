@@ -1,8 +1,9 @@
 Config:
   ISBNDb:
+    Url: http://isbndb.com/api/books.xml
     Keys:
-      - test1
-      - test2
+      - ZB4GTWMM
+      - NZC5LLNJ
   Genres:
     - Blues
     - Classic Rock
