@@ -1,16 +1,19 @@
 #include <TagRename/FetchBookDetails.hxx>
+#include <Poco/Net/HTTPRequest.h>
+#include <Poco/Net/HTMLForm.h>
+#include <Poco/Net/HTTPStreamFactory.h>
+#include <Poco/Net/HTTPResponse.h>
 #include <yaml-cpp/yaml.h>
 
 FetchBookDetails* FetchBookDetails::m_instance = nullptr;
 
 FetchBookDetails::FetchBookDetails()
 {
-  curl_global_init(CURL_GLOBAL_ALL);
+  Poco::Net::HTTPStreamFactory::registerFactory();
 }
 
 FetchBookDetails::~FetchBookDetails()
 {
-  curl_global_cleanup();
 }
 
 FetchBookDetails*
@@ -26,50 +29,50 @@ FetchBookDetails::instance()
 void
 FetchBookDetails::fetchIsbn(const std::string& p_isbn)
 {
-  curlCreate("isbn", p_isbn);
+  createForm("isbn", p_isbn);
 }
 
 void
 FetchBookDetails::fetchTitle(const std::string& p_title)
 {
-  curlCreate("combined", p_title);
+  createForm("combined", p_title);
 }
 
 void
 FetchBookDetails::execute()
 {
-  
+  for(auto& iter: m_sessions)
+  {
+    std::ostream& os = iter.first->sendRequest(*(iter.second.second));
+    Poco::Net::HTTPResponse response;
+    std::istream& is = iter.first->receiveResponse(response);
+  }
 }
 
 void
 FetchBookDetails::readConfig(const std::string& p_confFile)
 {
   YAML::Node config = YAML::LoadFile(p_confFile);
-  m_isbnDbUrl = config["Config"]["ISBNDb"]["Url"].as<std::string>();
+  std::string isbnDbUrl (config["Config"]["ISBNDb"]["Url"].as<std::string>());
+  m_uri = Poco::URI(isbnDbUrl);
   m_isbnDbKeys = config["Config"]["ISBNDb"]["Keys"].as<stl::StringVec>();
 }
 
 void
-FetchBookDetails::curlCreate(const std::string& p_type, const std::string& p_value)
+FetchBookDetails::createForm (const std::string& p_type,
+                              const std::string& p_search
+  )
 {
-  Form form (nullptr, nullptr);
-  auto handle = curl_easy_init();
-  curl_formadd(&form.first,
-               &form.second,
-               CURLFORM_COPYNAME, "access_key",
-               CURLFORM_COPYCONTENTS, "ZB4GTWMM",
-               CURLFORM_END);
-  curl_formadd(&form.first,
-               &form.second,
-               CURLFORM_COPYNAME, "value1",
-               CURLFORM_COPYCONTENTS, p_value.c_str(),
-               CURLFORM_END);
-  curl_formadd(&form.first,
-               &form.second,
-               CURLFORM_COPYNAME, "index1",
-               CURLFORM_COPYCONTENTS, p_type.c_str(),
-               CURLFORM_END);
-  curl_easy_setopt(handle, CURLOPT_URL, m_isbnDbUrl.c_str());
-  curl_easy_setopt(handle, CURLOPT_HTTPPOST, form.first);
-  m_handles.push_back(handle);
+  SessionPtr session (new
+                      Poco::Net::HTTPClientSession (m_uri.getHost(), m_uri.getPort()));
+  RequestPtr request (new
+    Poco::Net::HTTPRequest (Poco::Net::HTTPRequest::HTTP_POST,
+                            m_uri.getPath(),
+                            Poco::Net::HTTPMessage::HTTP_1_1));
+  FormPtr form (new Poco::Net::HTMLForm);
+  form->set("index1", p_type);
+  form->set("value1", p_search);
+  form->set("access_key", m_isbnDbKeys.front());
+  form->prepareSubmit(*request);
+  m_sessions[session] = std::make_pair(form, request);
 }

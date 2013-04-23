@@ -91,7 +91,7 @@ EndMacro (GET_PROPERTIES)
 
 
 Function (MP3DB_EXECUTABLE)
-  Get_Properties (ModuleName TargetName BoostLibraries OtherLibraries)
+  Get_Properties (ModuleName TargetName BoostLibraries OtherLibraries PocoLibraries)
   Get_Property (MP3DB_GTAGS_INPUT_FILE GLOBAL PROPERTY MP3DB_GTAGS_INPUT_FILE)
 
   Set (INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Include/${ModuleName})
@@ -137,10 +137,15 @@ Function (MP3DB_EXECUTABLE)
 
   Set (Boost_Libraries)
   Set (Other_Libraries)
+  Set (Poco_Libraries)
 
   ForEach (lib ${BoostLibraries})
     String (TOUPPER ${lib} lib) 
     List (APPEND Boost_Libraries ${Boost_@lib@_LIBRARY})
+  EndForEach (lib)
+
+  ForEach (lib ${PocoLibraries})
+    List (APPEND Poco_Libraries ${Poco_@lib@_LIBRARY})
   EndForEach (lib)
 
   ForEach (lib ${OtherLibraries})
@@ -155,6 +160,7 @@ Function (MP3DB_EXECUTABLE)
     ${QT_QTGUI_LIBRARIES}
     ${Boost_Libraries}
     ${Other_Libraries}
+    ${Poco_Libraries}
     )
 EndFunction (MP3DB_EXECUTABLE)
 

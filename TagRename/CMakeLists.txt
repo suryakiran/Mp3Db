@@ -6,4 +6,5 @@ Mp3Db_Executable_Properties (
   TagRename
   PROPERTY BoostLibraries filesystem system program_options date_time regex locale
   PROPERTY OtherLibraries taglib yaml-cpp curl
+  PROPERTY PocoLibraries Foundation Net Util
   )
