@@ -12,7 +12,6 @@
 using namespace std;
 
 #include <TagRename/AppConfig.hxx>
-#include <TagRename/FetchBookDetails.hxx>
 
 namespace po = boost::program_options;
 
@@ -54,9 +53,6 @@ namespace {
 
     AppConfig& config = AppConfig::instance();
     config.readConfig(confFile);
-
-    FetchBookDetails* fbd = FetchBookDetails::instance();
-    fbd->readConfig(confFile);
   }
 
   void setApplicationStyleSheet()
