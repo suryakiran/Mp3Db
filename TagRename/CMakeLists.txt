@@ -5,7 +5,7 @@ Include_Directories(${INTEL_TBB_INCLUDE_DIR})
 
 Mp3Db_Executable_Properties (
   TagRename
-  PROPERTY BoostLibraries filesystem system program_options date_time regex locale
+  PROPERTY BoostLibraries filesystem system program_options date_time regex
   PROPERTY OtherLibraries taglib yaml-cpp curl
   )
 
