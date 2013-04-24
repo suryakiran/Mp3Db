@@ -57,7 +57,7 @@ IsbnDb::fetch()
                           Book b(r.second);
                           if (b.valid) {
                             Results::accessor a;
-                            m_results.insert(a, make_pair(b.isbn.second, b));
+                            m_results.insert(a, make_pair(b.isbn.first, b));
                           }
                         }
                         if (!c.isDone()) {
@@ -82,7 +82,7 @@ IsbnDb::fetch()
                           Book b(r.second);
                           if (b.valid) {
                             Results::accessor a;
-                            m_results.insert(a, make_pair(b.isbn.second, b));
+                            m_results.insert(a, make_pair(b.isbn.first, b));
                           }
                         }
                       }
