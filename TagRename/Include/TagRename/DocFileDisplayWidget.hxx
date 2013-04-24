@@ -31,5 +31,7 @@ public Q_SLOTS:
   void resizeColumns   ();
   void onFetchTitles   ();
   void onRenameToTitle ();
+Q_SIGNALS:
+  void filesRenamed();
 };
 #endif

@@ -33,6 +33,8 @@ MainWindow :: MainWindow(QWidget* p_parent)
           m_docFileDisplayWidget, SLOT(onRenameToTitle()));
   connect(m_fetchTitles, SIGNAL(clicked()),
           m_docFileDisplayWidget, SLOT(onFetchTitles()));
+  connect(m_docFileDisplayWidget, SIGNAL(filesRenamed()),
+          this, SLOT(readCurrentDirectory()));
   
   buttonGroup->setId(musicButton, 0);
   buttonGroup->setId(docButton, 1);
@@ -47,4 +49,17 @@ MainWindow::showEvent(QShowEvent* p_event)
   }
   
   QMainWindow::showEvent(p_event);
+}
+
+void
+MainWindow::readCurrentDirectory()
+{
+  QItemSelectionModel* model = m_dirView->selectionModel();
+  if (!model) {
+    return;
+  }
+
+  if (model->hasSelection()) {
+    m_docFileDisplayWidget->readDirectory(model->currentIndex());
+  }
 }

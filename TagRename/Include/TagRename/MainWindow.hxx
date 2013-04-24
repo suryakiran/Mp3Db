@@ -18,6 +18,9 @@ private:
 
 protected:
   virtual void showEvent(QShowEvent* p_event);
+
+private Q_SLOTS:
+  void readCurrentDirectory();
 };
 
 #endif

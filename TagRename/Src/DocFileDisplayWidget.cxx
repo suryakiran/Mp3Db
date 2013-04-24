@@ -12,12 +12,15 @@
 #include <boost/range/algorithm/for_each.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/exception.hpp>
 
 #include <sstream>
 #include <iostream>
 
 using namespace std;
 using namespace boost::assign;
+namespace fs = boost::filesystem;
 
 namespace docs {
   COLUMN_DEFINE(FileType, 0, "File Type");
@@ -109,24 +112,36 @@ DocFileDisplayWidget::onFetchTitles()
 void
 DocFileDisplayWidget::onRenameToTitle()
 {
+  bool renamed(false);
   for(auto& iter: m_fileTypeItems)
   {
+    string extn(iter.first);
     QTreeWidgetItem* item = iter.second;
     for(int i = 0; i < item->childCount(); ++i)
     {
       QTreeWidgetItem* childItem = item->child(i);
       Qt::CheckState state = childItem->checkState(COLUMN_ID(docs::Select));
       if (state == Qt::Checked) {
-        QString oldName(childItem->text(COLUMN_ID(docs::FileName)));
-        QString newName(childItem->text(COLUMN_ID(docs::Title)));
-        if (newName.isEmpty()) {
+        fs::path path(childItem->text(COLUMN_ID(docs::DirName)).toStdString());
+        string oldName(childItem->text(COLUMN_ID(docs::FileName)).toStdString());
+        string newName(childItem->text(COLUMN_ID(docs::Title)).toStdString());
+        if (newName.empty()) {
           continue;
         }
-        cout << oldName << endl;
-        cout << newName << endl;
-        cout << "======" << endl;
+        fs::path oldPath(path), newPath(path);
+        oldPath /= oldName;
+        newPath /= (newName + "." + extn);
+        try {
+          fs::rename(oldPath, newPath);
+          renamed = true;
+        } catch (fs::filesystem_error& error) {
+          cout << "Error: " << error.what() << '\t' << error.path1() << endl;
+        }
       }
     }
+  }
+  if(renamed) {
+    Q_EMIT filesRenamed();
   }
 }
 
@@ -177,10 +192,7 @@ void DocFileDisplayWidget::guessTitles()
       QTreeWidgetItem* childItem = item->child(i);
       string title = childItem->text(COLUMN_ID(docs::FileName)).toStdString();
       auto match = str::find_regex(title, u_isbnReg);
-      if (!match) {
-        guessTitle(title);
-        childItem->setText(COLUMN_ID(docs::Title), title.c_str());
-      } else {
+      if (match) {
         ostringstream os ;
         os << match;
         string s(os.str());
@@ -205,7 +217,12 @@ void DocFileDisplayWidget::guessTitles()
         IsbnDb::Results::const_accessor a;
         if(results.find(a, v.toString().toStdString())) {
           Book b = a->second;
+          guessTitle(b.title);
           childItem->setText(COLUMN_ID(docs::Title), b.title.c_str());
+        } else {
+          string title = childItem->text(COLUMN_ID(docs::FileName)).toStdString();
+          guessTitle(title);
+          childItem->setText(COLUMN_ID(docs::Title), title.c_str());
         }
       }
     }
