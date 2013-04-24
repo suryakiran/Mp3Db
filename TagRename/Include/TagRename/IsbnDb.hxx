@@ -21,7 +21,6 @@ public:
 
 private:
   stl::StringVec m_isbn, m_titles;
-  std::string m_url;
   Results m_results;
 };
 

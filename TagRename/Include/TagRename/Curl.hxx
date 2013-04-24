@@ -6,8 +6,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/type_traits/add_reference.hpp>
-#include <string>
 #include <sstream>
+#include <Stl/Vector.hxx>
 
 class Curl
 {
@@ -59,7 +59,7 @@ public:
   };
 
 public:
-  Curl(const std::string& searchType, const std::string& url, const std::string& searchString);
+  Curl(const std::string& searchType, const std::string& searchString);
   Curl(const Curl& other);
 
   void   setPageNumber(int pageNum);
@@ -81,6 +81,7 @@ private:
   ResultPtr m_result;
   std::string m_outputString;
   Form m_form;
+  stl::StringVec m_keys;
 };
 
 #endif

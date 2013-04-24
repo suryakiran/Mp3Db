@@ -2,6 +2,7 @@
 #include <boost/lexical_cast.hpp>
 #include <TagRename/Curl.hxx>
 #include <TagRename/PtreeUtils.hxx>
+#include <TagRename/AppConfig.hxx>
 
 using namespace std;
 
@@ -19,10 +20,8 @@ namespace {
 }
 
 Curl::Curl(const string& searchType,
-           const string& url,
            const string& searchString)
-  : m_url(url),
-    m_searchString(searchString),
+  : m_searchString(searchString),
     m_searchType(searchType),
     m_result(new Result)
 {
@@ -30,8 +29,7 @@ Curl::Curl(const string& searchType,
 }
 
 Curl::Curl(const Curl& other)
-  : m_url(other.m_url),
-    m_searchString(other.m_searchString),
+  : m_searchString(other.m_searchString),
     m_searchType(other.m_searchType),
     m_result(new Result)
 {
@@ -104,8 +102,10 @@ Curl::operator()()
 void
 Curl::init()
 {
+  m_url = AppConfig::instance().isbnDbUrl();
+  m_keys = AppConfig::instance().isbnDbKeys();
   m_handle.reset(curl_easy_init());
-  m_form.set("access_key", "ZB4GTWMM");
+  m_form.set("access_key", m_keys.front().c_str());
   m_form.set("index1", m_searchType);
   m_form.set("value1", m_searchString);
 

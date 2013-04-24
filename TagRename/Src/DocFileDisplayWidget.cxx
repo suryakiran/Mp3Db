@@ -1,16 +1,21 @@
 #include <TagRename/DocFileDisplayWidget.hxx>
-#include <QHeaderView>
+#include <TagRename/IsbnDb.hxx>
 #include <TagRename/FileModelColumn.hxx>
 #include <TagRename/DocFileIterator.hxx>
+#include <TagRename/QStringPrint.hxx>
+
+#include <QHeaderView>
+#include <QtGui/QFileSystemModel>
+
 #include <boost/assign/std/map.hpp>
 #include <boost/assign/list_of.hpp>
-#include <iostream>
-#include <TagRename/QStringPrint.hxx>
-#include <QtGui/QFileSystemModel>
 #include <boost/range/algorithm/for_each.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/algorithm/string/trim.hpp>
-#include <Stl/Vector.hxx>
+
+#include <sstream>
+#include <iostream>
+
 using namespace std;
 using namespace boost::assign;
 
@@ -23,7 +28,7 @@ namespace docs {
 }
 
 namespace {
-  boost::regex u_isbnReg ("\\d{9}[\\d|X]");
+  boost::regex u_isbnReg ("(\\d{9}[\\d|X])");
   boost::regex u_titleReg("\\b([a-z])");
 
 
@@ -173,6 +178,10 @@ void DocFileDisplayWidget::guessTitles()
       auto match = str::find_regex(title, u_isbnReg);
       if (!match) {
         guessTitle(title);
+      } else {
+        ostringstream os ;
+        os << match;
+        string s(os.str());
       }
       childItem->setText(COLUMN_ID(docs::Title), title.c_str());
     }

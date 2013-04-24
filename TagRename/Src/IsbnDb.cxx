@@ -9,7 +9,6 @@
 using namespace std;
 
 IsbnDb::IsbnDb()
-  : m_url("http://isbndb.com/api/books.xml")
 {
   curl_global_init(CURL_GLOBAL_ALL);
 }
@@ -37,13 +36,13 @@ IsbnDb::fetch()
   boost::ptr_vector<Curl> curls, newCurls;
   for(const string& isbn: m_isbn)
   {
-    Curl* c = new Curl("isbn", m_url, isbn);
+    Curl* c = new Curl("isbn", isbn);
     curls.push_back (c);
   }
 
   for(const string& title: m_titles)
   {
-    Curl* c = new Curl("combined", m_url, title);
+    Curl* c = new Curl("combined", title);
     curls.push_back(c);
   }
 
