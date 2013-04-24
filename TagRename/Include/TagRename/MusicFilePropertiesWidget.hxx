@@ -3,8 +3,6 @@
 
 #include "ui_MusicFilePropertiesWidget.h"
 
-class Mp3Config;
-
 class MusicFilePropertiesWidget : public QWidget, private Ui::MusicFilePropertiesWidget
 {
   Q_OBJECT
@@ -21,9 +19,6 @@ class MusicFilePropertiesWidget : public QWidget, private Ui::MusicFilePropertie
 
   private:
     void updateGenresList();
-
-  private:
-    Mp3Config* m_mp3Config;
 };
 
 #endif

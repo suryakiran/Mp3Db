@@ -11,7 +11,7 @@
 #include <boost/algorithm/string/join.hpp>
 using namespace std;
 
-#include <TagRename/Mp3Config.hxx>
+#include <TagRename/AppConfig.hxx>
 #include <TagRename/FetchBookDetails.hxx>
 
 namespace po = boost::program_options;
@@ -52,8 +52,8 @@ namespace {
       dataDir = vmap["data-dir"].as<string>();
     }
 
-    Mp3Config* config = Mp3Config::instance();
-    config->readConfig(confFile);
+    AppConfig& config = AppConfig::instance();
+    config.readConfig(confFile);
 
     FetchBookDetails* fbd = FetchBookDetails::instance();
     fbd->readConfig(confFile);
