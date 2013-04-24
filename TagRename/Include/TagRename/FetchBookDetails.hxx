@@ -3,16 +3,7 @@
 
 #include <Stl/Vector.hxx>
 #include <Stl/Map.hxx>
-#include <Poco/Net/HTTPClientSession.h>
-#include <Poco/URI.h>
 #include <boost/shared_ptr.hpp>
-
-namespace Poco {
-  namespace Net {
-    class HTMLForm;
-    class HTTPRequest;
-  }
-}
 
 class FetchBookDetails
 {
@@ -24,14 +15,7 @@ private:
     std::string m_author;
   };
 
-typedef boost::shared_ptr <Poco::Net::HTMLForm> FormPtr;
-typedef boost::shared_ptr <Poco::Net::HTTPRequest> RequestPtr;
-typedef boost::shared_ptr <Poco::Net::HTTPClientSession> SessionPtr;
-typedef std::pair<FormPtr, RequestPtr> FormRequestPair;
-
   DEFINE_VECTOR(BookDetails, Results);
-  DEFINE_VECTOR(FormPtr, FormPtrVec);
-  DEFINE_MAP(SessionPtr, FormRequestPair, SessionDetails);
 
   FetchBookDetails();
   void createForm (const std::string& p_type, const std::string& p_search);
@@ -56,9 +40,7 @@ public:
 private:
   Results m_results;
   static FetchBookDetails* m_instance;
-  Poco::URI m_uri;
   stl::StringVec m_isbnDbKeys;
-  SessionDetails m_sessions;
 };
 
 #endif
