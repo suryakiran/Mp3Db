@@ -168,6 +168,7 @@ DocFileDisplayWidget::resizeColumns()
 
 void DocFileDisplayWidget::guessTitles()
 {
+  stl::StringVec isbns;
   for(auto& iter: m_fileTypeItems)
   {
     QTreeWidgetItem* item = iter.second;
@@ -178,14 +179,38 @@ void DocFileDisplayWidget::guessTitles()
       auto match = str::find_regex(title, u_isbnReg);
       if (!match) {
         guessTitle(title);
+        childItem->setText(COLUMN_ID(docs::Title), title.c_str());
       } else {
         ostringstream os ;
         os << match;
         string s(os.str());
+        isbns.push_back(s);
+        childItem->setData(COLUMN_ID(docs::Title), Qt::UserRole, s.c_str());
       }
-      childItem->setText(COLUMN_ID(docs::Title), title.c_str());
     }
   }
+
+  IsbnDb db;
+  boost::for_each(isbns, [&](const string& s) { db.addIsbn(s); });
+  db.fetch();
+  IsbnDb::Results& results = db.results();
+
+  for(auto& iter: m_fileTypeItems)
+  {
+    QTreeWidgetItem* item = iter.second;
+    for (int i = 0; i < item->childCount(); ++i) {
+      QTreeWidgetItem* childItem = item->child(i);
+      QVariant v = childItem->data(COLUMN_ID(docs::Title), Qt::UserRole);
+      if (!v.isNull()) {
+        IsbnDb::Results::const_accessor a;
+        if(results.find(a, v.toString().toStdString())) {
+          Book b = a->second;
+          childItem->setText(COLUMN_ID(docs::Title), b.title.c_str());
+        }
+      }
+    }
+  }
+  
 }
 
 void DocFileDisplayWidget::readDirectory(const QModelIndex& p_index)
