@@ -32,8 +32,9 @@ class Action(object):
         ld_lib_path.prepend(self.yml['dir']['boost_lib'])
         
         poco_include_dir = self.yml['dir']['poco_include']
-        poco_lib_dir = os.path.join(os.path.dirname(poco_include_dir), 'lib')
-        ld_lib_path.prepend(poco_lib_dir)
+        if poco_include_dir:
+            poco_lib_dir = os.path.join(os.path.dirname(poco_include_dir), 'lib')
+            ld_lib_path.prepend(poco_lib_dir)
 
         self.exe_file = os.path.join(exe_dir, self.yml['misc']['git_branch'], 'bin', exeName)
 
