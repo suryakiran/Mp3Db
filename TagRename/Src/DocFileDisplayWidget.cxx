@@ -262,4 +262,5 @@ void DocFileDisplayWidget::readDirectory(const QModelIndex& p_index)
 
     guessTitles();
   }
+  resizeColumns();
 }
