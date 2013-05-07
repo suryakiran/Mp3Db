@@ -10,7 +10,7 @@ Include (${CMAKE_SOURCE_DIR}/Mp3Db.cmake)
 If (CMAKE_COMPILER_IS_GNUCXX)
   Set (
     CMAKE_CXX_FLAGS 
-    "${CMAKE_CXX_FLAGS} -Wall -Wno-unused -Wno-inline -Woverloaded-virtual -Wmissing-declarations -Wno-write-strings"
+    "${CMAKE_CXX_FLAGS} -Wall -Wno-unused -Wno-inline -Woverloaded-virtual -Wmissing-declarations -Wno-write-strings -Wno-pointer-arith"
     )
 EndIf (CMAKE_COMPILER_IS_GNUCXX)
 

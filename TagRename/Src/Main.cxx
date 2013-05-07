@@ -11,7 +11,7 @@
 #include <boost/algorithm/string/join.hpp>
 using namespace std;
 
-#include <TagRename/Mp3Config.hxx>
+#include <TagRename/AppConfig.hxx>
 
 namespace po = boost::program_options;
 
@@ -51,8 +51,8 @@ namespace {
       dataDir = vmap["data-dir"].as<string>();
     }
 
-    Mp3Config* config = Mp3Config::instance();
-    config->readConfig(confFile);
+    AppConfig& config = AppConfig::instance();
+    config.readConfig(confFile);
   }
 
   void setApplicationStyleSheet()
@@ -75,7 +75,6 @@ namespace {
 
     fin.close();
     qApp->setStyleSheet (boost::algorithm::join(lines, "\n").c_str());
-
   }
 }
 

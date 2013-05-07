@@ -5,7 +5,7 @@
 #include <iostream>
 #include <TagRename/FileModelColumn.hxx>
 #include <TagRename/Mp3String.hxx>
-#include <TagRename/Mp3Config.hxx>
+#include <TagRename/AppConfig.hxx>
 #include <TagRename/ReturnPress.hxx>
 #include <TagRename/QStringPrint.hxx>
 
@@ -34,10 +34,10 @@ MusicFilePropertiesWidget::MusicFilePropertiesWidget (QWidget* p_parent)
   ReturnPress *rp = new ReturnPress (this);
   m_genre->installEventFilter (rp);
 
-  m_mp3Config = Mp3Config::instance();
+  // m_ = AppConfig::instance();
   updateGenresList();
 
-  m_mp3Config->signal<signal::mp3::config::GenresModified>().connect(MEM_FUN(MusicFilePropertiesWidget, updateGenresList, 0));
+  // m_mp3Config->signal<signal::mp3::config::GenresModified>().connect(MEM_FUN(MusicFilePropertiesWidget, updateGenresList, 0));
   connect (m_genre, SIGNAL(editTextChanged(const QString&)), this, SLOT(updateGenresList(const QString&)));
   connect (rp, SIGNAL(returnPressed()), this, SLOT (genreNameEdited()));
 }
@@ -49,7 +49,7 @@ MusicFilePropertiesWidget::genreNameEdited()
   int idx (m_genre->findText (curText));
   if (idx == -1)
   {
-    m_mp3Config->addGenre (curText.toStdString());
+    // m_mp3Config->addGenre (curText.toStdString());
     idx = m_genre->findText (curText);
     m_genre->setCurrentIndex (idx);
   }
@@ -64,7 +64,8 @@ void
 MusicFilePropertiesWidget::updateGenresList ()
 {
   m_genre->clear();
-  const stl::StringSet& genres = m_mp3Config->getGenres();
+  stl::StringSet genres;
+  // const stl::StringSet& genres = m_mp3Config->getGenres();
 
   BOOST_FOREACH (const string& genre, genres)
   {
@@ -120,7 +121,7 @@ MusicFilePropertiesWidget::updateDetailsOfSelectedFile (const QModelIndex& p_cur
   }
   else
   {
-    m_mp3Config->addGenre (genre.toStdString());
+    // m_mp3Config->addGenre (genre.toStdString());
     comboIdx = m_genre->findText(genre);
     m_genre->setCurrentIndex (comboIdx);
   }
