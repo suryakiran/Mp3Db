@@ -71,7 +71,7 @@ AppConfig::addGenre(const string& genre)
 std::string
 AppConfig::isbnDbUrl()
 {
-  return m_config["Config"]["ISBNDb"]["Url"].as<string>();
+  return m_config["Config"]["ISBNDb"]["Api"]["V2"]["Url"].as<string>();
 }
 
 stl::StringVec

@@ -3,6 +3,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <Stl/Vector.hxx>
+#include <yaml-cpp/yaml.h>
 
 struct Book
 {
@@ -14,6 +15,7 @@ struct Book
 
   Book();
   Book(const boost::property_tree::ptree& pt);
+  Book(const YAML::Node& node);
   bool operator<  (const Book& other);
   bool operator== (const Book& other);
   size_t hash (const std::string& s);

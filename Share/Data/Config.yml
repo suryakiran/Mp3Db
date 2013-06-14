@@ -1,6 +1,10 @@
 Config:
   ISBNDb:
-    Url: http://isbndb.com/api/books.xml
+    Api:
+      V1:
+        Url: http://isbndb.com/api/books.xml
+      V2:
+        Url: http://isbndb.com/api/v2/yaml
     Keys:
       - ZB4GTWMM
       - NZC5LLNJ

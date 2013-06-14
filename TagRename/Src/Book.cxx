@@ -6,6 +6,7 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/range/algorithm/for_each.hpp>
+#include <boost/foreach.hpp>
 #include <limits>
 
 using namespace std;
@@ -42,6 +43,30 @@ bool
 Book::equal(const string& first, const string& second) const
 {
   return first == second;
+}
+
+Book::Book(const YAML::Node& node)
+  : valid (true)
+{
+  isbn.first = node["isbn10"].Scalar();
+  isbn.second = node["isbn13"].Scalar();
+  if (isbn.first.empty() && isbn.second.empty()) {
+    valid = false;
+    return;
+  }
+
+  title = node["title_long"].Scalar();
+  if (title.empty()) {
+    title = node["title"].Scalar();
+    if (title.empty()) {
+      title = node["title_latin"].Scalar();
+    }
+  }
+
+  publisher = node["publisher_name"].Scalar();
+  BOOST_FOREACH(auto& n, node["author_data"]) {
+    authors.push_back(n["name"].Scalar());
+  }
 }
    
 Book::Book (const boost::property_tree::ptree& pt)

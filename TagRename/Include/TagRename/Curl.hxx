@@ -8,15 +8,48 @@
 #include <boost/type_traits/add_reference.hpp>
 #include <sstream>
 #include <Stl/Vector.hxx>
+#include <boost/algorithm/string/join.hpp>
+#include <iostream>
+#include <yaml-cpp/yaml.h>
+using namespace std;
 
 class Curl
 {
 public:
   typedef CURL* Handle;
-  typedef boost::property_tree::ptree Result;
-  typedef boost::shared_ptr<boost::property_tree::ptree> ResultPtr;
-  typedef boost::add_reference<Result>::type ResultReference;
-  typedef const ResultReference ResultConstReference;
+  typedef YAML::Node Result;
+  typedef Result& ResultReference;
+  typedef const Result& ResultConstReference;
+
+  typedef enum {
+    SingleResult,
+    MultipleResults
+  } ResultsType;
+
+  struct Url
+  {
+    Url(const std::string& url)
+      : m_url(url)
+      {
+      }
+
+    Url() { }
+
+    Url& append(const std::string& field)
+      {
+        m_url.append("/");
+        m_url.append(field);
+        return *this;
+      }
+
+    const char* operator()() const
+      {
+        return m_url.c_str();
+      }
+
+  private:
+    std::string m_url;
+  };
 
   struct Form
   {
@@ -40,6 +73,10 @@ public:
     
     struct curl_httppost* operator()() {
       return m_formPost;
+    }
+
+    operator bool() const {
+      return m_formPost != nullptr;
     }
 
     template <class T>
@@ -77,11 +114,13 @@ private:
   
 private:
   boost::shared_ptr<void> m_handle;
-  std::string m_url, m_searchString, m_searchType;
-  ResultPtr m_result;
+  std::string m_searchString, m_searchType;
+  Url m_url;
+  Result m_result;
   std::string m_outputString;
   Form m_form;
   stl::StringVec m_keys;
+  ResultsType m_resultType;
 };
 
 #endif

@@ -51,23 +51,23 @@ IsbnDb::fetch()
                       for(size_t i = range.begin(); i != range.end(); ++i) {
                         Curl& c = curls[i];
                         c();
-                        Curl::ResultReference& res = c.results();
-                        BOOST_FOREACH(auto& r, res)
+                        Curl::ResultConstReference& res = c.results();
+                        BOOST_FOREACH(auto& r, res["data"])
                         {
-                          Book b(r.second);
+                          Book b(r);
                           if (b.valid) {
                             Results::accessor a;
                             m_results.insert(a, make_pair(b.isbn.first, b));
                           }
                         }
-                        if (!c.isDone()) {
-                          int numPages = (c.numResults() / c.pageSize()) + 1;
-                          for (int i = 2; i <= numPages; ++i) {
-                            Curl* nc = new Curl(c);
-                            nc->setPageNumber(i);
-                            newCurls.push_back(nc);
-                          }
-                        }
+                        // if (!c.isDone()) {
+                        //   int numPages = (c.numResults() / c.pageSize()) + 1;
+                        //   for (int i = 2; i <= numPages; ++i) {
+                        //     Curl* nc = new Curl(c);
+                        //     nc->setPageNumber(i);
+                        //     newCurls.push_back(nc);
+                        //   }
+                        // }
                       }
                     });
 
@@ -76,15 +76,15 @@ IsbnDb::fetch()
                       for(size_t i = range.begin(); i != range.end(); ++i) {
                         Curl& c = newCurls[i];
                         c();
-                        Curl::ResultReference& res = c.results();
-                        BOOST_FOREACH(auto& r, res)
-                        {
-                          Book b(r.second);
-                          if (b.valid) {
-                            Results::accessor a;
-                            m_results.insert(a, make_pair(b.isbn.first, b));
-                          }
-                        }
+                        // Curl::ResultReference& res = c.results();
+                        // BOOST_FOREACH(auto& r, res)
+                        // {
+                        //   Book b(r.second);
+                        //   if (b.valid) {
+                        //     Results::accessor a;
+                        //     m_results.insert(a, make_pair(b.isbn.first, b));
+                        //   }
+                        // }
                       }
                     });
 

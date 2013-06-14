@@ -3,6 +3,8 @@
 #include <TagRename/Curl.hxx>
 #include <TagRename/PtreeUtils.hxx>
 #include <TagRename/AppConfig.hxx>
+#include <iostream>
+#include <boost/foreach.hpp>
 
 using namespace std;
 
@@ -22,16 +24,14 @@ namespace {
 Curl::Curl(const string& searchType,
            const string& searchString)
   : m_searchString(searchString),
-    m_searchType(searchType),
-    m_result(new Result)
+    m_searchType(searchType), m_resultType(SingleResult)
 {
   init();
 }
 
 Curl::Curl(const Curl& other)
   : m_searchString(other.m_searchString),
-    m_searchType(other.m_searchType),
-    m_result(new Result)
+    m_searchType(other.m_searchType), m_resultType(other.m_resultType)
 {
   init();
 }
@@ -46,7 +46,6 @@ size_t
 Curl::writeData(void* buffer, size_t size, size_t nmemb)
 {
   size_t count = size * nmemb;
-  fstream fout;
   ostringstream os;
   os.write(reinterpret_cast<const char*>(buffer), count);
   m_outputString += os.str();
@@ -57,45 +56,53 @@ Curl::writeData(void* buffer, size_t size, size_t nmemb)
 int
 Curl::numResults()
 {
-  return getAttributeValue(*m_result, "ISBNdb.BookList.<xmlattr>.total_results", 0);
+  if (m_resultType == SingleResult) {
+    return 1;
+  }
+  // return getAttributeValue(*m_result, "ISBNdb.BookList.<xmlattr>.total_results", 0);
+  return 0;
 }
 
 int
 Curl::pageSize()
 {
-  return (getAttributeValue(*m_result, "ISBNdb.BookList.<xmlattr>.page_size", 10));
+  if (m_resultType == SingleResult) {
+    return 1;
+  }
+  // return (getAttributeValue(*m_result, "ISBNdb.BookList.<xmlattr>.page_size", 10));
+  return 0;
 }
   
 bool
 Curl::isDone()
 {
-  int pageNumber(getAttributeValue(*m_result, "ISBNdb.BookList.<xmlattr>.page_number", 1));
-  return (numResults() <= (pageSize() * pageNumber));
+  if (m_resultType == SingleResult) {
+    return true;
+  }
+  // int pageNumber(getAttributeValue(*m_result, "ISBNdb.BookList.<xmlattr>.page_number", 1));
+  // return (numResults() <= (pageSize() * pageNumber));
+  return true;
 }
 
 void
 Curl::readData()
 {
-  istringstream is;
-  is.str(m_outputString);
-  boost::property_tree::read_xml(is, *m_result, 
-                                 boost::property_tree::xml_parser::trim_whitespace |
-                                 boost::property_tree::xml_parser::no_comments);
+  m_result = YAML::Load(m_outputString);
 }
 
-Curl::ResultConstReference&
+Curl::ResultConstReference
 Curl::results() const
 {
-  return m_result->get_child("ISBNdb.BookList");
+  return m_result;
 }
 
 void
 Curl::operator()()
 {
   CURLcode res = curl_easy_perform(m_handle.get());
+  auto iter = m_result.begin();
   if (res == CURLE_OK){
     readData();
-    m_outputString.clear();
   }
 }
 
@@ -105,12 +112,24 @@ Curl::init()
   m_url = AppConfig::instance().isbnDbUrl();
   m_keys = AppConfig::instance().isbnDbKeys();
   m_handle.reset(curl_easy_init());
-  m_form.set("access_key", m_keys.front().c_str());
-  m_form.set("index1", m_searchType);
-  m_form.set("value1", m_searchString);
 
-  curl_easy_setopt(m_handle.get(), CURLOPT_URL, m_url.c_str());
+  if (m_searchType != "isbn") {
+    m_resultType = MultipleResults;
+  }
+
+  if (m_resultType == SingleResult) {
+    m_url.append(m_keys.front()).append("book").append(m_searchString);
+  } else {
+    m_url = m_keys.front() + "books";
+    m_form.set("q", m_searchString);
+    m_form.set("i", m_searchType);
+  }
+
+  curl_easy_setopt(m_handle.get(), CURLOPT_URL, m_url());
   curl_easy_setopt(m_handle.get(), CURLOPT_WRITEFUNCTION, writeFunction);
   curl_easy_setopt(m_handle.get(), CURLOPT_WRITEDATA, this);
-  curl_easy_setopt(m_handle.get(), CURLOPT_HTTPPOST, m_form());
+
+  if (m_form) {
+    curl_easy_setopt(m_handle.get(), CURLOPT_HTTPPOST, m_form());
+  }
 }
